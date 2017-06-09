@@ -5,6 +5,7 @@ import android.util.Log;
 import com.kauailabs.navx.ftc.MPU9250;
 
 import virtualRobot.AutonomousRobot;
+import virtualRobot.SallyJoeBot;
 import virtualRobot.commands.Command;
 import virtualRobot.utils.MathUtils;
 import virtualRobot.utils.Matrix;
@@ -27,7 +28,7 @@ public class StateSensor extends Sensor {
         angle = 0;
     }
 
-    public StateSensor setRobot(AutonomousRobot robot) {
+    public StateSensor setRobot(SallyJoeBot robot) {
         this.robot = robot;
         return this;
     }
