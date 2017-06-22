@@ -237,6 +237,7 @@ public abstract class UpdateThread extends OpMode {
 		godThread = cv.godThread;
 		tInstantiated = true;
 		t.start();
+		Thread.currentThread().setPriority(10);
 	}
 	
 	public void loop() {

@@ -1,6 +1,7 @@
 package virtualRobot.components;
 
 import virtualRobot.SallyJoeBot;
+import virtualRobot.SallyJoeBot;
 import virtualRobot.utils.MathUtils;
 import virtualRobot.utils.Matrix;
 import virtualRobot.utils.Vector3f;
