@@ -35,7 +35,7 @@ public abstract class LogicThread implements Runnable {
         RUNNING,
         PAUSE
     };
-    private ThreadState state;
+    private volatile ThreadState state;
 
     //The thread to check all monitorThreads and put data in HashMap
     private Thread interruptHandler = new Thread(this) {
@@ -98,7 +98,7 @@ public abstract class LogicThread implements Runnable {
     }
 
     /**
-     * Runs command with certian conditions to check type of command
+     * Runs command with certain conditions to check type of command
      *
      * @param c Command to run
      * @return Whether command stopped by interrupt
@@ -224,13 +224,17 @@ public abstract class LogicThread implements Runnable {
         logicThread.monitorData.put(monitorThread.getClass().getName(), false);
     }
 
-    protected void pauseParent() {
-        state = ThreadState.PAUSE;
-        notify();
+    protected synchronized void pauseParent() {
+        synchronized (this) {
+            state = ThreadState.PAUSE;
+            notify();
+        }
     }
 
-    protected void resumeParent() {
-        state = ThreadState.RUNNING;
-        notify();
+    protected synchronized void resumeParent() {
+        synchronized (this) {
+            state = ThreadState.RUNNING;
+            notify();
+        }
     }
 }

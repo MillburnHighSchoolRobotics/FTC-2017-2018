@@ -1,14 +1,8 @@
 package virtualRobot.components;
 
-import android.util.Log;
-
-import com.kauailabs.navx.ftc.MPU9250;
-
-import virtualRobot.AutonomousRobot;
-import virtualRobot.commands.Command;
+import virtualRobot.SallyJoeBot;
 import virtualRobot.utils.MathUtils;
 import virtualRobot.utils.Matrix;
-import virtualRobot.utils.Vector2f;
 import virtualRobot.utils.Vector3f;
 
 /**
@@ -19,7 +13,7 @@ public class StateSensor extends Sensor {
     private long lastUpdateTime;
     private Matrix state;
     private double angle;
-    private AutonomousRobot robot = null;
+    private SallyJoeBot robot = null;
 
     public StateSensor() {
         lastUpdateTime = System.currentTimeMillis();
@@ -27,7 +21,7 @@ public class StateSensor extends Sensor {
         angle = 0;
     }
 
-    public StateSensor setRobot(AutonomousRobot robot) {
+    public StateSensor setRobot(SallyJoeBot robot) {
         this.robot = robot;
         return this;
     }

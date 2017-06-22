@@ -4,7 +4,7 @@ package virtualRobot.commands;
  * Created by ethachu19 on 3/31/2017.
  */
 
-public class TestCommand extends Command {
+public abstract class TestCommand extends Command {
     double tp = 1;
     @Override
     protected int activate(String s) {
