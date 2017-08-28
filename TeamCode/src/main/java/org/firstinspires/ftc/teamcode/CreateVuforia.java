@@ -8,7 +8,14 @@ import java.util.ArrayList;
 
 import virtualRobot.GodThread;
 import virtualRobot.VuforiaLocalizerImplSubclass;
-import virtualRobot.godThreads.*;
+import virtualRobot.godThreads.deprecated.FPSGodThread;
+import virtualRobot.godThreads.deprecated.FireBallsGodThread;
+import virtualRobot.godThreads.deprecated.PIDTesterGodThread;
+import virtualRobot.godThreads.deprecated.RotateAutoPIDGod;
+import virtualRobot.godThreads.deprecated.TeleopGodThread;
+import virtualRobot.godThreads.deprecated.TranslateAutoPIDGod;
+import virtualRobot.godThreads.deprecated.TranslateTeleopPIDGod;
+import virtualRobot.godThreads.deprecated.testingTranslateGodThread;
 
 /**
  * Created by 17osullivand on 11/9/16.

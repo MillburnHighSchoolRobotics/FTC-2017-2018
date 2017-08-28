@@ -11,12 +11,18 @@ import java.io.IOException;
  * Created by shant on 1/29/2016.
  * Plays a Music file
  */
-public class PlayMusic implements Command {
+public class PlayMusic extends Command {
     private String fileName;
 
     public PlayMusic (String fileName) {
         this.fileName = fileName;
     }
+
+    @Override
+    protected int activate(String s) {
+        return 0;
+    }
+
     @Override
     public boolean changeRobotState() throws InterruptedException {
         final MediaPlayer mp = new MediaPlayer();

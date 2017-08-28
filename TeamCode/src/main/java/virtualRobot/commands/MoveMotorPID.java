@@ -9,7 +9,7 @@ import virtualRobot.utils.MathUtils;
 /**
  * Created by ethachu19 on 2/4/17.
  */
-public class MoveMotorPID implements Command {
+public class MoveMotorPID extends Command {
     public final static double MAX_SPEED = 100;
 
     private double speed;
@@ -56,7 +56,7 @@ public class MoveMotorPID implements Command {
 
     }
 
-    public void setCondition(Condition condition) {
+    public void addCondition(Condition condition) {
         this.condition = condition;
     }
 
@@ -73,34 +73,53 @@ public class MoveMotorPID implements Command {
     }
     private double getSpeedOfRev() {
         double a = encoder.getRawValue()-lastEncoder;
-        //Command.AUTO_ROBOT.addToTelemetry("DIF: ", a);
+        //Command.ROBOT.addToTelemetry("DIF: ", a);
 
         if (System.currentTimeMillis() - lastTime > MSC ) { //1780 RPM = 333 milliseconds/cycle
             //if (!UpdateThread.allDone)
             //Log.d("MotorPID", String.valueOf(currPower));
-            //Command.AUTO_ROBOT.addToTelemetry("PENS: ", "Lock");
+            //Command.ROBOT.addToTelemetry("PENS: ", "Lock");
 
             double time = lastTime;
             lastEncoder = encoder.getRawValue();
             lastTime = System.currentTimeMillis();
             return (a/PPC)/(System.currentTimeMillis()-time); //25.9 pulses per cycle
         }
-       // Command.AUTO_ROBOT.addToTelemetry("PENS: ", "Ban");
+       // Command.ROBOT.addToTelemetry("PENS: ", "Ban");
 
         return lastSpeed;
     }
+
+    @Override
+    protected int activate(String s) {
+        switch(s) {
+            case "BREAK":
+                return BREAK;
+            case "END":
+                return END;
+        }
+        return NO_CHANGE;
+    }
+
     //shuyd
     @Override
     public boolean changeRobotState() throws InterruptedException {
         double motorSpeed;
         boolean isInterrupted = false;
-        while (!condition.isConditionMet()) {
+        MainLoop: while (!isInterrupted) {
+            switch (checkConditionals()) {
+                case BREAK:
+                    break MainLoop;
+                case END:
+                    return isInterrupted;
+            }
+
             if (Thread.currentThread().isInterrupted()) {
                 isInterrupted = true;
                 break;
             }
            lastSpeed = getSpeedOfRev();
-            //Command.AUTO_ROBOT.addToTelemetry("Speed: ", lastSpeed);
+            //Command.ROBOT.addToTelemetry("Speed: ", lastSpeed);
 
 
 //            if (Double.isNaN(motorSpeed))
@@ -108,7 +127,7 @@ public class MoveMotorPID implements Command {
             double oldPower = currPower;
             currPower = speedController.getPIDOutput(lastSpeed);
             currPower = MathUtils.clamp(currPower, -1, 1);
-            //Command.AUTO_ROBOT.addToTelemetry("MotorPID: ", currPower);
+            //Command.ROBOT.addToTelemetry("MotorPID: ", currPower);
 
             //Log.d("MotorPID", speed + " " + currPower + " " + lastSpeed + " " + encoder.getRawValue());
             motor.setPower(currPower == 0 ? oldPower : currPower);

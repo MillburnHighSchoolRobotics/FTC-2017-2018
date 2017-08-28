@@ -1,12 +1,6 @@
-package virtualRobot.godThreads;
+package virtualRobot.godThreads.deprecated;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import virtualRobot.AutonomousRobot;
 import virtualRobot.GodThread;
-import virtualRobot.LogicThread;
-import virtualRobot.MonitorThread;
-import virtualRobot.commands.Rotate;
 
 /**
  * Created by shant on 1/15/2016.
@@ -38,8 +32,8 @@ public class TestingGodThread extends GodThread {
         // THIS IS THE STANDARD FORMAT FOR ADDING A LOGICTHREAD TO THE LIST
         LogicThread moveSlowly = new LogicThread() {
             @Override
-            public void loadCommands() {
-                commands.add(new Translate(5000, Translate.Direction.FORWARD, 0.3, 0));
+            public void realRun() {
+                runCommand(new Translate(5000, Translate.Direction.FORWARD, 0.3, 0));
             }
         };
         Thread mtb = new Thread(moveSlowly);
@@ -48,8 +42,8 @@ public class TestingGodThread extends GodThread {
         */
         /*LogicThread cameraTest = new LogicThread() {
             @Override
-            public void loadCommands() {
-                commands.add (new TakePicture(redisLeft));
+            public void realRun() {
+                runCommand (new TakePicture(redisLeft));
             }
         };
         Thread ct = new Thread(cameraTest);
@@ -76,14 +70,14 @@ public class TestingGodThread extends GodThread {
 
         //delegateMonitor(mtb, new MonitorThread[]{watchingForDebris, watchingForTime});*/
 
-        /*LogicThread<AutonomousRobot> translateTest = new LogicThread<AutonomousRobot>() {
+        /*LogicThread translateTest = new LogicThread() {
             @Override
-            public void loadCommands() {
+            public void realRun() {
 
-                commands.add (new Rotate (90));
-                commands.add (new Rotate (0));
-                commands.add (new Rotate (-90));
-                commands.add (new Rotate (0));
+                runCommand (new Rotate (90));
+                runCommand (new Rotate (0));
+                runCommand (new Rotate (-90));
+                runCommand (new Rotate (0));
             }
         };
 

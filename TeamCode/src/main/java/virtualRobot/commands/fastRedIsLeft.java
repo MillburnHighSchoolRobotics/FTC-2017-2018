@@ -6,10 +6,9 @@ import android.util.Log;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import virtualRobot.AutonomousRobot;
 import virtualRobot.Condition;
 import virtualRobot.SallyJoeBot;
-import virtualRobot.SomeoneDunGoofed;
+import virtualRobot.exceptions.SomeoneDunGoofed;
 import virtualRobot.VuforiaLocalizerImplSubclass;
 import virtualRobot.utils.Vector2i;
 

@@ -1,31 +1,18 @@
-package virtualRobot.godThreads;
-
-import org.firstinspires.ftc.teamcode.UpdateThread;
+package virtualRobot.godThreads.deprecated;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import virtualRobot.AutonomousRobot;
 import virtualRobot.GodThread;
 import virtualRobot.LogicThread;
 import virtualRobot.MonitorThread;
 import virtualRobot.commands.Command;
-import virtualRobot.commands.FTCTakePicture;
-import virtualRobot.commands.Pause;
-import virtualRobot.commands.Rotate;
-import virtualRobot.logicThreads.AutonomousLayer1.BlueGoToWall;
 import virtualRobot.logicThreads.AutonomousLayer1.RedGoToWall;
 import virtualRobot.logicThreads.AutonomousLayer2.ColorCompensator;
-import virtualRobot.logicThreads.AutonomousLayer2.ToLineNoUltra;
-import virtualRobot.logicThreads.AutonomousLayer2.ToWhiteLine;
 import virtualRobot.logicThreads.AutonomousLayer2.ToWhiteLineCompensateColor;
 import virtualRobot.logicThreads.AutonomousLayer2.justRedIsLeft;
-import virtualRobot.logicThreads.CompensateForMiss;
-import virtualRobot.logicThreads.NoSensorAutonomouses.BlueStrafeToCenterGoal;
-import virtualRobot.logicThreads.NoSensorAutonomouses.Pauselogic;
 import virtualRobot.logicThreads.NoSensorAutonomouses.PushLeftButton;
 import virtualRobot.logicThreads.NoSensorAutonomouses.PushRightButton;
 import virtualRobot.logicThreads.NoSensorAutonomouses.RedStrafeToCenterGoal;
-import virtualRobot.logicThreads.NoSensorAutonomouses.RedStrafeToRamp;
 import virtualRobot.logicThreads.NoSensorAutonomouses.moveAndFireBalls;
 import virtualRobot.monitorThreads.TimeMonitor;
 
@@ -84,7 +71,7 @@ public class RedAutoGodThread extends GodThread {
 
             }
             if (allSensorsFailed.get()) {
-                Command.AUTO_ROBOT.addToProgress("RunningAllSensorsFailed");
+                Command.ROBOT.addToProgress("RunningAllSensorsFailed");
 
                 LogicThread blindAllign = new ToWhiteLineCompensateColor(GodThread.Line.RED_FIRST_LINE, firstSensorTriggered, lastSensorTriggered, allSensorsFailed, sonarWorks, redIsLeft, colorTriggered, vuforia, ToWhiteLineCompensateColor.Mode.ALL_FAILED);
                 Thread bl = new Thread(blindAllign);
@@ -100,7 +87,7 @@ public class RedAutoGodThread extends GodThread {
                 delegateMonitor(irl, new MonitorThread[]{});
 
             } else {
-                Command.AUTO_ROBOT.addToProgress("CompensatingColor");
+                Command.ROBOT.addToProgress("CompensatingColor");
                 LogicThread allignToLine = new ColorCompensator(Line.RED_FIRST_LINE, 2500, redIsLeft, sonarWorks, colorTriggered, vuforia);
                 Thread atl = new Thread(allignToLine);
                 atl.start();
@@ -146,7 +133,7 @@ public class RedAutoGodThread extends GodThread {
 
         }
         if (allSensorsFailed.get()) {
-            Command.AUTO_ROBOT.addToProgress("RunningAllSensorsFailed");
+            Command.ROBOT.addToProgress("RunningAllSensorsFailed");
 
             LogicThread blindAllign = new ToWhiteLineCompensateColor(GodThread.Line.RED_SECOND_LINE, firstSensorTriggered, lastSensorTriggered, allSensorsFailed, sonarWorks, redIsLeft, colorTriggered, vuforia, ToWhiteLineCompensateColor.Mode.ALL_FAILED);
             Thread bl = new Thread(blindAllign);
@@ -162,7 +149,7 @@ public class RedAutoGodThread extends GodThread {
             delegateMonitor(irl, new MonitorThread[]{});
 
         } else {
-            Command.AUTO_ROBOT.addToProgress("CompensatingColor");
+            Command.ROBOT.addToProgress("CompensatingColor");
             LogicThread allignToLine = new ColorCompensator(Line.RED_SECOND_LINE, 2500, redIsLeft, sonarWorks, colorTriggered, vuforia);
             Thread atl = new Thread(allignToLine);
             atl.start();
@@ -248,7 +235,7 @@ tm.start();
 //            delegateMonitor(cor, new MonitorThread[]{});
 
         if (lastSensorTriggered.get() && false) {
-        Command.AUTO_ROBOT.addToProgress("LastSensorTriggered");
+        Command.ROBOT.addToProgress("LastSensorTriggered");
         LogicThread reAdjust = new CompensateForMiss(CompensateForMiss.TriggerLevel.LASTLIGHTTRIGGERED, GodThread.Line.RED_FIRST_LINE, weCanUseSonar);
         Thread adjust = new Thread(reAdjust);
         adjust.start();
@@ -256,7 +243,7 @@ tm.start();
         delegateMonitor(adjust, new MonitorThread[]{});
         }
         if (firstSensorTriggered.get() && false) {
-        Command.AUTO_ROBOT.addToProgress("FirstSensorTriggered");
+        Command.ROBOT.addToProgress("FirstSensorTriggered");
         LogicThread reAdjust = new CompensateForMiss(CompensateForMiss.TriggerLevel.FIRSTLIGHTTRIGGERED, GodThread.Line.RED_FIRST_LINE, weCanUseSonar);
         Thread adjust = new Thread(reAdjust);
         adjust.start();
@@ -264,7 +251,7 @@ tm.start();
         delegateMonitor(adjust, new MonitorThread[]{});
         }
         if (allSensorsFailed.get()) {
-        Command.AUTO_ROBOT.addToProgress("RunningAllSensorsFailed");
+        Command.ROBOT.addToProgress("RunningAllSensorsFailed");
 
         LogicThread reAdjust = new CompensateForMiss(CompensateForMiss.TriggerLevel.LASTLIGHTFAILS, GodThread.Line.RED_FIRST_LINE, weCanUseSonar);
         Thread adjust = new Thread(reAdjust);
@@ -278,7 +265,7 @@ tm.start();
         delegateMonitor(takepicturenow, new MonitorThread[]{});
 
         } else {
-        Command.AUTO_ROBOT.addToProgress("CompensatingColor");
+        Command.ROBOT.addToProgress("CompensatingColor");
         LogicThread allignToLine = new ColorCompensator(Line.RED_FIRST_LINE, 1000, redIsLeft, sonarWorks, colorTriggered, vuforia);
         Thread atl = new Thread(allignToLine);
         atl.start();
@@ -332,7 +319,7 @@ tm.start();
 
 
         if (lastSensorTriggered.get() && false) {
-        Command.AUTO_ROBOT.addToProgress("LastSensorTriggered");
+        Command.ROBOT.addToProgress("LastSensorTriggered");
         LogicThread reAdjust = new CompensateForMiss(CompensateForMiss.TriggerLevel.LASTLIGHTTRIGGERED, GodThread.Line.RED_SECOND_LINE, weCanUseSonar);
         Thread adjust = new Thread(reAdjust);
         adjust.start();
@@ -340,7 +327,7 @@ tm.start();
         delegateMonitor(adjust, new MonitorThread[]{});
         }
         if (firstSensorTriggered.get() && false) {
-        Command.AUTO_ROBOT.addToProgress("FirstSensorTriggered");
+        Command.ROBOT.addToProgress("FirstSensorTriggered");
         LogicThread reAdjust = new CompensateForMiss(CompensateForMiss.TriggerLevel.FIRSTLIGHTTRIGGERED, GodThread.Line.RED_SECOND_LINE, weCanUseSonar);
         Thread adjust = new Thread(reAdjust);
         adjust.start();
@@ -348,7 +335,7 @@ tm.start();
         delegateMonitor(adjust, new MonitorThread[]{});
         }
         if (allSensorsFailed.get()) {
-        Command.AUTO_ROBOT.addToProgress("RunningAllSensorsFailed");
+        Command.ROBOT.addToProgress("RunningAllSensorsFailed");
 
         LogicThread reAdjust = new CompensateForMiss(CompensateForMiss.TriggerLevel.LASTLIGHTFAILS, GodThread.Line.RED_SECOND_LINE, weCanUseSonar);
         Thread adjust = new Thread(reAdjust);
@@ -361,7 +348,7 @@ tm.start();
         children.add(takepicturenow2);
         delegateMonitor(takepicturenow2, new MonitorThread[]{});
         } else {
-        Command.AUTO_ROBOT.addToProgress("Compensating color");
+        Command.ROBOT.addToProgress("Compensating color");
 
         LogicThread allignToLine = new ColorCompensator(Line.RED_SECOND_LINE, 1000, redIsLeft, sonarWorks, colorTriggered, vuforia);
         Thread atl = new Thread(allignToLine);
@@ -378,7 +365,7 @@ tm.start();
 //            delegateMonitor(takepicturenow2, new MonitorThread[]{});
 
         if (secondSmallCorrect) {
-        Command.AUTO_ROBOT.addToProgress("LastSensorTriggered");
+        Command.ROBOT.addToProgress("LastSensorTriggered");
         LogicThread reAdjust = new CompensateForMiss(CompensateForMiss.TriggerLevel.SMALLCORRECTION, GodThread.Line.RED_SECOND_LINE, weCanUseSonar);
         Thread adjust = new Thread(reAdjust);
         adjust.start();

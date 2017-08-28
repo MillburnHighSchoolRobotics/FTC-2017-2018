@@ -2,7 +2,7 @@ package virtualRobot.commands;
 
 import android.util.Log;
 
-import virtualRobot.AutonomousRobot;
+import virtualRobot.SallyJoeBot;
 import virtualRobot.Condition;
 import virtualRobot.PIDController;
 
@@ -10,8 +10,8 @@ import virtualRobot.PIDController;
  * Created by ethachu19 on 11/22/16.
  */
 
-public class CompensateColor implements Command {
-    AutonomousRobot robot = Command.AUTO_ROBOT;
+public class CompensateColor extends Command {
+    SallyJoeBot robot = Command.ROBOT;
     PIDController lateral = new PIDController(1.22,0,0,0,0);
 //    Direction direction = Direction.FORWARD;
     double referenceAngle;
@@ -19,16 +19,8 @@ public class CompensateColor implements Command {
     double multiplier;
     private static final double whiteTape = 13;
 
-    Condition condition;
-
     public CompensateColor() {
         referenceAngle = 0; timeLimit = 10000; multiplier=2.5;
-         condition = new Condition() {
-            @Override
-            public boolean isConditionMet() {
-                return false;
-            }
-        };
     }
     public CompensateColor(double timeLimit) {
         this();
@@ -45,12 +37,15 @@ public class CompensateColor implements Command {
         this.referenceAngle = referenceAngle;
     }
 
-    public Condition getCondition() {
-        return condition;
-    }
-
-    public void setCondition(Condition condition) {
-        this.condition = condition;
+    @Override
+    protected int activate(String s) {
+        switch(s) {
+            case "BREAK":
+                return BREAK;
+            case "END":
+                return END;
+        }
+        return NO_CHANGE;
     }
 
     @Override
@@ -61,7 +56,13 @@ public class CompensateColor implements Command {
         double curr;
         double startTime = System.currentTimeMillis();
         boolean colorTriggered = false;
-        while (! colorTriggered && !isInterrupted && !condition.isConditionMet() && System.currentTimeMillis() - startTime < timeLimit) {
+        MainLoop: while (!colorTriggered && !isInterrupted && System.currentTimeMillis() - startTime < timeLimit) {
+            switch (checkConditionals()) {
+                case BREAK:
+                    break MainLoop;
+                case END:
+                    return isInterrupted;
+            }
 
             curr = robot.getLightSensor1().getValue()*multiplier + robot.getLightSensor2().getValue() - robot.getLightSensor3().getValue() - robot.getLightSensor4().getValue()*(2.55);
             lateralPower = lateral.getPIDOutput(curr)*-1;// - pidController1.getPIDOutput(robot.getHeadingSensor().getValue());

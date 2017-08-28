@@ -4,7 +4,7 @@ import android.util.Log;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import virtualRobot.AutonomousRobot;
+import virtualRobot.SallyJoeBot;
 import virtualRobot.Condition;
 import virtualRobot.GodThread;
 import virtualRobot.LogicThread;
@@ -18,7 +18,7 @@ import virtualRobot.commands.WallTrace;
  * goes to whiteLine
  */
 @Deprecated
-public class ToWhiteLine extends LogicThread<AutonomousRobot>  {
+public class ToWhiteLine extends LogicThread  {
     //Note that displacement is handled in exitCondition
     public static final double WALL_TRACE_SONAR_THRESHOLD = 15; //How close we want to trace wall
     public static final double MAX_ALLOWABLE_DISPLACEMENT_TO_LINE = 2350; //If we've gone this far, it means our line sensor is broken
@@ -109,7 +109,7 @@ public class ToWhiteLine extends LogicThread<AutonomousRobot>  {
 
 
     @Override
-    public void loadCommands() {
+    public void realRun() {
         robot.getLFEncoder().clearValue();
         robot.getRFEncoder().clearValue();
         robot.getLBEncoder().clearValue();
@@ -124,72 +124,72 @@ public class ToWhiteLine extends LogicThread<AutonomousRobot>  {
 
     public void withUltra(){
         robot.addToProgress("Going To Line with Ultra");
-        commands.add(new Pause(200));
-        commands.add(new Rotate(0,0.5,2000));
-        commands.add(new Pause(200));
+        runCommand(new Pause(200));
+        runCommand(new Rotate(0,0.5,2000));
+        runCommand(new Pause(200));
         if (type.getColor()==GodThread.ColorType.RED) {
             if (type.getLine()==GodThread.LineType.SECOND)
-                commands.add(new Translate(500, Translate.Direction.BACKWARD, 0));
+                runCommand(new Translate(500, Translate.Direction.BACKWARD, 0));
             WallTrace toWhiteLine;
                 toWhiteLine = new WallTrace(WallTrace.Direction.BACKWARD, WALL_TRACE_SONAR_THRESHOLD);
-                toWhiteLine.setCondition(atwhitelineRed);
-            commands.add(new Pause(500));
-            commands.add(toWhiteLine);
-            commands.add(new Pause(500));
-            commands.add(new Rotate(0, 1, 1000));
-            commands.add(new Pause(500));
+                toWhiteLine.addCondition(atwhitelineRed, "BREAK");
+            runCommand(new Pause(500));
+            runCommand(toWhiteLine);
+            runCommand(new Pause(500));
+            runCommand(new Rotate(0, 1, 1000));
+            runCommand(new Pause(500));
 
 
         }
         else  {
             WallTrace toWhiteLine;
-            commands.add(new Pause(500));
+            runCommand(new Pause(500));
             if (type.getLine()==GodThread.LineType.SECOND)
-                commands.add(new Translate(700, Translate.Direction.FORWARD, 0));
-            commands.add(new Pause(500));
+                runCommand(new Translate(700, Translate.Direction.FORWARD, 0));
+            runCommand(new Pause(500));
                 toWhiteLine = new WallTrace(WallTrace.Direction.FORWARD, WALL_TRACE_SONAR_THRESHOLD);
-                toWhiteLine.setCondition(atwhitelineBlue);
-            commands.add(toWhiteLine);
-            commands.add(new Pause(500));
-            commands.add(new Rotate(0,1, 1000));
+                toWhiteLine.addCondition(atwhitelineBlue, "BREAK");
+            runCommand(toWhiteLine);
+            runCommand(new Pause(500));
+            runCommand(new Rotate(0,1, 1000));
 
-            commands.add(new Pause(500));
+            runCommand(new Pause(500));
         }
     }
 
     public void withoutUltra(){
         robot.addToProgress("Going To Line with NO Ultra");
-        commands.add(new Pause(200));
-        commands.add(new Rotate(0,0.5,2000));
-        commands.add(new Pause(200));
+        runCommand(new Pause(200));
+        runCommand(new Rotate(0,0.5,2000));
+        runCommand(new Pause(200));
         if (type.getLine()== GodThread.LineType.FIRST) {
-            commands.add(new Translate(ESCAPE_WALL, Translate.Direction.LEFT, 0));
-            commands.add(new Pause(200));
+            runCommand(new Translate(ESCAPE_WALL, Translate.Direction.LEFT, 0));
+            runCommand(new Pause(200));
         }
         if (type.getColor()==GodThread.ColorType.RED) {
             if (type.getLine()==GodThread.LineType.SECOND)
-                commands.add(new Translate(500, Translate.Direction.BACKWARD, 0));
-            commands.add(new Pause(200));
+                runCommand(new Translate(500, Translate.Direction.BACKWARD, 0));
+            runCommand(new Pause(200));
             Translate toWhiteLine;
             toWhiteLine = new Translate(Translate.RunMode.HEADING_ONLY, Translate.Direction.BACKWARD, 0, .2);
-            toWhiteLine.setCondition(atwhitelineRed);
-            commands.add(toWhiteLine);
-            commands.add(new Pause(200));
-            commands.add(new Rotate(0,1, 1000));
-            commands.add(new Pause(200));
+            toWhiteLine.addCondition(atwhitelineRed, "BREAK");
+            runCommand(toWhiteLine);
+            runCommand(new Pause(200));
+            runCommand(new Rotate(0,1, 1000));
+            runCommand(new Pause(200));
 
         }
         else  {
             if (type.getLine()==GodThread.LineType.SECOND)
-                commands.add(new Translate(700, Translate.Direction.FORWARD, 0));
-            commands.add(new Pause(200));
+                runCommand(new Translate(700, Translate.Direction.FORWARD, 0));
+            runCommand(new Pause(200));
             Translate toWhiteLine;
             toWhiteLine = new Translate(Translate.RunMode.HEADING_ONLY, Translate.Direction.FORWARD, 0, .2);
-            toWhiteLine.setCondition(atwhitelineBlue);
-            commands.add(toWhiteLine);
-            commands.add(new Pause(200));
-            commands.add(new Rotate(0,1, 1000));
-            commands.add(new Pause(200));
+            toWhiteLine.addCondition(atwhitelineBlue, "BREAK");
+            runCommand(toWhiteLine);
+            runCommand(new Pause(200));
+            runCommand(new Rotate(0,1, 1000));
+            runCommand(new Pause(200));
         }
     }
 

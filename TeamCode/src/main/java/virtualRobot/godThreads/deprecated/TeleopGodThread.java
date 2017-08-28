@@ -1,10 +1,9 @@
-package virtualRobot.godThreads;
+package virtualRobot.godThreads.deprecated;
 
 import virtualRobot.GodThread;
 import virtualRobot.LogicThread;
 import virtualRobot.MonitorThread;
 import virtualRobot.logicThreads.TeleopLogic;
-import virtualRobot.monitorThreads.TimeMonitor;
 
 /**
  * Created by shant on 1/10/2016.

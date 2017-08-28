@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.ArrayList;
 
-import virtualRobot.AutonomousRobot;
+import virtualRobot.SallyJoeBot;
 import virtualRobot.Condition;
 import virtualRobot.SallyJoeBot;
 
@@ -20,12 +20,12 @@ import virtualRobot.SallyJoeBot;
  * Created by ethachu19 on 12/11/2016.
  */
 
-public class NavigateToBeacon implements Command {
+public class NavigateToBeacon extends Command {
     VuforiaTrackables allTrackables;
     ArrayList<OpenGLMatrix> matrices = new ArrayList<>();
     OpenGLMatrix lastLocation = null;
     VuforiaLocalizer vuforia;
-    AutonomousRobot robot = Command.AUTO_ROBOT;
+    SallyJoeBot robot = Command.ROBOT;
     Condition condition = new Condition() {
         @Override
         public boolean isConditionMet() {
@@ -46,7 +46,18 @@ public class NavigateToBeacon implements Command {
         this (vuforia, "Beacons");
     }
 
-    public void setCondition(Condition condition) { this.condition = condition; }
+    public void addCondition(Condition condition) { this.condition = condition; }
+
+    @Override
+    protected int activate(String s) {
+        switch(s) {
+            case "BREAK":
+                return BREAK;
+            case "END":
+                return END;
+        }
+        return NO_CHANGE;
+    }
 
     @Override
     public boolean changeRobotState(){
@@ -77,7 +88,14 @@ public class NavigateToBeacon implements Command {
         boolean isInterrupted = false;
 
         ArrayList<VuforiaTrackable> remove = new ArrayList<>();
-        while (!condition.isConditionMet() && !isInterrupted) {
+        MainLoop: while (!isInterrupted) {
+            switch (checkConditionals()) {
+                case BREAK:
+                    break MainLoop;
+                case END:
+                    return isInterrupted;
+            }
+
             for (VuforiaTrackable trackable : allTrackables) {
                 OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
                 if (robotLocationTransform != null) {

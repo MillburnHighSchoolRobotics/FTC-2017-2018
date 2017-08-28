@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import virtualRobot.godThreads.PIDTesterGodThread;
+import virtualRobot.godThreads.deprecated.PIDTesterGodThread;
 
 /**
  * Created by Yanjun on 11/28/2015.

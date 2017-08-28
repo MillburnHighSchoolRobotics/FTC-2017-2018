@@ -4,7 +4,7 @@ import android.util.Log;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import virtualRobot.AutonomousRobot;
+import virtualRobot.SallyJoeBot;
 import virtualRobot.Condition;
 import virtualRobot.GodThread;
 import virtualRobot.LogicThread;
@@ -16,7 +16,7 @@ import virtualRobot.commands.Translate;
  * Goes to Line
  */
 @Deprecated
-public class ToLineNoUltra extends LogicThread<AutonomousRobot>  {
+public class ToLineNoUltra extends LogicThread  {
     public static final double ESCAPE_WALL = 400; //we know that we crashed into to the wall on account of our broken sonar, so we need to escape
     public static final double MAX_ALLOWABLE_DISPLACEMENT_TO_LINE = ToWhiteLine.MAX_ALLOWABLE_DISPLACEMENT_TO_LINE; //if we've gone this far our line sensor is broken as well! Oh no :(
     public static final double MAX_ALLOWABLE_DISPLACEMENT_TO_SECOND_LINE = ToWhiteLine.MAX_ALLOWABLE_DISPLACEMENT_TO_SECOND_LINE;
@@ -49,7 +49,7 @@ public class ToLineNoUltra extends LogicThread<AutonomousRobot>  {
         lineEntered = true;
     }
     @Override
-    public void loadCommands() {
+    public void realRun() {
     //The current value of the color sensor
         final AtomicBoolean farDisplacedment = new AtomicBoolean(false);
         final int whiteTape = 20;
@@ -74,11 +74,10 @@ public class ToLineNoUltra extends LogicThread<AutonomousRobot>  {
             }
         }; //if our line sensor detects a change >.7, we're at the line, stop moving!
 
-        data.add(targetLine);
         robot.addToProgress("Going To Line with NO Ultra");
-        commands.add(new Pause(500));
-        commands.add(new Translate(ESCAPE_WALL, Translate.Direction.LEFT, 0)); //Welp we've just missed our sonar so lets get outttt of here
-        commands.add(new Pause(500));
+        runCommand(new Pause(500));
+        runCommand(new Translate(ESCAPE_WALL, Translate.Direction.LEFT, 0)); //Welp we've just missed our sonar so lets get outttt of here
+        runCommand(new Pause(500));
         if (type == GodThread.Line.RED_FIRST_LINE || type == GodThread.Line.BLUE_SECOND_LINE) {
             Translate toWhiteLine;
             if (type == GodThread.Line.RED_FIRST_LINE)
@@ -86,13 +85,13 @@ public class ToLineNoUltra extends LogicThread<AutonomousRobot>  {
             else
                 toWhiteLine = new Translate(MAX_ALLOWABLE_DISPLACEMENT_TO_SECOND_LINE, Translate.Direction.BACKWARD, 0, .15);
             if ((lineAlreadyWorks && lineEntered) || !lineEntered)
-            toWhiteLine.setCondition(atwhitelineFIRST);
-            commands.add(toWhiteLine);
-            commands.add(new Pause(500));
+            toWhiteLine.addCondition(atwhitelineFIRST, "BREAK");
+            runCommand(toWhiteLine);
+            runCommand(new Pause(500));
             if(farDisplacedment.get()){
                 //random value needs adjustment
-                commands.add(new Translate(400, Translate.Direction.BACKWARD, 0));
-                commands.add(new Pause(500));
+                runCommand(new Translate(400, Translate.Direction.BACKWARD, 0));
+                runCommand(new Pause(500));
             }
         }
         else if (type == GodThread.Line.RED_SECOND_LINE || type == GodThread.Line.BLUE_FIRST_LINE) {
@@ -102,13 +101,13 @@ public class ToLineNoUltra extends LogicThread<AutonomousRobot>  {
             else
                 toWhiteLine = new Translate(MAX_ALLOWABLE_DISPLACEMENT_TO_SECOND_LINE, Translate.Direction.FORWARD, 0, .15);
             if ((lineAlreadyWorks && lineEntered) || !lineEntered)
-            toWhiteLine.setCondition(atwhitelineFIRST);
-            commands.add(toWhiteLine);
-            commands.add(new Pause(500));
+            toWhiteLine.addCondition(atwhitelineFIRST, "BREAK");
+            runCommand(toWhiteLine);
+            runCommand(new Pause(500));
             if(farDisplacedment.get()){
                 //random value needs adjustment
-                commands.add(new Translate(400, Translate.Direction.BACKWARD, 0));
-                commands.add(new Pause(500));
+                runCommand(new Translate(400, Translate.Direction.BACKWARD, 0));
+                runCommand(new Pause(500));
             }
         }
     }

@@ -2,7 +2,7 @@ package virtualRobot.logicThreads.AutonomousLayer2;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import virtualRobot.AutonomousRobot;
+import virtualRobot.SallyJoeBot;
 import virtualRobot.GodThread;
 import virtualRobot.LogicThread;
 import virtualRobot.VuforiaLocalizerImplSubclass;
@@ -14,7 +14,7 @@ import virtualRobot.commands.fastRedIsLeft;
  * Created by 17osullivand on 2/18/17.
  */
 
-public class justRedIsLeft extends LogicThread<AutonomousRobot> {
+public class justRedIsLeft extends LogicThread {
     GodThread.Line type;
     VuforiaLocalizerImplSubclass vuforia;
     AtomicBoolean redIsLeft;
@@ -24,8 +24,8 @@ public class justRedIsLeft extends LogicThread<AutonomousRobot> {
         this.redIsLeft = redIsLeft;
     }
     @Override
-    public void loadCommands() {
-        commands.add(new fastRedIsLeft(redIsLeft, vuforia));
-        commands.add(new Pause(200));
+    public void realRun() {
+        runCommand(new fastRedIsLeft(redIsLeft, vuforia));
+        runCommand(new Pause(200));
     }
 }

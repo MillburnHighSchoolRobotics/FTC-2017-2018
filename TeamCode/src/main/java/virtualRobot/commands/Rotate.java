@@ -4,7 +4,7 @@ import android.util.Log;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import virtualRobot.AutonomousRobot;
+import virtualRobot.SallyJoeBot;
 import virtualRobot.Condition;
 import virtualRobot.PIDController;
 import virtualRobot.SallyJoeBot;
@@ -14,7 +14,7 @@ import virtualRobot.utils.MathUtils;
  * Created by shant on 10/27/2015.
  * Rotates the Robot in place
  */
-public class Rotate implements Command {
+public class Rotate extends Command {
     private Condition condition;
     public static RunMode defaultMode = RunMode.WITH_ANGLE_SENSOR;
 
@@ -48,7 +48,7 @@ public class Rotate implements Command {
 
     private PIDController pidController;
 
-    private static AutonomousRobot robot = Command.AUTO_ROBOT;
+    private static SallyJoeBot robot = Command.ROBOT;
     private static double currentAngle = 0;
 
     public static double getCurrentAngle() {
@@ -149,7 +149,7 @@ public class Rotate implements Command {
     }
 
 
-    public void setCondition(Condition e) {
+    public void addCondition(Condition e) {
         condition = e;
     }
 
@@ -163,6 +163,17 @@ public class Rotate implements Command {
     }
 
     @Override
+    protected int activate(String s) {
+        switch(s) {
+            case "BREAK":
+                return BREAK;
+            case "END":
+                return END;
+        }
+        return NO_CHANGE;
+    }
+
+    @Override
     public boolean changeRobotState() throws InterruptedException {
         boolean isInterrupted = false;
         time = System.currentTimeMillis();
@@ -171,7 +182,13 @@ public class Rotate implements Command {
         switch (runMode) {
             case WITH_ANGLE_SENSOR:
 
-                while (!condition.isConditionMet() && (Math.abs(angleInDegrees - robot.getHeadingSensor().getValue()) > TOLERANCE || isTesting) && (timeLimit == -1 || (System.currentTimeMillis() - time) < timeLimit)) {
+                MainLoop: while ((Math.abs(angleInDegrees - robot.getHeadingSensor().getValue()) > TOLERANCE || isTesting) && (timeLimit == -1 || (System.currentTimeMillis() - time) < timeLimit)) {
+                    switch (checkConditionals()) {
+                        case BREAK:
+                            break MainLoop;
+                        case END:
+                            return isInterrupted;
+                    }
 
                     if (stop.get()) {
                         robot.stopMotors();
@@ -218,7 +235,14 @@ public class Rotate implements Command {
                 robot.getRBEncoder().clearValue();
                 robot.addToProgress("Rotate Angle: " + currentAngle);
                 double angle = currentAngle;
-                while (!condition.isConditionMet() && (Math.abs(angleInDegrees - currentAngle) > TOLERANCE || isTesting) && (timeLimit == -1 || (System.currentTimeMillis() - time) < timeLimit)) {//Mehmet: Unsure of relevance of 20, may need to be changed.
+                MainLoop: while ((Math.abs(angleInDegrees - currentAngle) > TOLERANCE || isTesting) && (timeLimit == -1 || (System.currentTimeMillis() - time) < timeLimit)) {//Mehmet: Unsure of relevance of 20, may need to be changed.
+                    switch (checkConditionals()) {
+                        case BREAK:
+                            break MainLoop;
+                        case END:
+                            return isInterrupted;
+                    }
+
                     currentAngle = angle + ((robot.getRFEncoder().getValue() / robot.getRFMotor().getMotorType().getTicksPerRevolution()) * SallyJoeBot.wheelDiameter * Math.PI) / (Math.sqrt((Math.pow(SallyJoeBot.botWidth, 2) + Math.pow(SallyJoeBot.botLength, 2))) * Math.PI) * 360;
                     robot.addToTelemetry("Rotate: ", currentAngle);
                     adjustedPower = MathUtils.clamp(pidController.getPIDOutput(currentAngle), -1, 1);
@@ -256,7 +280,14 @@ public class Rotate implements Command {
                 robot.getRBEncoder().clearValue();
                 robot.addToProgress("Rotate Angle: " + currentAngle);
                 double thisAngle = currentAngle;
-                while (!wall.isConditionMet() && (timeLimit == -1 || (System.currentTimeMillis() - time) < timeLimit)) {//Mehmet: Unsure of relevance of 20, may need to be changed.
+                MainLoop: while ((timeLimit == -1 || (System.currentTimeMillis() - time) < timeLimit)) {//Mehmet: Unsure of relevance of 20, may need to be changed.
+                    switch (checkConditionals()) {
+                        case BREAK:
+                            break MainLoop;
+                        case END:
+                            return isInterrupted;
+                    }
+
                     currentAngle = thisAngle + ((robot.getRFEncoder().getValue() / robot.getRFMotor().getMotorType().getTicksPerRevolution()) * SallyJoeBot.wheelDiameter * Math.PI) / (Math.sqrt((Math.pow(SallyJoeBot.botWidth, 2) + Math.pow(SallyJoeBot.botLength, 2))) * Math.PI) * 360;
                     robot.addToTelemetry("Rotate: ", currentAngle);
                     adjustedPower = MathUtils.clamp(pidController.getPIDOutput(currentAngle), -1, 1);

@@ -25,8 +25,13 @@ public class TranslateAutoPIDTester extends LogicThread {
     }
 
     @Override
-    public void loadCommands() {
-        commands.add(new Command() {
+    public void realRun() {
+        runCommand(new Command() {
+
+            @Override
+            protected int activate(String s) {
+                return 0;
+            }
 
             @Override
             public boolean changeRobotState() throws InterruptedException {
@@ -70,6 +75,6 @@ public class TranslateAutoPIDTester extends LogicThread {
         });
         Translate r = new Translate(kP,90,35000,shouldStop,iter % 2 == 0 ? Translate.Direction.FORWARD : Translate.Direction.BACKWARD);
         robot.getHeadingSensor().clearValue();
-        commands.add(r);
+        runCommand(r);
     }
 }

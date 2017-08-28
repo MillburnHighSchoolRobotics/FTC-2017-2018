@@ -1,6 +1,6 @@
 package virtualRobot.logicThreads.TestingAutonomouses;
 
-import virtualRobot.AutonomousRobot;
+import virtualRobot.SallyJoeBot;
 import virtualRobot.LogicThread;
 import virtualRobot.VuforiaLocalizerImplSubclass;
 
@@ -9,7 +9,7 @@ import virtualRobot.VuforiaLocalizerImplSubclass;
  * used to test ethan's algos
  */
 
-public class ScrewTesterMax extends LogicThread<AutonomousRobot> {
+public class ScrewTesterMax extends LogicThread {
 
     private static final double SCALE = .7;
     private VuforiaLocalizerImplSubclass vuforia;
@@ -19,8 +19,8 @@ public class ScrewTesterMax extends LogicThread<AutonomousRobot> {
     }
 
     @Override
-    public void loadCommands() {
-//        commands.add(new Command(){
+    public void realRun() {
+//        runCommand(new Command(){
 //            @Override
 //            public boolean changeRobotState() throws InterruptedException {
 //                boolean isInterrupted = false;
@@ -49,7 +49,7 @@ public class ScrewTesterMax extends LogicThread<AutonomousRobot> {
 //            }
 //        });
 
-//        commands.add(new Command() {
+//        runCommand(new Command() {
 //            @Override
 //            public boolean changeRobotState() throws InterruptedException
 //            {
@@ -164,34 +164,34 @@ public class ScrewTesterMax extends LogicThread<AutonomousRobot> {
 //            }
 //        };
 //        Translate t1 = new Translate(Translate.RunMode.HEADING_ONLY, Translate.Direction.FORWARD, 0, 1);
-//        t1.setCondition(whiteLine);
-//        commands.add(t1);
-//        commands.add(new Pause(200));
+//        t1.addCondition(whiteLine);
+//        runCommand(t1);
+//        runCommand(new Pause(200));
 //        Translate newT1 = new Translate(1500, Translate.Direction.BACKWARD,0,0.2);
-//        newT1.setCondition(whiteLine);
-//        commands.add(newT1);
-//        //commands.add(new Pause(200));
-//        //commands.add(new Rotate(0, .5, 2000));
-//        commands.add(new Pause(200));
-//        commands.add(new CompensateColor(2000));
-//        commands.add(new Pause(200));
-//        commands.add(new Translate(50, Translate.Direction.BACKWARD,0,0.2).setTolerance(25));
-//        commands.add(new Pause(5000));
-//        commands.add(new Translate(500, Translate.Direction.FORWARD, 0));
-//        commands.add(new Pause(200));
+//        newT1.addCondition(whiteLine);
+//        runCommand(newT1);
+//        //runCommand(new Pause(200));
+//        //runCommand(new Rotate(0, .5, 2000));
+//        runCommand(new Pause(200));
+//        runCommand(new CompensateColor(2000));
+//        runCommand(new Pause(200));
+//        runCommand(new Translate(50, Translate.Direction.BACKWARD,0,0.2).setTolerance(25));
+//        runCommand(new Pause(5000));
+//        runCommand(new Translate(500, Translate.Direction.FORWARD, 0));
+//        runCommand(new Pause(200));
 //        Translate t2 = new Translate(Translate.RunMode.HEADING_ONLY, Translate.Direction.FORWARD, 0, 1);
-//        t2.setCondition(whiteLine);
-//        commands.add(t2);
+//        t2.addCondition(whiteLine);
+//        runCommand(t2);
 ////        Translate.setGlobalTolerance(50);
-//        commands.add(new Pause(200));
+//        runCommand(new Pause(200));
 //        Translate newT = new Translate(1500, Translate.Direction.BACKWARD,0,0.2);
-//        newT.setCondition(whiteLine);
-//        commands.add(newT);
+//        newT.addCondition(whiteLine);
+//        runCommand(newT);
 //        //Translate.setGlobalTolerance(50);
-//        //commands.add(new Rotate(0, .5, 2000)); //Straighten out (note that rotate takes in a target value, not a relative value). So this will return us to the angle we started our bot at.
-//        commands.add(new Pause(200));
+//        //runCommand(new Rotate(0, .5, 2000)); //Straighten out (note that rotate takes in a target value, not a relative value). So this will return us to the angle we started our bot at.
+//        runCommand(new Pause(200));
 //        CompensateColor lt = new CompensateColor(2000);
-//        lt.setCondition(new Condition() {
+//        lt.addCondition(new Condition() {
 //            @Override
 //            public boolean isConditionMet() {
 //                return false;
@@ -199,18 +199,18 @@ public class ScrewTesterMax extends LogicThread<AutonomousRobot> {
 //        });
 //        robot.stopMotors();
 //        robot.addToProgress("Replace on Line Done");
-//        commands.add(new Pause(200));
-//        commands.add(lt);
+//        runCommand(new Pause(200));
+//        runCommand(lt);
 //        robot.stopMotors();
-//        commands.add(new Pause(200));
+//        runCommand(new Pause(200));
 //        robot.addToProgress("Pause Finished, Translate Now");
-//        commands.add(new Translate(50, Translate.Direction.BACKWARD,0,0.2).setTolerance(25));
+//        runCommand(new Translate(50, Translate.Direction.BACKWARD,0,0.2).setTolerance(25));
 //        robot.addToProgress("Translate Done");
 
 
 //        final AtomicBoolean ab = new AtomicBoolean();
-//        commands.add(new AllignWithBeacon(vuforia,ab, AllignWithBeacon.Direction.BACKWARD, 5000));
-//        commands.add(new Command() {
+//        runCommand(new AllignWithBeacon(vuforia,ab, AllignWithBeacon.Direction.BACKWARD, 5000));
+//        runCommand(new Command() {
 //            @Override
 //            public boolean changeRobotState() throws InterruptedException {
 //                robot.addToProgress("Red is Left: " + ab.get());
@@ -218,10 +218,10 @@ public class ScrewTesterMax extends LogicThread<AutonomousRobot> {
 //                return Thread.currentThread().isInterrupted();
 //            }
 //        });
-//        commands.add(new Pause(1000));
-//        commands.add(new Translate(2000, Translate.Direction.FORWARD, 0, .2));
-//        commands.add(new AllignWithBeacon(vuforia,ab, AllignWithBeacon.Direction.FORWARD, 5000));
-//        commands.add(new Command() {
+//        runCommand(new Pause(1000));
+//        runCommand(new Translate(2000, Translate.Direction.FORWARD, 0, .2));
+//        runCommand(new AllignWithBeacon(vuforia,ab, AllignWithBeacon.Direction.FORWARD, 5000));
+//        runCommand(new Command() {
 //            @Override
 //            public boolean changeRobotState() throws InterruptedException {
 //                robot.addToProgress("Red is Left: " + ab.get());
@@ -230,7 +230,7 @@ public class ScrewTesterMax extends LogicThread<AutonomousRobot> {
 //            }
 //        });
 
-//        commands.add(new Command () {
+//        runCommand(new Command () {
 //
 //            private PIDController compensate = new PIDController(.2,0,0,0,0);
 //            PIDController heading = new PIDController(.008,0,0,0,0);
@@ -322,9 +322,9 @@ public class ScrewTesterMax extends LogicThread<AutonomousRobot> {
 //            }
 //        });
 
-//commands.add(new PreciseAllign(-1, new AtomicBoolean(),  new AtomicBoolean(true), vuforia, GodThread.Line.RED_FIRST_LINE));
+//runCommand(new PreciseAllign(-1, new AtomicBoolean(),  new AtomicBoolean(true), vuforia, GodThread.Line.RED_FIRST_LINE));
 
-//        commands.add(new Command () {
+//        runCommand(new Command () {
 //            //1.8, .0507, 15.975
 //
 //            private PIDController compensate = new PIDController(1.125, 0.0241,0,0,(AllignWithBeacon.BLUETHRESHOLD + AllignWithBeacon.REDTHRESHOLD)/2);

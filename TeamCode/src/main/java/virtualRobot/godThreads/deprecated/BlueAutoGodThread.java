@@ -1,35 +1,19 @@
-package virtualRobot.godThreads;
-
-import org.firstinspires.ftc.teamcode.UpdateThread;
+package virtualRobot.godThreads.deprecated;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import virtualRobot.AutonomousRobot;
 import virtualRobot.GodThread;
 import virtualRobot.LogicThread;
 import virtualRobot.MonitorThread;
 //import virtualRobot.logicThreads.BlueDumpPeople;
 import virtualRobot.commands.Command;
-import virtualRobot.commands.FTCTakePicture;
-import virtualRobot.commands.Pause;
 import virtualRobot.logicThreads.AutonomousLayer1.BlueGoToWall;
-import virtualRobot.logicThreads.AutonomousLayer1.RedGoToWall;
 import virtualRobot.logicThreads.AutonomousLayer2.ColorCompensator;
-import virtualRobot.logicThreads.AutonomousLayer2.ToLineNoUltra;
-import virtualRobot.logicThreads.AutonomousLayer2.ToWhiteLine;
 import virtualRobot.logicThreads.AutonomousLayer2.ToWhiteLineCompensateColor;
 import virtualRobot.logicThreads.AutonomousLayer2.justRedIsLeft;
-import virtualRobot.logicThreads.AutonomousLayer3.AllignLineNoUltraLine;
-import virtualRobot.logicThreads.AutonomousLayer3.AllignLineNoUltraNoLine;
-import virtualRobot.logicThreads.AutonomousLayer3.AllignLineUltraLine;
-import virtualRobot.logicThreads.AutonomousLayer3.AllignLineUltraNoLine;
-import virtualRobot.logicThreads.CompensateForMiss;
 import virtualRobot.logicThreads.NoSensorAutonomouses.BlueStrafeToCenterGoal;
-import virtualRobot.logicThreads.NoSensorAutonomouses.BlueStrafeToRamp;
-import virtualRobot.logicThreads.NoSensorAutonomouses.Pauselogic;
 import virtualRobot.logicThreads.NoSensorAutonomouses.PushLeftButton;
 import virtualRobot.logicThreads.NoSensorAutonomouses.PushRightButton;
-import virtualRobot.logicThreads.NoSensorAutonomouses.RedStrafeToCenterGoal;
 import virtualRobot.logicThreads.NoSensorAutonomouses.moveAndFireBalls;
 import virtualRobot.monitorThreads.TimeMonitor;
 
@@ -94,7 +78,7 @@ public class BlueAutoGodThread extends GodThread {
 
         }
         if (allSensorsFailed.get()) {
-            Command.AUTO_ROBOT.addToProgress("RunningAllSensorsFailed");
+            Command.ROBOT.addToProgress("RunningAllSensorsFailed");
 
             LogicThread blindAllign = new ToWhiteLineCompensateColor(GodThread.Line.BLUE_FIRST_LINE, firstSensorTriggered, lastSensorTriggered, allSensorsFailed, sonarWorks, redIsLeft, colorTriggered, vuforia, ToWhiteLineCompensateColor.Mode.ALL_FAILED);
             Thread bl = new Thread(blindAllign);
@@ -110,7 +94,7 @@ public class BlueAutoGodThread extends GodThread {
             delegateMonitor(irl, new MonitorThread[]{});
 
         } else {
-            Command.AUTO_ROBOT.addToProgress("CompensatingColor");
+            Command.ROBOT.addToProgress("CompensatingColor");
             LogicThread allignToLine = new ColorCompensator(Line.BLUE_FIRST_LINE, 2500, redIsLeft, sonarWorks, colorTriggered, vuforia);
             Thread atl = new Thread(allignToLine);
             atl.start();
@@ -157,7 +141,7 @@ public class BlueAutoGodThread extends GodThread {
 
         }
         if (allSensorsFailed.get()) {
-            Command.AUTO_ROBOT.addToProgress("RunningAllSensorsFailed");
+            Command.ROBOT.addToProgress("RunningAllSensorsFailed");
 
             LogicThread blindAllign = new ToWhiteLineCompensateColor(GodThread.Line.BLUE_SECOND_LINE, firstSensorTriggered, lastSensorTriggered, allSensorsFailed, sonarWorks, redIsLeft, colorTriggered, vuforia, ToWhiteLineCompensateColor.Mode.ALL_FAILED);
             Thread bl = new Thread(blindAllign);
@@ -173,7 +157,7 @@ public class BlueAutoGodThread extends GodThread {
             delegateMonitor(irl, new MonitorThread[]{});
 
         } else {
-            Command.AUTO_ROBOT.addToProgress("CompensatingColor");
+            Command.ROBOT.addToProgress("CompensatingColor");
             LogicThread allignToLine = new ColorCompensator(Line.BLUE_SECOND_LINE, 2500, redIsLeft, sonarWorks, colorTriggered, vuforia);
             Thread atl = new Thread(allignToLine);
             atl.start();

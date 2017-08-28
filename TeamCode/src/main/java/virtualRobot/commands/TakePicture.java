@@ -11,7 +11,12 @@ import static com.qualcomm.ftcrobotcontroller.FtcRobotControllerActivity.mCamera
  * DEPRECATED: takes a picture using janky means
  */
 @Deprecated
-public class TakePicture implements Command {
+public class TakePicture extends Command {
+    @Override
+    protected int activate(String s) {
+        return 0;
+    }
+
     @Override
     public boolean changeRobotState() throws InterruptedException {
         return false;
@@ -41,7 +46,7 @@ public class TakePicture implements Command {
 
         isRed = color.equals("red");
     }
-    public void setCondition (Condition e) {
+    public void addCondition (Condition e) {
         condition = e;
     }
     public boolean changeRobotState() throws InterruptedException {

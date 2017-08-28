@@ -5,7 +5,6 @@ import android.util.Log;
 import virtualRobot.JoystickController;
 import virtualRobot.LogicThread;
 import virtualRobot.PIDController;
-import virtualRobot.TeleopRobot;
 import virtualRobot.commands.Command;
 import virtualRobot.logicThreads.NoSensorAutonomouses.PushLeftButton;
 import virtualRobot.logicThreads.NoSensorAutonomouses.PushRightButton;
@@ -29,7 +28,7 @@ import virtualRobot.utils.MathUtils;
  * Created by DOSullivan on 9/14/2016.
  * Teleop! For Robot!
  */
-public class TeleopLogic extends LogicThread<TeleopRobot> {
+public class TeleopLogic extends LogicThread {
 
     private static final int POWER_MATRIX[][] = { //for each of the directions
             {1, 1, 1, 1},
@@ -57,9 +56,14 @@ public class TeleopLogic extends LogicThread<TeleopRobot> {
     double lastSpeed = 0;
 
     @Override
-    public void loadCommands() {
+    public void realRun() {
 
-        commands.add(new Command() {
+        runCommand(new Command() {
+            @Override
+            protected int activate(String s) {
+                return 0;
+            }
+
             @Override
             public boolean changeRobotState() {
                 boolean isInterrupted = false;
@@ -231,7 +235,7 @@ public class TeleopLogic extends LogicThread<TeleopRobot> {
                         double currPower = 0;
 
                         double a = robot.getFlywheelEncoder().getRawValue()-lastEncoder;
-                            //Command.AUTO_ROBOT.addToTelemetry("DIF: ", a);
+                            //Command.ROBOT.addToTelemetry("DIF: ", a);
                         if (System.currentTimeMillis() - lastTime > MSC ) { //1780 RPM = 333 milliseconds/cycle
                             double time = lastTime;
                             lastEncoder = robot.getFlywheelEncoder().getRawValue();

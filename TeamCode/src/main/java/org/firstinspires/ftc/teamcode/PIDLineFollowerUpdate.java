@@ -2,8 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import virtualRobot.godThreads.PIDLineFollowerGod;
-import virtualRobot.godThreads.RedAutoGodThread;
+import virtualRobot.godThreads.deprecated.PIDLineFollowerGod;
 
 /**
  * Created by ethachu19 on 10/27/2016.

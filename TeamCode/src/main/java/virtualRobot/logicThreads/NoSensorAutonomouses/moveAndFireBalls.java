@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import virtualRobot.AutonomousRobot;
+import virtualRobot.SallyJoeBot;
 import virtualRobot.LogicThread;
 import virtualRobot.commands.Command;
 import virtualRobot.commands.MoveMotor;
@@ -25,34 +25,34 @@ import virtualRobot.components.Servo;
  * Created by 17osullivand on 11/27/16.
  */
 
-public class moveAndFireBalls extends LogicThread<AutonomousRobot> {
+public class moveAndFireBalls extends LogicThread {
     private AtomicBoolean reapStart;
     private AtomicBoolean onlyFireBalls;
 
 
-    LogicThread<AutonomousRobot> forward = new LogicThread<AutonomousRobot>() {
+    LogicThread forward = new LogicThread() {
         @Override
-        public void loadCommands() {
-            commands.add(new MoveServo(new Servo[]{robot.getFlywheelStopper()}, new double[]{0})); //move button pusher
+        public void realRun() {
+            runCommand(new MoveServo(new Servo[]{robot.getFlywheelStopper()}, new double[]{0})); //move button pusher
 
-            commands.add(new Translate(1600, Translate.Direction.LEFT, 0));
-            commands.add(new Pause(500));
-            commands.add(new Rotate(0, .5, 500));
+            runCommand(new Translate(1600, Translate.Direction.LEFT, 0));
+            runCommand(new Pause(500));
+            runCommand(new Rotate(0, .5, 500));
         }
     };
-    LogicThread<AutonomousRobot> spinFlywheel = new LogicThread<AutonomousRobot>() {
+    LogicThread spinFlywheel = new LogicThread() {
         @Override
-        public void loadCommands() {
-            commands.add(new MoveMotorPID(92,robot.getFlywheel(),robot.getFlywheelEncoder()));
-            commands.add(new Pause(1000));
+        public void realRun() {
+            runCommand(new MoveMotorPID(92,robot.getFlywheel(),robot.getFlywheelEncoder()));
+            runCommand(new Pause(1000));
 
         }
     };
-    LogicThread<AutonomousRobot> moveReaper = new LogicThread<AutonomousRobot>() {
+    LogicThread moveReaper = new LogicThread() {
         @Override
-        public void loadCommands() {
-            commands.add(new Pause(2000));
-            commands.add(new MoveMotor(robot.getReaperMotor(), .21));
+        public void realRun() {
+            runCommand(new Pause(2000));
+            runCommand(new MoveMotor(robot.getReaperMotor(), .21));
 
         }
     };
@@ -68,7 +68,7 @@ public class moveAndFireBalls extends LogicThread<AutonomousRobot> {
 
 
     @Override
-    public void loadCommands (){
+    public void realRun (){
 
         List<LogicThread> threads = new ArrayList<LogicThread>();
         threads.add(forward);
@@ -77,15 +77,15 @@ public class moveAndFireBalls extends LogicThread<AutonomousRobot> {
 
         SpawnNewThread fly = new SpawnNewThread((threads));
 
-        commands.add(fly);
-        commands.add(new Pause(5000));
-        commands.add(new MoveServo(new Servo[]{robot.getFlywheelStopper()}, new double[]{.6})); //move button pusher
+        runCommand(fly);
+        runCommand(new Pause(5000));
+        runCommand(new MoveServo(new Servo[]{robot.getFlywheelStopper()}, new double[]{.6})); //move button pusher
 
-        commands.add(new killChildren(this));
+        runCommand(new killChildren(this));
 
         if (onlyFireBalls.get()) {
-            commands.add(new Translate(4000, Translate.Direction.LEFT, 0));
-            commands.add(new Rotate(-90));
+            runCommand(new Translate(4000, Translate.Direction.LEFT, 0));
+            runCommand(new Rotate(-90));
         }
     }
 }

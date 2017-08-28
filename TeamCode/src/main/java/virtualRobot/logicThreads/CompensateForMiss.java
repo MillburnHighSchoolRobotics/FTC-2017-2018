@@ -2,7 +2,7 @@ package virtualRobot.logicThreads;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import virtualRobot.AutonomousRobot;
+import virtualRobot.SallyJoeBot;
 import virtualRobot.Condition;
 import virtualRobot.GodThread;
 import virtualRobot.LogicThread;
@@ -16,7 +16,7 @@ import static virtualRobot.GodThread.ColorType.*;
  * Created by 17osullivand on 11/18/16.
  */
 @Deprecated
-public class CompensateForMiss extends LogicThread<AutonomousRobot> {
+public class CompensateForMiss extends LogicThread {
 
     final int maxdistance = 1750;
 
@@ -86,7 +86,7 @@ public class CompensateForMiss extends LogicThread<AutonomousRobot> {
 
      */
     @Override
-    public void loadCommands() {
+    public void realRun() {
         robot.getLFEncoder().clearValue();
         robot.getRFEncoder().clearValue();
         robot.getLBEncoder().clearValue();
@@ -105,65 +105,65 @@ public class CompensateForMiss extends LogicThread<AutonomousRobot> {
             case FIRSTLIGHTTRIGGERED:
                 robot.addToProgress("Doing Adjustment");
                 if (line.getColor() == BLUE)
-                    commands.add(new Translate(LIGHT_ADJUSTMENT,Translate.Direction.BACKWARD,0).setTolerance(25));
+                    runCommand(new Translate(LIGHT_ADJUSTMENT,Translate.Direction.BACKWARD,0).setTolerance(25));
                 else
-                    commands.add(new Translate(LIGHT_ADJUSTMENT,Translate.Direction.FORWARD,0).setTolerance(25));
-                commands.add(new Pause(500));
+                    runCommand(new Translate(LIGHT_ADJUSTMENT,Translate.Direction.FORWARD,0).setTolerance(25));
+                runCommand(new Pause(500));
                 break;
             case LASTLIGHTTRIGGERED:
                 robot.addToProgress("Doing Adjustment");
                 if (line.getColor() == RED)
-                    commands.add(new Translate(LIGHT_ADJUSTMENT,Translate.Direction.BACKWARD,0).setTolerance(25));
+                    runCommand(new Translate(LIGHT_ADJUSTMENT,Translate.Direction.BACKWARD,0).setTolerance(25));
                 else
-                    commands.add(new Translate(LIGHT_ADJUSTMENT,Translate.Direction.FORWARD,0).setTolerance(25));
-                commands.add(new Pause(500));
+                    runCommand(new Translate(LIGHT_ADJUSTMENT,Translate.Direction.FORWARD,0).setTolerance(25));
+                runCommand(new Pause(500));
                 break;
 
             case FIRSTLIGHTFAILS:
                 WallTrace moveLeft;
                 if (line.getColor() == RED) {
                     moveLeft = new WallTrace(WallTrace.Direction.FORWARD);
-                    moveLeft.setCondition(hitsLineRed);
-                    commands.add(moveLeft);
+                    moveLeft.addCondition(hitsLineRed, "BREAK");
+                    runCommand(moveLeft);
                 }
                 else {
                     moveLeft = new WallTrace(WallTrace.Direction.BACKWARD);
-                    moveLeft.setCondition(hitsLineBlue);
-                    commands.add(moveLeft);
+                    moveLeft.addCondition(hitsLineBlue, "BREAK");
+                    runCommand(moveLeft);
                 }
-                commands.add(new Pause(500));
+                runCommand(new Pause(500));
                 break;
 
             case LASTLIGHTFAILS:
                 robot.addToProgress("LastLightFailed");
                 if (line.getColor() == RED) {
-                    commands.add(new Translate((line.getLine() == GodThread.LineType.SECOND ? BLIND_ADJUSTMENT_SECOND : BLIND_ADJUSTMENT_FIRST), line.getLine() == GodThread.LineType.FIRST ? Translate.Direction.FORWARD : Translate.Direction.BACKWARD, 0).setTolerance(25));
+                    runCommand(new Translate((line.getLine() == GodThread.LineType.SECOND ? BLIND_ADJUSTMENT_SECOND : BLIND_ADJUSTMENT_FIRST), line.getLine() == GodThread.LineType.FIRST ? Translate.Direction.FORWARD : Translate.Direction.BACKWARD, 0).setTolerance(25));
                 }
                 else {
-                    commands.add(new Translate((line.getLine() == GodThread.LineType.SECOND ? BLIND_ADJUSTMENT_SECOND : BLIND_ADJUSTMENT_FIRST), line.getLine() == GodThread.LineType.FIRST ? Translate.Direction.BACKWARD : Translate.Direction.FORWARD, 0).setTolerance(25));
+                    runCommand(new Translate((line.getLine() == GodThread.LineType.SECOND ? BLIND_ADJUSTMENT_SECOND : BLIND_ADJUSTMENT_FIRST), line.getLine() == GodThread.LineType.FIRST ? Translate.Direction.BACKWARD : Translate.Direction.FORWARD, 0).setTolerance(25));
                 }
-                commands.add(new Pause(500));
+                runCommand(new Pause(500));
                 break;
             case SMALLCORRECTION:
                 if (line== GodThread.Line.BLUE_FIRST_LINE) {
-                    commands.add(new Pause(200));
+                    runCommand(new Pause(200));
                     robot.addToProgress("Small Correction");
-                    commands.add(new Translate(SMALL_ADJUSTMENT_BLUE_1, Translate.Direction.BACKWARD, 0));
+                    runCommand(new Translate(SMALL_ADJUSTMENT_BLUE_1, Translate.Direction.BACKWARD, 0));
                 }
                 else if (line== GodThread.Line.BLUE_SECOND_LINE) {
-                    commands.add(new Pause(200));
+                    runCommand(new Pause(200));
                     robot.addToProgress("Small Correction");
-                    commands.add(new Translate(SMALL_ADJUSTMENT_BLUE_2, Translate.Direction.BACKWARD, 0));
+                    runCommand(new Translate(SMALL_ADJUSTMENT_BLUE_2, Translate.Direction.BACKWARD, 0));
                 }
                 else if(line == GodThread.Line.RED_FIRST_LINE) {
-                    commands.add(new Pause(200));
+                    runCommand(new Pause(200));
                     robot.addToProgress("Small Correction");
-                    commands.add(new Translate(SMALL_ADJUSTMENT_RED_1, Translate.Direction.FORWARD, 0));
+                    runCommand(new Translate(SMALL_ADJUSTMENT_RED_1, Translate.Direction.FORWARD, 0));
                 }
                 else if (line == GodThread.Line.RED_SECOND_LINE) {
-                    commands.add(new Pause(200));
+                    runCommand(new Pause(200));
                     robot.addToProgress("Small Correction");
-                    commands.add(new Translate(SMALL_ADJUSTMENT_RED_2, Translate.Direction.FORWARD, 0));
+                    runCommand(new Translate(SMALL_ADJUSTMENT_RED_2, Translate.Direction.FORWARD, 0));
                 }
                 break;
 
@@ -179,64 +179,64 @@ public class CompensateForMiss extends LogicThread<AutonomousRobot> {
             case FIRSTLIGHTTRIGGERED:
                 robot.addToProgress("Doing Adjustment");
                 if (line.getColor() == BLUE)
-                    commands.add(new Translate(LIGHT_ADJUSTMENT,Translate.Direction.BACKWARD,0).setTolerance(25));
+                    runCommand(new Translate(LIGHT_ADJUSTMENT,Translate.Direction.BACKWARD,0).setTolerance(25));
                 else
-                    commands.add(new Translate(LIGHT_ADJUSTMENT,Translate.Direction.FORWARD,0).setTolerance(25));
-                commands.add(new Pause(500));
+                    runCommand(new Translate(LIGHT_ADJUSTMENT,Translate.Direction.FORWARD,0).setTolerance(25));
+                runCommand(new Pause(500));
                 break;
             case LASTLIGHTTRIGGERED:
                 robot.addToProgress("Doing Adjustment");
                 if (line.getColor() == RED)
-                    commands.add(new Translate(LIGHT_ADJUSTMENT,Translate.Direction.BACKWARD,0).setTolerance(25));
+                    runCommand(new Translate(LIGHT_ADJUSTMENT,Translate.Direction.BACKWARD,0).setTolerance(25));
                 else
-                    commands.add(new Translate(LIGHT_ADJUSTMENT,Translate.Direction.FORWARD,0).setTolerance(25));
-                commands.add(new Pause(500));
+                    runCommand(new Translate(LIGHT_ADJUSTMENT,Translate.Direction.FORWARD,0).setTolerance(25));
+                runCommand(new Pause(500));
                 break;
             case FIRSTLIGHTFAILS:
               Translate moveLeft;
                 if (line.getColor() == RED) {
                     moveLeft = new Translate(Translate.RunMode.CUSTOM, Translate.Direction.FORWARD, 0, .15);
-                    moveLeft.setCondition(hitsLineRed);
-                    commands.add(moveLeft);
+                    moveLeft.addCondition(hitsLineRed, "BREAK");
+                    runCommand(moveLeft);
                 }
                 else {
                     moveLeft = new Translate(Translate.RunMode.CUSTOM, Translate.Direction.BACKWARD, 0, .15);
-                    moveLeft.setCondition(hitsLineBlue);
-                    commands.add(moveLeft);
+                    moveLeft.addCondition(hitsLineBlue, "BREAK");
+                    runCommand(moveLeft);
                 }
                 break;
 
             case LASTLIGHTFAILS:
                 robot.addToProgress("LastLightFailed");
                 if (line.getColor() == RED) {
-                    commands.add(new Translate((line.getLine() == GodThread.LineType.SECOND ? BLIND_ADJUSTMENT_SECOND : BLIND_ADJUSTMENT_FIRST), line.getLine() == GodThread.LineType.FIRST ? Translate.Direction.FORWARD : Translate.Direction.BACKWARD, 0).setTolerance(25));
+                    runCommand(new Translate((line.getLine() == GodThread.LineType.SECOND ? BLIND_ADJUSTMENT_SECOND : BLIND_ADJUSTMENT_FIRST), line.getLine() == GodThread.LineType.FIRST ? Translate.Direction.FORWARD : Translate.Direction.BACKWARD, 0).setTolerance(25));
                 }
                 else {
-                    commands.add(new Translate((line.getLine() == GodThread.LineType.SECOND ? BLIND_ADJUSTMENT_SECOND : BLIND_ADJUSTMENT_FIRST), line.getLine() == GodThread.LineType.FIRST ? Translate.Direction.BACKWARD : Translate.Direction.FORWARD, 0).setTolerance(25));
+                    runCommand(new Translate((line.getLine() == GodThread.LineType.SECOND ? BLIND_ADJUSTMENT_SECOND : BLIND_ADJUSTMENT_FIRST), line.getLine() == GodThread.LineType.FIRST ? Translate.Direction.BACKWARD : Translate.Direction.FORWARD, 0).setTolerance(25));
                 }
-                commands.add(new Pause(500));
+                runCommand(new Pause(500));
                 break;
 
             case SMALLCORRECTION:
                 if (line== GodThread.Line.BLUE_FIRST_LINE) {
-                    commands.add(new Pause(200));
+                    runCommand(new Pause(200));
                     robot.addToProgress("Small Correction");
-                    commands.add(new Translate(SMALL_ADJUSTMENT_BLUE_1, Translate.Direction.BACKWARD, 0));
+                    runCommand(new Translate(SMALL_ADJUSTMENT_BLUE_1, Translate.Direction.BACKWARD, 0));
                 }
                 else if (line== GodThread.Line.BLUE_SECOND_LINE) {
-                    commands.add(new Pause(200));
+                    runCommand(new Pause(200));
                     robot.addToProgress("Small Correction");
-                    commands.add(new Translate(SMALL_ADJUSTMENT_BLUE_2, Translate.Direction.BACKWARD, 0));
+                    runCommand(new Translate(SMALL_ADJUSTMENT_BLUE_2, Translate.Direction.BACKWARD, 0));
                 }
                 else if(line == GodThread.Line.RED_FIRST_LINE) {
-                    commands.add(new Pause(200));
+                    runCommand(new Pause(200));
                     robot.addToProgress("Small Correction");
-                    commands.add(new Translate(SMALL_ADJUSTMENT_RED_1, Translate.Direction.FORWARD, 0));
+                    runCommand(new Translate(SMALL_ADJUSTMENT_RED_1, Translate.Direction.FORWARD, 0));
                 }
                 else if (line == GodThread.Line.RED_SECOND_LINE) {
-                    commands.add(new Pause(200));
+                    runCommand(new Pause(200));
                     robot.addToProgress("Small Correction");
-                    commands.add(new Translate(SMALL_ADJUSTMENT_RED_2, Translate.Direction.FORWARD, 0).setTolerance(25));
+                    runCommand(new Translate(SMALL_ADJUSTMENT_RED_2, Translate.Direction.FORWARD, 0).setTolerance(25));
                 }
 
                 break;

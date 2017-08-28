@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import virtualRobot.godThreads.TeleopGodThread;
-import virtualRobot.godThreads.testingTranslateGodThread;
+import virtualRobot.godThreads.deprecated.testingTranslateGodThread;
 
 /**
  * Created by 17osullivand on 11/4/16.

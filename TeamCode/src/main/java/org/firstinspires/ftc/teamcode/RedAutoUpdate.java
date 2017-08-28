@@ -2,8 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import virtualRobot.godThreads.RedAutoGodThread;
-import virtualRobot.godThreads.RedStatesGodThread;
+import virtualRobot.godThreads.deprecated.RedAutoGodThread;
 
 /**
  * Created by 17osullivand on 10/6/16.

@@ -9,7 +9,7 @@ import virtualRobot.components.Servo;
  * Created by shant on 10/9/2015.
  * Moves a Servo
  */
-public class MoveServo implements Command {
+public class MoveServo extends Command {
     private Condition condition;
     private ArrayList<Object[]> servos = new ArrayList<Object[]>();
 
@@ -59,7 +59,7 @@ public class MoveServo implements Command {
         }
     }
 
-    public void setCondition(Condition e) {
+    public void addCondition(Condition e) {
         condition = e;
     }
 
@@ -68,10 +68,28 @@ public class MoveServo implements Command {
     }
 
     @Override
+    protected int activate(String s) {
+        switch(s) {
+            case "BREAK":
+                return BREAK;
+            case "END":
+                return END;
+        }
+        return NO_CHANGE;
+    }
+
+    @Override
     public boolean changeRobotState() {
         int i = 0;
         boolean isInterrupted = false;
-        while (!condition.isConditionMet() && i < servos.size()) {
+        MainLoop: while (!isInterrupted && i < servos.size()) {
+            switch (checkConditionals()) {
+                case BREAK:
+                    break MainLoop;
+                case END:
+                    return isInterrupted;
+            }
+
             ((Servo)servos.get(i)[0]).setPosition(((Double)servos.get(i)[1]));
             i++;
             

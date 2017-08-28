@@ -21,7 +21,7 @@ public class TranslatePIDTest extends LogicThread {
     }
 
     @Override
-    public void loadCommands() {
-        commands.add(new Translate(kP,7000,-1,new AtomicBoolean(), dir));
+    public void realRun() {
+        runCommand(new Translate(kP,7000,-1,new AtomicBoolean(), dir));
     }
 }

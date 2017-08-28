@@ -1,13 +1,8 @@
-package virtualRobot.godThreads;
-
-import java.util.concurrent.atomic.AtomicBoolean;
+package virtualRobot.godThreads.deprecated;
 
 import virtualRobot.GodThread;
 import virtualRobot.LogicThread;
 import virtualRobot.MonitorThread;
-import virtualRobot.logicThreads.AutonomousLayer1.BlueGoToWall;
-import virtualRobot.logicThreads.AutonomousLayer1.RedGoToWall;
-import virtualRobot.logicThreads.AutonomousLayer2.ToWhiteLine;
 import virtualRobot.logicThreads.TestingAutonomouses.testingTranslateLogicThread;
 
 /**

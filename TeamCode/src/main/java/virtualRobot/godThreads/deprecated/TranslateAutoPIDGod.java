@@ -1,10 +1,10 @@
-package virtualRobot.godThreads;
+package virtualRobot.godThreads.deprecated;
 
 import android.util.Log;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import virtualRobot.AutonomousRobot;
+import virtualRobot.SallyJoeBot;
 import virtualRobot.GodThread;
 import virtualRobot.LogicThread;
 import virtualRobot.MonitorThread;
@@ -25,7 +25,7 @@ public class TranslateAutoPIDGod extends GodThread {
     double increment = 0.0000001;
     boolean lastTimeTooSmall = false;
     long iteration = 1;
-    AutonomousRobot robot = Command.ROBOT;
+    SallyJoeBot robot = Command.ROBOT;
     @Override
     public void realRun() throws InterruptedException {
         boolean isInterrupted = false;

@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import virtualRobot.godThreads.RotateAutoPIDGod;
+import virtualRobot.godThreads.deprecated.RotateAutoPIDGod;
 
 /**
  * Created by ethachu19 on 11/14/2016.

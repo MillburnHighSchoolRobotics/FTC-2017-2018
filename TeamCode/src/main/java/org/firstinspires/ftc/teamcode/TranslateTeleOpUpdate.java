@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import virtualRobot.godThreads.TranslateTeleopPIDGod;
+import virtualRobot.godThreads.deprecated.TranslateTeleopPIDGod;
 
 /**
  * Created by ethachu19 on 1/15/2017.

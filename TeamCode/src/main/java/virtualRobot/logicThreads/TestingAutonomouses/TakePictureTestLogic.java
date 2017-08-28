@@ -2,7 +2,7 @@ package virtualRobot.logicThreads.TestingAutonomouses;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import virtualRobot.AutonomousRobot;
+import virtualRobot.SallyJoeBot;
 import virtualRobot.LogicThread;
 import virtualRobot.VuforiaLocalizerImplSubclass;
 import virtualRobot.commands.FTCTakePicture;
@@ -12,7 +12,7 @@ import virtualRobot.commands.fastRedIsLeft;
  * Created by mehme_000 on 10/6/2016.
  * Used to test the camera
  */
-public class TakePictureTestLogic extends LogicThread<AutonomousRobot> {
+public class TakePictureTestLogic extends LogicThread {
     AtomicBoolean redIsLeft;
     VuforiaLocalizerImplSubclass vuforia;
 
@@ -22,9 +22,9 @@ public class TakePictureTestLogic extends LogicThread<AutonomousRobot> {
         this.vuforia = vuforia;
     }
 
-    public void loadCommands() {
+    public void realRun() {
 
-        commands.add(new fastRedIsLeft(redIsLeft,vuforia));
+        runCommand(new fastRedIsLeft(redIsLeft,vuforia));
 
 
     }

@@ -1,6 +1,6 @@
 package virtualRobot.components;
 
-import virtualRobot.SomeoneDunGoofed;
+import virtualRobot.exceptions.SomeoneDunGoofed;
 
 /*
 The virtual Motor component

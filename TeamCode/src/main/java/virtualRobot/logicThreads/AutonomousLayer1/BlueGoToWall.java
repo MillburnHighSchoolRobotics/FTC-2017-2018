@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.UpdateThread;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import virtualRobot.AutonomousRobot;
+import virtualRobot.SallyJoeBot;
 import virtualRobot.Condition;
 import virtualRobot.LogicThread;
 import virtualRobot.commands.Pause;
@@ -18,7 +18,7 @@ import virtualRobot.commands.Translate;
  * Knocks ball, strafes to wall
  */
 
-public class BlueGoToWall extends LogicThread<AutonomousRobot>  {
+public class BlueGoToWall extends LogicThread  {
     public static final boolean WITH_SONAR = UpdateThread.WITH_SONAR; //Are we using a sonar?
     public static final double CLOSE_TO_WALL = RedGoToWall.CLOSE_TO_WALL; //How close we want to strafe to wall
     public static final double SONAR_ERROR_MAX = CLOSE_TO_WALL+3; //the threshold at which if a sonar is >= than this when at wall, it's wrong
@@ -31,10 +31,10 @@ public class BlueGoToWall extends LogicThread<AutonomousRobot>  {
         this.sonarWorks = sonarWorks;
     }
     @Override
-    public void loadCommands() {
+    public void realRun() {
         warrenPlan();
         robot.addToProgress("Went To Wall");
-        commands.add(new Pause(500));
+        runCommand(new Pause(500));
 
 
 
@@ -46,27 +46,27 @@ public class BlueGoToWall extends LogicThread<AutonomousRobot>  {
 
 
         /*WallTrace.setOnBlueSide(true); //makes walltrace use 180 degrees
-//        commands.add(new MoveServo(new Servo[]{robot.getBallLauncherServo()}, new double[]{1})); //move ballLauncher
-        commands.add(new Pause(500));
+//        runCommand(new MoveServo(new Servo[]{robot.getBallLauncherServo()}, new double[]{1})); //move ballLauncher
+        runCommand(new Pause(500));
         Translate escapeWall = new Translate(500, Translate.Direction.BACKWARD, 0); //
-        commands.add(escapeWall);
-        commands.add(new Pause(200));
-        commands.add(new Rotate(-135, .5, 2000));
-        commands.add(new Pause(200));
+        runCommand(escapeWall);
+        runCommand(new Pause(200));
+        runCommand(new Rotate(-135, .5, 2000));
+        runCommand(new Pause(200));
 
-//        commands.add(new Pause(200));
-        commands.add(new Translate(6800, Translate.Direction.FORWARD, 0, 1, -135));
-        //commands.add(new Translate(6800, Translate.Direction.FORWARD_RIGHT, 0));
-        commands.add(new Pause(200));
-        //commands.add(new Translate(500, Translate.Direction.FORWARD, 0)); //Continue Backward (relative to the angle we just rotated to)
-        //commands.add(new Pause(500));
+//        runCommand(new Pause(200));
+        runCommand(new Translate(6800, Translate.Direction.FORWARD, 0, 1, -135));
+        //runCommand(new Translate(6800, Translate.Direction.FORWARD_RIGHT, 0));
+        runCommand(new Pause(200));
+        //runCommand(new Translate(500, Translate.Direction.FORWARD, 0)); //Continue Backward (relative to the angle we just rotated to)
+        //runCommand(new Pause(500));
         Rotate.setOnBlueSide(true); //makes Rotate add 180 to whatever it's target is
         Translate.setOnBlueSide(true); //makes heading Controllers correct to 180
-        commands.add(new Rotate(0, .5, 600)); //Straighten out (note that rotate takes in a target value, not a relative value). So this will return us to the angle we started our bot at.
-        commands.add(new Pause(200));
+        runCommand(new Rotate(0, .5, 600)); //Straighten out (note that rotate takes in a target value, not a relative value). So this will return us to the angle we started our bot at.
+        runCommand(new Pause(200));
         Translate strafeRight = new Translate(2400, Translate.Direction.RIGHT, 0, .3); //Strafe towards the wall. Stop at 2000 or when the sonar says, "hey you're too close guy"
         if (WITH_SONAR) {
-            strafeRight.setCondition(new Condition() {
+            strafeRight.addCondition(new Condition() {
                 @Override
                 public boolean isConditionMet() {
                     double sonarRight = robot.getSonarRight().getFilteredValue();
@@ -86,25 +86,25 @@ public class BlueGoToWall extends LogicThread<AutonomousRobot>  {
                 }
             });
         }
-        commands.add(strafeRight);
-        commands.add(new Pause(200));
-        commands.add(new Rotate(0, .5, 600)); //Straighten out again
-        commands.add(new Pause(200));
+        runCommand(strafeRight);
+        runCommand(new Pause(200));
+        runCommand(new Rotate(0, .5, 600)); //Straighten out again
+        runCommand(new Pause(200));
         robot.addToProgress("Went To Wall");*/
 
     }
     private void warrenPlan() { //We've already fired balls and are on our way to the second beacon.
-        commands.add(new Rotate(-53.5, .5, 1500));
-        commands.add(new Pause(500));
-        commands.add(new Translate(5300, Translate.Direction.FORWARD, 0,1,-50));
-        commands.add(new Pause(500));
-        commands.add(new Rotate(-90, .3, 2000));
-        commands.add(new Pause(500));
+        runCommand(new Rotate(-53.5, .5, 1500));
+        runCommand(new Pause(500));
+        runCommand(new Translate(5300, Translate.Direction.FORWARD, 0,1,-50));
+        runCommand(new Pause(500));
+        runCommand(new Rotate(-90, .3, 2000));
+        runCommand(new Pause(500));
         Translate strafeRight = new Translate(1500, Translate.Direction.RIGHT, 0, .3); //Strafe towards the wall. Stop at 2000 or when the sonar says, "hey you're too close guy"
 
 
         if (WITH_SONAR) {
-            strafeRight.setCondition(new Condition() {
+            strafeRight.addCondition(new Condition() {
                 int iterations = 0;
                 double startTime;
                 @Override
@@ -129,26 +129,26 @@ public class BlueGoToWall extends LogicThread<AutonomousRobot>  {
 
                     return false;
                 }
-            });
+            }, "BREAK");
         }
-        commands.add(strafeRight);
+        runCommand(strafeRight);
         Rotate.setOnBlueSide();
 
     }
     }
   /*Translate escapeWall = new Translate(1200, Translate.Direction.FORWARD, 0);
-        commands.add(escapeWall); //Move Away from wall
-        commands.add(new Pause(500));
-        commands.add(new Rotate(INT_ANGLE, 1)); //Rotate In such a way to glance the ball
-        commands.add(new Pause(500));
-        commands.add(new Pause(500));
-        commands.add(new Translate(12000, Translate.Direction.FORWARD, 0, 1, INT_ANGLE)); //Continue forward (relative to the angle we just rotated to)
-        commands.add(new Pause(500));
-        commands.add(new Rotate(0, 1)); //Straighten out (note that rotate takes in a target value, not a relative value). So this will return us to the angle we started our bot at.
-        commands.add(new Pause(500));
+        runCommand(escapeWall); //Move Away from wall
+        runCommand(new Pause(500));
+        runCommand(new Rotate(INT_ANGLE, 1)); //Rotate In such a way to glance the ball
+        runCommand(new Pause(500));
+        runCommand(new Pause(500));
+        runCommand(new Translate(12000, Translate.Direction.FORWARD, 0, 1, INT_ANGLE)); //Continue forward (relative to the angle we just rotated to)
+        runCommand(new Pause(500));
+        runCommand(new Rotate(0, 1)); //Straighten out (note that rotate takes in a target value, not a relative value). So this will return us to the angle we started our bot at.
+        runCommand(new Pause(500));
         Translate strafeRight = new Translate(3200, Translate.Direction.RIGHT, 0, .3); //Strafe towards the wall. Stop at 3500 or when the sonar says, "hey you're too close guy"
         if (WITH_SONAR) {
-            strafeRight.setCondition(new Condition() {
+            strafeRight.addCondition(new Condition() {
                 @Override
                 public boolean isConditionMet() {
                     double sonarRight = robot.getSonarRight().getFilteredValue();
@@ -168,8 +168,8 @@ public class BlueGoToWall extends LogicThread<AutonomousRobot>  {
                 }
             });
         }
-        commands.add(strafeRight);
-        commands.add(new Pause(500));
-        commands.add(new Rotate(0, .5)); //Straighten out again
-        commands.add(new Pause(500));
+        runCommand(strafeRight);
+        runCommand(new Pause(500));
+        runCommand(new Rotate(0, .5)); //Straighten out again
+        runCommand(new Pause(500));
         robot.addToProgress("Went To Wall");*/

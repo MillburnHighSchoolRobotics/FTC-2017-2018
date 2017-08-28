@@ -5,31 +5,21 @@ import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.util.RobotLog;
-import com.vuforia.Frame;
 import com.vuforia.HINT;
-import com.vuforia.Image;
-import com.vuforia.PIXEL_FORMAT;
-import com.vuforia.State;
 import com.vuforia.Vuforia;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.robotcore.internal.VuforiaLocalizerImpl;
-import org.firstinspires.ftc.robotcore.internal.opengl.models.Teapot;
 import org.firstinspires.ftc.teamcode.R;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import virtualRobot.VuforiaLocalizerImplSubclass;
 import virtualRobot.commands.DavidClass;
-import virtualRobot.godThreads.TakePictureTestGod;
 
 /**
  * Created by mehme_000 on 10/7/2016.

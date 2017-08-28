@@ -62,7 +62,7 @@ public class SpawnNewThread extends Command {
     public void addLogicThread(LogicThread l) {
     	logic.add(l);
     }
-    public void setCondition(Condition e) {
+    public void addCondition(Condition e) {
         condition = e;
     }
 }

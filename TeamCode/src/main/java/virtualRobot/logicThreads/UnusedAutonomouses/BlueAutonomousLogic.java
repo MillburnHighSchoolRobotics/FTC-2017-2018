@@ -4,7 +4,7 @@ import android.util.Log;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import virtualRobot.AutonomousRobot;
+import virtualRobot.SallyJoeBot;
 import virtualRobot.Condition;
 import virtualRobot.LogicThread;
 import virtualRobot.VuforiaLocalizerImplSubclass;
@@ -18,7 +18,7 @@ import virtualRobot.commands.Translate;
  * Knocks off ball, takes pic of first beacon
  */
 @Deprecated
-public class BlueAutonomousLogic extends LogicThread<AutonomousRobot> {
+public class BlueAutonomousLogic extends LogicThread {
     AtomicBoolean redIsLeft;
     VuforiaLocalizerImplSubclass vuforia;
     public static double Line = 4;
@@ -28,7 +28,7 @@ public class BlueAutonomousLogic extends LogicThread<AutonomousRobot> {
         this.vuforia = vuforia;
     }
     @Override
-    public void loadCommands() {
+    public void realRun() {
         final double currentLine = robot.getLightSensor1().getRawValue(); //The current value of the color sensor
         Line = currentLine; //So BlueMoveToSecondBeacon knows the current value of the color sensor
         final Condition atwhiteline = new Condition() {
@@ -40,30 +40,30 @@ public class BlueAutonomousLogic extends LogicThread<AutonomousRobot> {
                 return false;
             }
         }; //if our line sensor detects a change >.7, we're at the line, stop moving!
-//        commands.add(
+//        runCommand(
 //                new MoveServo(
 //                        new Servo[]{robot.getCapServo()},
 //                        new double[]{.2}
 //                )
 //        );
         Translate escapeWall = new Translate(1500, Translate.Direction.FORWARD, 0);
-        commands.add(escapeWall); //Move Away from wall
-        commands.add(new Pause(500));
-        commands.add(new Rotate(40, 1)); //Rotate In such a way to glance the ball
-        commands.add(new Pause(500));
-//        commands.add(
+        runCommand(escapeWall); //Move Away from wall
+        runCommand(new Pause(500));
+        runCommand(new Rotate(40, 1)); //Rotate In such a way to glance the ball
+        runCommand(new Pause(500));
+//        runCommand(
 //                new MoveServo(
 //                        new Servo[]{robot.getCapServo()},
 //                        new double[]{.2}
 //                )
 //        );
-        commands.add(new Pause(500));
-        commands.add(new Translate(10000, Translate.Direction.FORWARD, 0, 1, 40)); //Continue forward (relative to the angle we just rotated to)
-        commands.add(new Pause(500));
-        commands.add(new Rotate(0, 1)); //Straighten out (note that rotate takes in a target value, not a relative value). So this will return us to the angle we started our bot at.
-        commands.add(new Pause(500));
+        runCommand(new Pause(500));
+        runCommand(new Translate(10000, Translate.Direction.FORWARD, 0, 1, 40)); //Continue forward (relative to the angle we just rotated to)
+        runCommand(new Pause(500));
+        runCommand(new Rotate(0, 1)); //Straighten out (note that rotate takes in a target value, not a relative value). So this will return us to the angle we started our bot at.
+        runCommand(new Pause(500));
         Translate strafeRight = new Translate(3200, Translate.Direction.RIGHT, 0, .3); //Strafe towards the wall. Stop at 3500 or when the sonar says, "hey you're too close guy"
-        strafeRight.setCondition(new Condition() {
+        strafeRight.addCondition(new Condition() {
             @Override
             public boolean isConditionMet() {
                 Log.d("UltraSOUND", "" + robot.getSonarLeft().getValue() + "" + robot.getSonarRight().getValue());
@@ -73,25 +73,25 @@ public class BlueAutonomousLogic extends LogicThread<AutonomousRobot> {
                 }
                 return false;
             }
-        });
-        commands.add(strafeRight);
-        commands.add(new Pause(1000));
-        commands.add(new Rotate(0, 1)); //Straighten out again
-        commands.add(new Pause(1000));
+        }, "BREAK");
+        runCommand(strafeRight);
+        runCommand(new Pause(1000));
+        runCommand(new Rotate(0, 1)); //Straighten out again
+        runCommand(new Pause(1000));
         //WallTrace toWhiteLine =  new WallTrace(WallTrace.Direction.FORWARD, 8); //Move towards the white line, staying parallel to the wall, until the white line is deteceted
         Translate toWhiteLine = new Translate(Translate.RunMode.CUSTOM, Translate.Direction.FORWARD, 0, .15);
-        toWhiteLine.setCondition(atwhiteline);
-        commands.add(toWhiteLine);
-        commands.add(new Pause(500));
+        toWhiteLine.addCondition(atwhiteline, "BREAK");
+        runCommand(toWhiteLine);
+        runCommand(new Pause(500));
         //WallTrace toWhiteLine2 =  new WallTrace(WallTrace.Direction.BACKWARD, 8); //To account for slight overshoot of beacon thanks to momentum
         Translate toWhiteLine2 = new Translate(Translate.RunMode.CUSTOM, Translate.Direction.BACKWARD, 0, .15);
-        toWhiteLine2.setCondition(atwhiteline);
-        commands.add(toWhiteLine2);
+        toWhiteLine2.addCondition(atwhiteline, "BREAK");
+        runCommand(toWhiteLine2);
         robot.addToProgress("Went to Line");
-        /*commands.add(new Rotate(0, 1));
-        commands.add(new Pause(500));
+        /*runCommand(new Rotate(0, 1));
+        runCommand(new Pause(500));
         Translate moveToWall2 =  new Translate(Translate.RunMode.CUSTOM, Translate.Direction.RIGHT, 0, .2);
-        moveToWall2.setCondition(
+        moveToWall2.addCondition(
                 new Condition() {
                     @Override
                     public boolean isConditionMet() {
@@ -103,18 +103,18 @@ public class BlueAutonomousLogic extends LogicThread<AutonomousRobot> {
                         return false;
                     }
                 });
-        commands.add(new Pause(2000));
-        commands.add(new Rotate(0, 1));
-        commands.add(new Pause(2000));*/
-        commands.add(new Pause(500));
-        commands.add(new Rotate(0, 1));
-        commands.add(new Pause(500));
+        runCommand(new Pause(2000));
+        runCommand(new Rotate(0, 1));
+        runCommand(new Pause(2000));*/
+        runCommand(new Pause(500));
+        runCommand(new Rotate(0, 1));
+        runCommand(new Pause(500));
         //FTCTakePicture pic = new FTCTakePicture(redIsLeft,vuforia);//Take a picture of beacon
-        //commands.add(pic);
+        //runCommand(pic);
         //Strafe left to move towards wall
         /*
         Translate moveToWall = new Translate(1000, Translate.Direction.RIGHT, -10);
-        moveToWall.setCondition(new Condition() {
+        moveToWall.addCondition(new Condition() {
             @Override
             public boolean isConditionMet() {
                if (robot.getUltrasonicSensor().getValue() < 10) {
@@ -126,7 +126,7 @@ public class BlueAutonomousLogic extends LogicThread<AutonomousRobot> {
 
         //Strafe to first white line
         Translate moveToWhiteLine = new Translate(1000, Translate.Direction.BACKWARD, 0);
-        moveToWhiteLine.setCondition(atwhiteline);
-        commands.add(moveToWhiteLine);*/
+        moveToWhiteLine.addCondition(atwhiteline);
+        runCommand(moveToWhiteLine);*/
     }
 }

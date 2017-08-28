@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import virtualRobot.AutonomousRobot;
+import virtualRobot.SallyJoeBot;
 import virtualRobot.Condition;
 import virtualRobot.GodThread;
 import virtualRobot.LogicThread;
@@ -26,7 +26,7 @@ import virtualRobot.components.Servo;
  * Created by 17osullivand on 12/2/16.
  */
 
-public class ToWhiteLineCompensateColor extends LogicThread<AutonomousRobot> {
+public class ToWhiteLineCompensateColor extends LogicThread {
     //Note that displacement is handled in exitCondition
     public static final double WALL_TRACE_SONAR_THRESHOLD = 17; //How close we want to trace wall
     public static final double MAX_ALLOWABLE_DISPLACEMENT_TO_FIRST_LINE = 2300; //Max Displacement To The First Line
@@ -113,7 +113,7 @@ public class ToWhiteLineCompensateColor extends LogicThread<AutonomousRobot> {
     }
 
     @Override
-    public void loadCommands() {
+    public void realRun() {
 
         Translate.setGlobalAngleMod(type.getColor() == GodThread.ColorType.RED ? 90 : -90);
         if (mode == Mode.NORMAL) {
@@ -122,34 +122,34 @@ public class ToWhiteLineCompensateColor extends LogicThread<AutonomousRobot> {
             robot.getLBEncoder().clearValue();
             robot.getRBEncoder().clearValue();
             if (type.getLine() == GodThread.LineType.FIRST && sonarWorks.get()) {
-                commands.add(new Pause(200));
-                commands.add(new Translate(100, Translate.Direction.LEFT, 0).setTolerance(25));
-                commands.add(new Pause(200));
+                runCommand(new Pause(200));
+                runCommand(new Translate(100, Translate.Direction.LEFT, 0).setTolerance(25));
+                runCommand(new Pause(200));
 
             }
             if (type.getLine() == GodThread.LineType.FIRST && !sonarWorks.get() && escapeWall) {
-                commands.add(new Translate(ESCAPE_WALL, Translate.Direction.LEFT, 0));
-                commands.add(new Pause(200));
+                runCommand(new Translate(ESCAPE_WALL, Translate.Direction.LEFT, 0));
+                runCommand(new Pause(200));
 
             }
             if (type.getLine() == GodThread.LineType.FIRST) {
                 if (sonarWorks.get() && withWallTrace) {
-                    commands.add(new WallTrace(type.getColor() == GodThread.ColorType.BLUE ? WallTrace.Direction.FORWARD : WallTrace.Direction.BACKWARD, WALL_TRACE_SONAR_THRESHOLD,1500)); //so we don't risk detecting too early
+                    runCommand(new WallTrace(type.getColor() == GodThread.ColorType.BLUE ? WallTrace.Direction.FORWARD : WallTrace.Direction.BACKWARD, WALL_TRACE_SONAR_THRESHOLD,1500)); //so we don't risk detecting too early
 
                 } else {
-                    commands.add(new Translate(1400, type.getColor() == GodThread.ColorType.BLUE ? Translate.Direction.FORWARD : Translate.Direction.BACKWARD, 0, 1.0)); //so we don't risk detecting too early
+                    runCommand(new Translate(1400, type.getColor() == GodThread.ColorType.BLUE ? Translate.Direction.FORWARD : Translate.Direction.BACKWARD, 0, 1.0)); //so we don't risk detecting too early
                 }
-                commands.add(new Pause(200));
+                runCommand(new Pause(200));
 
             }
             if (type.getLine() == GodThread.LineType.SECOND) {
                 if (sonarWorks.get() && withWallTrace) {
-                    commands.add(new WallTrace(type.getColor() == GodThread.ColorType.BLUE ? WallTrace.Direction.BACKWARD : WallTrace.Direction.FORWARD, WALL_TRACE_SONAR_THRESHOLD,1700)); //so we don't recheck the same line
+                    runCommand(new WallTrace(type.getColor() == GodThread.ColorType.BLUE ? WallTrace.Direction.BACKWARD : WallTrace.Direction.FORWARD, WALL_TRACE_SONAR_THRESHOLD,1700)); //so we don't recheck the same line
 
                 } else {
-                    commands.add(new Translate(2400, type.getColor() == GodThread.ColorType.BLUE ? Translate.Direction.BACKWARD : Translate.Direction.FORWARD, 0, 1.0)); //so we don't recheck the same line
+                    runCommand(new Translate(2400, type.getColor() == GodThread.ColorType.BLUE ? Translate.Direction.BACKWARD : Translate.Direction.FORWARD, 0, 1.0)); //so we don't recheck the same line
                 }
-                    commands.add(new Pause(200));
+                    runCommand(new Pause(200));
 
             }
 
@@ -170,8 +170,8 @@ public class ToWhiteLineCompensateColor extends LogicThread<AutonomousRobot> {
             firstDisplacement = new Translate(MAX_ALLOWABLE_DISPLACEMENT_TO_FIRST_LINE, type.getColor() == GodThread.ColorType.BLUE ? Translate.Direction.FORWARD : Translate.Direction.BACKWARD, 0, .15);
         else
             firstDisplacement = new Translate(MAX_ALLOWABLE_DISPLACEMENT_TO_SECOND_LINE, type.getColor() == GodThread.ColorType.BLUE ? Translate.Direction.BACKWARD : Translate.Direction.FORWARD, 0, .15);
-        firstDisplacement.setCondition(atwhitelineFirstTry);
-        commands.add(firstDisplacement);
+        firstDisplacement.addCondition(atwhitelineFirstTry, "BREAK");
+        runCommand(firstDisplacement);
 
     }
 
@@ -182,8 +182,8 @@ public class ToWhiteLineCompensateColor extends LogicThread<AutonomousRobot> {
             secondDisplacement = new Translate(MAX_DISTANCE_WHEN_COLOR_FAILS, type.getColor() == GodThread.ColorType.BLUE ? Translate.Direction.BACKWARD : Translate.Direction.FORWARD, 0, .15);
         else
             secondDisplacement = new Translate(MAX_DISTANCE_WHEN_COLOR_FAILS, type.getColor() == GodThread.ColorType.BLUE ? Translate.Direction.FORWARD : Translate.Direction.BACKWARD, 0, .15);
-        secondDisplacement.setCondition(atwhitelineSecondTry);
-        commands.add(secondDisplacement);
+        secondDisplacement.addCondition(atwhitelineSecondTry, "BREAK");
+        runCommand(secondDisplacement);
     }
 
     private void allignBlindly() {
@@ -192,7 +192,7 @@ public class ToWhiteLineCompensateColor extends LogicThread<AutonomousRobot> {
             blindAdjustment = new Translate(BLIND_ADJUSTMENT_FIRST, type.getColor() == GodThread.ColorType.BLUE ? Translate.Direction.FORWARD : Translate.Direction.BACKWARD, 0, .15).setTolerance(25);
         else
             blindAdjustment = new Translate(BLIND_ADJUSTMENT_SECOND, type.getColor() == GodThread.ColorType.BLUE ? Translate.Direction.BACKWARD : Translate.Direction.FORWARD, 0, .15).setTolerance(25);
-        //commands.add(blindAdjustment);
+        //runCommand(blindAdjustment);
     }
 
 
@@ -226,50 +226,50 @@ public class ToWhiteLineCompensateColor extends LogicThread<AutonomousRobot> {
         else
             firstDisplacement = new Translate(MAX_ALLOWABLE_DISPLACEMENT_TO_SECOND_LINE, type.getColor() == GodThread.ColorType.BLUE ? Translate.Direction.BACKWARD : Translate.Direction.FORWARD, 0, .2);
         allSensorsFail.set(true);
-        //firstDisplacement.setCondition(atwhitelineSecond);
-        commands.add(firstDisplacement);
-       /* commands.add(new Pause(500));
+        //firstDisplacement.addCondition(atwhitelineSecond);
+        runCommand(firstDisplacement);
+       /* runCommand(new Pause(500));
         Translate secondDisplacement = new Translate(MAX_ALLOWABLE_DISPLACEMENT_BACK_TO_LINE, type.getColor()== GodThread.ColorType.BLUE ? Translate.Direction.BACKWARD : Translate.Direction.FORWARD, 0, .1);
-        secondDisplacement.setCondition(atwhitelineFirst);
-        commands.add(secondDisplacement);
-        commands.add(new Pause(500));
+        secondDisplacement.addCondition(atwhitelineFirst);
+        runCommand(secondDisplacement);
+        runCommand(new Pause(500));
         allSensorsFail.set(true);
         Translate thirdDisplacement = new Translate(MAX_ALLOWABLE_DISPLACEMENT_BACK_TO_LINE, type.getColor()== GodThread.ColorType.BLUE ? Translate.Direction.FORWARD : Translate.Direction.BACKWARD, 0, .1);
-        thirdDisplacement.setCondition(atwhitelineSecond);
-        commands.add(thirdDisplacement);*/
+        thirdDisplacement.addCondition(atwhitelineSecond);
+        runCommand(thirdDisplacement);*/
 
             /*if(robot.getLightSensor4().getRawValue()> .61)
-                commands.add(new Translate(type.getLine() == GodThread.LineType.FIRST ? 75 : 100,Translate.Direction.BACKWARD,0).setTolerance(50));
+                runCommand(new Translate(type.getLine() == GodThread.LineType.FIRST ? 75 : 100,Translate.Direction.BACKWARD,0).setTolerance(50));
             else if(robot.getLightSensor1().getRawValue()> .61)
-                commands.add(new Translate(type.getLine() == GodThread.LineType.FIRST ? 75 : 100,Translate.Direction.FORWARD,0).setTolerance(50));
+                runCommand(new Translate(type.getLine() == GodThread.LineType.FIRST ? 75 : 100,Translate.Direction.FORWARD,0).setTolerance(50));
 
         if(type.getLine() == GodThread.LineType.SECOND && robot.getSonarLeft().getValue()> 21)
-            commands.add(new Translate(75,Translate.Direction.FORWARD,0).setTolerance(50));
+            runCommand(new Translate(75,Translate.Direction.FORWARD,0).setTolerance(50));
 
         if (type.getLine() == GodThread.LineType.FIRST) {
             fireBalls();
         }*/
-        commands.add(new Pause(200));
+        runCommand(new Pause(200));
         if (type.getLine() == GodThread.LineType.FIRST)
-            commands.add(new AllignWithBeacon(vuforia, redIsLeft, type.getColor() == GodThread.ColorType.BLUE ? AllignWithBeacon.Direction.FORWARD : AllignWithBeacon.Direction.BACKWARD));
+            runCommand(new AllignWithBeacon(vuforia, redIsLeft, type.getColor() == GodThread.ColorType.BLUE ? AllignWithBeacon.Direction.FORWARD : AllignWithBeacon.Direction.BACKWARD));
         else
-            commands.add(new AllignWithBeacon(vuforia, redIsLeft, type.getColor() == GodThread.ColorType.RED ? AllignWithBeacon.Direction.FORWARD : AllignWithBeacon.Direction.BACKWARD));
-        commands.add(new Pause(1000));
+            runCommand(new AllignWithBeacon(vuforia, redIsLeft, type.getColor() == GodThread.ColorType.RED ? AllignWithBeacon.Direction.FORWARD : AllignWithBeacon.Direction.BACKWARD));
+        runCommand(new Pause(1000));
     }
 
     private void onlyAllign() {
         //TODO: Add wallTrace instead of translate if sonar works
         if (type.getLine() == GodThread.LineType.FIRST) {
-            commands.add(new Translate(1500, type.getColor() == GodThread.ColorType.RED ? Translate.Direction.BACKWARD : Translate.Direction.FORWARD, 0, .2));
-            commands.add(new Pause(200));
+            runCommand(new Translate(1500, type.getColor() == GodThread.ColorType.RED ? Translate.Direction.BACKWARD : Translate.Direction.FORWARD, 0, .2));
+            runCommand(new Pause(200));
 
-            commands.add(new AllignWithBeacon(vuforia, redIsLeft, type.getColor() == GodThread.ColorType.BLUE ? AllignWithBeacon.Direction.FORWARD : AllignWithBeacon.Direction.BACKWARD, 3000, maxDistance, maxDistanceReached, type.getColor() == GodThread.ColorType.RED ? 90 : -90));
+            runCommand(new AllignWithBeacon(vuforia, redIsLeft, type.getColor() == GodThread.ColorType.BLUE ? AllignWithBeacon.Direction.FORWARD : AllignWithBeacon.Direction.BACKWARD, 3000, maxDistance, maxDistanceReached, type.getColor() == GodThread.ColorType.RED ? 90 : -90));
         } else {
-            commands.add(new Translate(1500, type.getColor() == GodThread.ColorType.BLUE ? Translate.Direction.BACKWARD : Translate.Direction.FORWARD, 0, .2));
-            commands.add(new Pause(200));
-            commands.add(new AllignWithBeacon(vuforia, redIsLeft, type.getColor() == GodThread.ColorType.RED ? AllignWithBeacon.Direction.FORWARD : AllignWithBeacon.Direction.BACKWARD, 3000, maxDistance, maxDistanceReached, type.getColor() == GodThread.ColorType.RED ? 90 : -90));
+            runCommand(new Translate(1500, type.getColor() == GodThread.ColorType.BLUE ? Translate.Direction.BACKWARD : Translate.Direction.FORWARD, 0, .2));
+            runCommand(new Pause(200));
+            runCommand(new AllignWithBeacon(vuforia, redIsLeft, type.getColor() == GodThread.ColorType.RED ? AllignWithBeacon.Direction.FORWARD : AllignWithBeacon.Direction.BACKWARD, 3000, maxDistance, maxDistanceReached, type.getColor() == GodThread.ColorType.RED ? 90 : -90));
         }
-        commands.add(new Pause(1000));
+        runCommand(new Pause(1000));
 
     }
 
@@ -284,22 +284,22 @@ public class ToWhiteLineCompensateColor extends LogicThread<AutonomousRobot> {
     }
 
     private void fireBalls() {
-        commands.add(new Translate(400, Translate.Direction.BACKWARD_LEFT, 0));
-        commands.add(new MoveServo(new Servo[]{robot.getFlywheelStopper()}, new double[]{0})); //move flywheel
+        runCommand(new Translate(400, Translate.Direction.BACKWARD_LEFT, 0));
+        runCommand(new MoveServo(new Servo[]{robot.getFlywheelStopper()}, new double[]{0})); //move flywheel
 
-        LogicThread<AutonomousRobot> spinFlywheel = new LogicThread<AutonomousRobot>() {
+        LogicThread spinFlywheel = new LogicThread() {
             @Override
-            public void loadCommands() {
-                commands.add(new MoveMotorPID(87, robot.getFlywheel(), robot.getFlywheelEncoder()));
-                commands.add(new Pause(1000));
+            public void realRun() {
+                runCommand(new MoveMotorPID(87, robot.getFlywheel(), robot.getFlywheelEncoder()));
+                runCommand(new Pause(1000));
 
             }
         };
-        LogicThread<AutonomousRobot> moveReaper = new LogicThread<AutonomousRobot>() {
+        LogicThread moveReaper = new LogicThread() {
             @Override
-            public void loadCommands() {
-                commands.add(new Pause(2000));
-                commands.add(new MoveMotor(robot.getReaperMotor(), .21));
+            public void realRun() {
+                runCommand(new Pause(2000));
+                runCommand(new MoveMotor(robot.getReaperMotor(), .21));
 
             }
         };
@@ -311,10 +311,10 @@ public class ToWhiteLineCompensateColor extends LogicThread<AutonomousRobot> {
 
         SpawnNewThread fly = new SpawnNewThread((threads));
 
-        commands.add(fly);
-        commands.add(new Pause(5000));
-        commands.add(new killChildren(this));
-        commands.add(new Translate(400, Translate.Direction.FORWARD_RIGHT, 0));
+        runCommand(fly);
+        runCommand(new Pause(5000));
+        runCommand(new killChildren(this));
+        runCommand(new Translate(400, Translate.Direction.FORWARD_RIGHT, 0));
 
     }
 

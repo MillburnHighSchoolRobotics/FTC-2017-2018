@@ -1,18 +1,14 @@
-package virtualRobot.godThreads;
+package virtualRobot.godThreads.deprecated;
 
 import android.util.Log;
-
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import virtualRobot.GodThread;
 import virtualRobot.JoystickController;
 import virtualRobot.LogicThread;
 import virtualRobot.MonitorThread;
 import virtualRobot.SallyJoeBot;
-import virtualRobot.TeleopRobot;
 import virtualRobot.commands.Command;
 import virtualRobot.logicThreads.TestingAutonomouses.KPModifier;
-import virtualRobot.logicThreads.TestingAutonomouses.TranslateAutoPIDTester;
 import virtualRobot.logicThreads.TestingAutonomouses.TranslatePIDTest;
 
 /**
@@ -20,7 +16,7 @@ import virtualRobot.logicThreads.TestingAutonomouses.TranslatePIDTest;
  */
 
 public class TranslateTeleopPIDGod extends GodThread {
-    TeleopRobot robot;
+    SallyJoeBot robot;
     JoystickController controller;
     long iter = 1;
     Thread pid;
@@ -32,7 +28,7 @@ public class TranslateTeleopPIDGod extends GodThread {
 
     @Override
     public void realRun() throws InterruptedException {
-        robot = Command.TELEOP_ROBOT;
+        robot = Command.ROBOT;
         while (!Thread.currentThread().isInterrupted()) {
             PIDTest = new KPModifier();
             pid = new Thread(PIDTest);
@@ -48,7 +44,7 @@ public class TranslateTeleopPIDGod extends GodThread {
                 JoystickController controller;
                 @Override
                 public boolean setStatus() {
-                    controller = Command.TELEOP_ROBOT.getJoystickController1();
+                    controller = Command.ROBOT.getJoystickController1();
                     controller.logicalRefresh();
                     if (controller.isPressed(JoystickController.BUTTON_B)) {
                         pid.interrupt();

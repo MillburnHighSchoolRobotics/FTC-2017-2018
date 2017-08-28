@@ -6,7 +6,7 @@ import virtualRobot.commands.Command;
  * Created by Yanjun on 11/12/2015.
  * Pauses the Robot
  */
-public class Pause implements Command {
+public class Pause extends Command {
 
     private int nMillis;
 
@@ -15,8 +15,8 @@ public class Pause implements Command {
     }
 
     @Override
-    public boolean activate(String s) {
-        return false;
+    public int activate(String s) {
+        return 0;
     }
 
     @Override

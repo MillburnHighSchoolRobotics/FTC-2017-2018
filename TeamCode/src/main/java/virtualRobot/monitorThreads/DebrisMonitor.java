@@ -2,14 +2,14 @@ package virtualRobot.monitorThreads;
 
 import android.util.Log;
 
-import virtualRobot.AutonomousRobot;
+import virtualRobot.SallyJoeBot;
 import virtualRobot.MonitorThread;
 
 /**
  * Created by shant on 1/10/2016.
  * Automatically stops robot if it's tilted at an angle (it's caught on debris)
  */
-public class DebrisMonitor extends MonitorThread<AutonomousRobot> {
+public class DebrisMonitor extends MonitorThread {
 
 
     @Override

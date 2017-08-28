@@ -6,7 +6,6 @@ import android.util.Log;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import virtualRobot.AutonomousRobot;
 import virtualRobot.Condition;
 import virtualRobot.PIDController;
 import virtualRobot.SallyJoeBot;
@@ -22,7 +21,7 @@ import virtualRobot.utils.Vector2i;
  * NOTE FOR TEAM OF 2016 - 2017: CAMERA IS FLIPPED AND 180 DEGREE ROTATE IS TOO COSTLY
  */
 
-public class AllignWithBeacon implements Command {
+public class AllignWithBeacon extends Command {
 
     public enum Mode {
         MIDSPLIT, TWORECTANGLES
@@ -49,12 +48,6 @@ public class AllignWithBeacon implements Command {
     AtomicBoolean redIsLeft;
     SallyJoeBot robot = Command.ROBOT;
     VuforiaLocalizerImplSubclass vuforia;
-    Condition condition = new Condition() {
-        @Override
-        public boolean isConditionMet() {
-            return false;
-        }
-    };
     private int whiteTape = 13;
     public final static double BLUETHRESHOLD = 0.7; //.65
     public final static double REDTHRESHOLD = 1.43;
@@ -89,9 +82,6 @@ public class AllignWithBeacon implements Command {
         heading.setTarget(referenceAnlge);
     }
 
-    public void setCondition(Condition condition) {
-        this.condition = condition;
-    }
 
     private int closestToFrac(double num, double frac) {
         int res = -1;
@@ -113,6 +103,17 @@ public class AllignWithBeacon implements Command {
                 robot.getLightSensor3().getValue() > LINETHRESHOLD ||
                 robot.getLightSensor4().getValue() > LINETHRESHOLD ||
                 ((robot.getColorSensor().getRed() >= whiteTape && robot.getColorSensor().getBlue() >= whiteTape && robot.getColorSensor().getGreen() >= whiteTape && robot.getColorSensor().getBlue() < 255));
+    }
+
+    @Override
+    protected int activate(String s) {
+        switch(s) {
+            case "BREAK":
+                return BREAK;
+            case "END":
+                return END;
+        }
+        return NO_CHANGE;
     }
 
     @Override
@@ -169,7 +170,13 @@ public class AllignWithBeacon implements Command {
         Vector2i currentPos;
         boolean isInterrupted = false, satisfied = false;
 
-        while (!condition.isConditionMet() && !isInterrupted && (!satisfied || !isOnLine())) {
+        MainLoop: while (!isInterrupted && (!satisfied || !isOnLine())) {
+            switch (checkConditionals()) {
+                case BREAK:
+                    break MainLoop;
+                case END:
+                    return isInterrupted;
+            }
             currLeft = 0;
             currRight = 0;
             bm.copyPixelsFromBuffer(vuforia.rgb.getPixels());
@@ -224,12 +231,6 @@ public class AllignWithBeacon implements Command {
             robot.addToTelemetry("CurrentDistance", getAvgDistance());
             if (getAvgDistance() > maxDistance) {
                 maxDistanceReached.set(true);
-                condition = new Condition() {
-                    @Override
-                    public boolean isConditionMet() { //will then automatically break out of rest of parts of allign to beacon
-                        return true;
-                    }
-                };
             }
             if (Thread.currentThread().isInterrupted()) {
                 isInterrupted = true;
@@ -244,7 +245,7 @@ public class AllignWithBeacon implements Command {
         }
         robot.stopMotors();
         Thread.sleep(500);
-        if (!condition.isConditionMet()) {
+        if (!maxDistanceReached.get()) {
             robot.addToProgress("Switched To Correction"); //acounts for times where it goes to far and alligns with one side of beacon
             if (currLeft > currRight) {
                 redIsLeft.set(true);
@@ -268,7 +269,13 @@ public class AllignWithBeacon implements Command {
         double power, curr = 0;
         int covered;
         long start = System.currentTimeMillis();
-        while (!condition.isConditionMet() && !isInterrupted && (System.currentTimeMillis() - start < timeLimit)) {
+        MainLoop: while (!maxDistanceReached.get() && !isInterrupted && (System.currentTimeMillis() - start < timeLimit)) {
+            switch (checkConditionals()) {
+                case BREAK:
+                    break MainLoop;
+                case END:
+                    return isInterrupted;
+            }
             curr = 0;
             bm.copyPixelsFromBuffer(vuforia.rgb.getPixels());
             currentPos = new Vector2i(start1.x, vuforia.rgb.getHeight()/2);

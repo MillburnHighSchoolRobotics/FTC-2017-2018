@@ -2,7 +2,7 @@ package virtualRobot.logicThreads.AutonomousLayer3;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import virtualRobot.AutonomousRobot;
+import virtualRobot.SallyJoeBot;
 import virtualRobot.GodThread;
 import virtualRobot.LogicThread;
 import virtualRobot.VuforiaLocalizerImplSubclass;
@@ -18,7 +18,7 @@ import virtualRobot.commands.WallTrace;
  * EVERYTHING IS BROKEEEN YAAAAY
  */
 @Deprecated
-public class AllignLineNoUltraNoLine extends LogicThread<AutonomousRobot> {
+public class AllignLineNoUltraNoLine extends LogicThread {
     public static final double CORRECTION_VALUE = AllignLineUltraNoLine.CORRECTION_VALUE; //since we've very much overshot the line, we need to go back;
     public static final double CORRECTION_VALUE_TWO = 1200;
 
@@ -32,7 +32,7 @@ public class AllignLineNoUltraNoLine extends LogicThread<AutonomousRobot> {
     }
 
     @Override
-    public void loadCommands() {
+    public void realRun() {
         robot.addToProgress("Alligning with Line, with NO Ultra and NO Line");
         if (type== GodThread.Line.RED_FIRST_LINE || type== GodThread.Line.BLUE_SECOND_LINE) {
            Translate toWhiteLine2;
@@ -40,13 +40,13 @@ public class AllignLineNoUltraNoLine extends LogicThread<AutonomousRobot> {
            toWhiteLine2 =  new Translate(CORRECTION_VALUE, Translate.Direction.FORWARD, 0, .15); //go slowly just to minimize error
             else
                 toWhiteLine2 =  new Translate(CORRECTION_VALUE_TWO, Translate.Direction.FORWARD, 0, .15); //go slowly just to minimize error
-            commands.add(toWhiteLine2);
-            commands.add(new Pause(500));
-            commands.add(new Rotate(0, 1));
-            commands.add(new Pause(500));
+            runCommand(toWhiteLine2);
+            runCommand(new Pause(500));
+            runCommand(new Rotate(0, 1));
+            runCommand(new Pause(500));
             //FTCTakePicture pic = new FTCTakePicture(redIsLeft,vuforia); //Take a picture of beacon
-            //commands.add(pic);
-            commands.add(new Pause(500));
+            //runCommand(pic);
+            runCommand(new Pause(500));
 
         }
         else if (type== GodThread.Line.RED_SECOND_LINE || type== GodThread.Line.BLUE_FIRST_LINE) {
@@ -55,13 +55,13 @@ public class AllignLineNoUltraNoLine extends LogicThread<AutonomousRobot> {
             toWhiteLine2 =  new Translate(CORRECTION_VALUE, Translate.Direction.BACKWARD, 0, .15); //go slowly just to minimize error
             else
                 toWhiteLine2 =  new Translate(CORRECTION_VALUE_TWO, Translate.Direction.BACKWARD, 0, .15); //go slowly just to minimize error
-            commands.add(toWhiteLine2);
-            commands.add(new Pause(500));
-            commands.add(new Rotate(0, 1));
-            commands.add(new Pause(500));
+            runCommand(toWhiteLine2);
+            runCommand(new Pause(500));
+            runCommand(new Rotate(0, 1));
+            runCommand(new Pause(500));
             //FTCTakePicture pic = new FTCTakePicture(redIsLeft,vuforia); //Take a picture of beacon
-            //commands.add(pic);
-            commands.add(new Pause(500));
+            //runCommand(pic);
+            runCommand(new Pause(500));
 
         }
 

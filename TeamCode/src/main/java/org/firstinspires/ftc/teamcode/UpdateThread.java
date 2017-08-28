@@ -2,29 +2,16 @@ package org.firstinspires.ftc.teamcode;
 
 import android.util.Log;
 
-import com.kauailabs.navx.ftc.AHRS;
 import com.kauailabs.navx.ftc.MPU9250;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.exception.RobotCoreException;
-import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.CRServoImpl;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.LightSensor;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoImpl;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.vuforia.HINT;
-import com.vuforia.Vuforia;
-
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.teamcode.TestingOpModes.TakePictureTest;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -32,23 +19,17 @@ import java.util.Map;
 import virtualRobot.GodThread;
 import virtualRobot.JoystickController;
 import virtualRobot.SallyJoeBot;
-import virtualRobot.VuforiaLocalizerImplSubclass;
 import virtualRobot.commands.Command;
-import virtualRobot.commands.FTCTakePicture;
 import virtualRobot.commands.Rotate;
 import virtualRobot.commands.Translate;
 import virtualRobot.components.AxisSensor;
-import virtualRobot.components.ContinuousRotationServo;
 import virtualRobot.components.StateSensor;
 import virtualRobot.components.Motor;
 import virtualRobot.components.Sensor;
-import virtualRobot.components.SyncedMotors;
-import virtualRobot.godThreads.PIDLineFollowerGod;
-import virtualRobot.godThreads.PIDTesterGodThread;
-import virtualRobot.godThreads.TeleopGodThread;
+import virtualRobot.godThreads.deprecated.PIDTesterGodThread;
 import virtualRobot.logicThreads.TeleopLogic;
 import virtualRobot.utils.MathUtils;
-import virtualRobot.godThreads.TakePictureTestGod;
+import virtualRobot.godThreads.deprecated.TakePictureTestGod;
 import virtualRobot.utils.Vector3f;
 
 /*

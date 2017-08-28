@@ -1,4 +1,4 @@
-package virtualRobot;
+package virtualRobot.exceptions;
 
 /**
  * Created by 17osullivand on 2/10/17.

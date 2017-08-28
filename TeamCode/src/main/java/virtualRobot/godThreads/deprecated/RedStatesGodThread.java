@@ -1,6 +1,4 @@
-package virtualRobot.godThreads;
-
-import java.util.concurrent.atomic.AtomicBoolean;
+package virtualRobot.godThreads.deprecated;
 
 import virtualRobot.GodThread;
 import virtualRobot.LogicThread;
@@ -9,11 +7,12 @@ import virtualRobot.logicThreads.NoSensorAutonomouses.moveAndFireBalls;
 import virtualRobot.monitorThreads.TimeMonitor;
 
 /**
- * Created by 17osullivand on 11/27/16.
- * Fires the Balls and that's about it
+ * Created by 17osullivand on 1/30/17.
  */
 
-public class FireBallsGodThread extends GodThread {
+public class RedStatesGodThread extends GodThread{
+
+
 
     @Override
     public void realRun() throws InterruptedException {
@@ -22,10 +21,13 @@ public class FireBallsGodThread extends GodThread {
         Thread tm = new Thread(watchingForTime);
         tm.start();
         children.add(tm);
-        LogicThread fireBalls = new moveAndFireBalls(new AtomicBoolean(true));
+
+        LogicThread fireBalls = new moveAndFireBalls();
         Thread fb = new Thread(fireBalls);
         fb.start();
         children.add(fb);
+
         delegateMonitor(fb, new MonitorThread[]{watchingForTime});
+
     }
 }

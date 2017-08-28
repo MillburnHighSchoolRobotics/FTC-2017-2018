@@ -1,4 +1,4 @@
-package virtualRobot.godThreads;
+package virtualRobot.godThreads.deprecated;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -7,7 +7,6 @@ import virtualRobot.LogicThread;
 import virtualRobot.MonitorThread;
 import virtualRobot.commands.Command;
 import virtualRobot.commands.FTCTakePicture;
-import virtualRobot.logicThreads.NoSensorAutonomouses.RedStrafeToRamp;
 import virtualRobot.logicThreads.TestingAutonomouses.ScrewTesterMax;
 
 /**
@@ -18,9 +17,9 @@ import virtualRobot.logicThreads.TestingAutonomouses.ScrewTesterMax;
 public class PIDLineFollowerGod extends GodThread {
     LogicThread takePicture = new LogicThread() {
         @Override
-        public void loadCommands() {
+        public void realRun() {
             FTCTakePicture pic = new FTCTakePicture(FTCTakePicture.Mode.TAKING_PICTURE, b,vuforia); //Take a picture of beacon
-            commands.add(pic);
+            runCommand(pic);
         }
     };
     AtomicBoolean b = new AtomicBoolean();
@@ -43,6 +42,6 @@ public class PIDLineFollowerGod extends GodThread {
         children.add(threa2);
         //keep the program alive as long as the two monitor threads are still going - should proceed every logicThread addition
         delegateMonitor(threa2, new MonitorThread[]{});
-        Command.AUTO_ROBOT.addToProgress("redIsLeft: " + b.get());
+        Command.ROBOT.addToProgress("redIsLeft: " + b.get());
     }
 }

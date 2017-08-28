@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import virtualRobot.LogicThread;
 import virtualRobot.SallyJoeBot;
 import virtualRobot.Condition;
 
@@ -19,6 +20,7 @@ public abstract class Command  {
     final int NO_CHANGE = 0;
     private HashMap<Condition, String> conditionals = new HashMap<>();
     private AtomicBoolean stopCommand = new AtomicBoolean(false);
+    private LogicThread parentThread = null;
 
     /**
      * To evaluate the action of the string and act accordingly
@@ -34,8 +36,18 @@ public abstract class Command  {
      * @param condition
      * @param action
      */
-    public void addCondition(Condition condition, String action) {
+    public synchronized void addCondition(Condition condition, String action) {
         conditionals.put(condition, action);
+    }
+
+    /**
+     * For use of LogicThread in runCommand to set the parent thread for the command to access the monitor threads
+     *
+     * @see LogicThread
+     * @param parentThread
+     */
+    public synchronized void setParentThread(LogicThread parentThread) {
+        this.parentThread = parentThread;
     }
 
     /**
@@ -53,6 +65,8 @@ public abstract class Command  {
      * @return Action to do in changeRobotState
      */
     protected final int checkConditionals() {
+        if (stopCommand.get())
+            return END;
         for (Map.Entry<Condition, String> entry : conditionals.entrySet()) {
             if (entry.getKey().isConditionMet())
                 return activate(entry.getValue());
@@ -62,10 +76,6 @@ public abstract class Command  {
 
     public synchronized void stopCommand() {
         stopCommand.set(true);
-    }
-
-    private synchronized boolean ifStopCommand() {
-        return stopCommand.get();
     }
 
     public final static SallyJoeBot ROBOT = new SallyJoeBot();

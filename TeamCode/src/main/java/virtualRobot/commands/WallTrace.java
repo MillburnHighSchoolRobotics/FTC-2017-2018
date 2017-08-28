@@ -2,7 +2,7 @@ package virtualRobot.commands;
 
 import android.util.Log;
 
-import virtualRobot.AutonomousRobot;
+import virtualRobot.SallyJoeBot;
 import virtualRobot.Condition;
 import virtualRobot.PIDController;
 import virtualRobot.components.UltrasonicSensor;
@@ -14,10 +14,9 @@ import virtualRobot.components.UltrasonicSensor;
  * and stays within "target" cm of the wall
  */
 
-public class WallTrace implements Command {
-    Condition condition;
+public class WallTrace extends Command {
     Direction direction;
-    private AutonomousRobot robot;
+    private SallyJoeBot robot;
     private double target = 15;
     private static boolean onBlue = false;
     private boolean slow = false;
@@ -27,14 +26,8 @@ public class WallTrace implements Command {
     PIDController allign = new PIDController(0.015,0,0,0, !onBlue ? 90 : -90);
 
     public WallTrace() {
-        robot = Command.AUTO_ROBOT;
+        robot = Command.ROBOT;
         direction = Direction.FORWARD;
-        condition = new Condition() {
-            @Override
-            public boolean isConditionMet() {
-                return false;
-            }
-        };
         close.setTarget(target);
     }
     public WallTrace(Direction d) {
@@ -69,12 +62,15 @@ public class WallTrace implements Command {
 
     public Direction getDirection() { return direction; }
 
-    public void setCondition(Condition e) {
-        condition = e;
-    }
-
-    public Condition getCondition() {
-        return condition;
+    @Override
+    protected int activate(String s) {
+        switch(s) {
+            case "BREAK":
+                return BREAK;
+            case "END":
+                return END;
+        }
+        return NO_CHANGE;
     }
 
     @Override
@@ -87,7 +83,13 @@ public class WallTrace implements Command {
         robot.getRFEncoder().clearValue();
         robot.getLBEncoder().clearValue();
         robot.getRBEncoder().clearValue();
-        while (!condition.isConditionMet()) {
+        MainLoop: while (!isInterrupted) {
+            switch (checkConditionals()) {
+                case BREAK:
+                    break MainLoop;
+                case END:
+                    return isInterrupted;
+            }
             currLeft = sonarLeft.getFilteredValue();
             currRight = sonarRight.getFilteredValue();
             errClose = close.getPIDOutput(currLeft);

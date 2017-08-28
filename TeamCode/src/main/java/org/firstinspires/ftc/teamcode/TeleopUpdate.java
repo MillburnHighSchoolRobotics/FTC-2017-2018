@@ -1,11 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.UpdateThread;
-
-import virtualRobot.godThreads.TeleopGodThread;
+import virtualRobot.godThreads.deprecated.TeleopGodThread;
 
 /**
  * _____ ______   ___  ___  ________

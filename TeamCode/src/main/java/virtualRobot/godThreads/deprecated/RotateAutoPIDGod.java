@@ -1,15 +1,14 @@
-package virtualRobot.godThreads;
+package virtualRobot.godThreads.deprecated;
 
 import android.util.Log;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import virtualRobot.AutonomousRobot;
+import virtualRobot.SallyJoeBot;
 import virtualRobot.GodThread;
 import virtualRobot.LogicThread;
 import virtualRobot.MonitorThread;
 import virtualRobot.commands.Command;
-import virtualRobot.logicThreads.TestingAutonomouses.PIDTester;
 import virtualRobot.logicThreads.TestingAutonomouses.RotateAutoPIDTester;
 
 /**
@@ -23,7 +22,7 @@ public class RotateAutoPIDGod extends GodThread {
     double increment = 0.01;
     boolean lastTimeTooSmall = false;
     long iteration = 1;
-    AutonomousRobot robot = Command.ROBOT;
+    SallyJoeBot robot = Command.ROBOT;
     @Override
     public void realRun() throws InterruptedException {
         boolean isInterrupted = false;

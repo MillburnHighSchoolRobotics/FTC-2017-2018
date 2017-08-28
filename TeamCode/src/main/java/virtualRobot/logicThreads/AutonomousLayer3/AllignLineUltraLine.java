@@ -2,7 +2,7 @@ package virtualRobot.logicThreads.AutonomousLayer3;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import virtualRobot.AutonomousRobot;
+import virtualRobot.SallyJoeBot;
 import virtualRobot.Condition;
 import virtualRobot.GodThread;
 import virtualRobot.LogicThread;
@@ -17,7 +17,7 @@ import virtualRobot.logicThreads.AutonomousLayer2.ToWhiteLine;
  * Accounts for slight overshoot when going to line
  */
 @Deprecated
-public class AllignLineUltraLine extends LogicThread<AutonomousRobot>  {
+public class AllignLineUltraLine extends LogicThread  {
     GodThread.Line type;
     double currentLine;
     public static final double WALL_TRACE_SONAR_THRESHOLD = ToWhiteLine.WALL_TRACE_SONAR_THRESHOLD; //How close we want to trace wall
@@ -33,7 +33,7 @@ public class AllignLineUltraLine extends LogicThread<AutonomousRobot>  {
     }
 
     @Override
-    public void loadCommands() {
+    public void realRun() {
         final Condition atwhiteline = new Condition() {
             @Override
             public boolean isConditionMet() {
@@ -51,14 +51,14 @@ public class AllignLineUltraLine extends LogicThread<AutonomousRobot>  {
            //else
                //toWhiteLine2 =  new WallTrace(WallTrace.Direction.FORWARD,  WALL_TRACE_SONAR_THRESHOLD, CORRECTION_VALUE_TWO);
 
-           //toWhiteLine2.setCondition(atwhiteline);
-           //commands.add(toWhiteLine2);
-           commands.add(new Pause(500));
-           commands.add(new Rotate(0, 1));
-           commands.add(new Pause(500));
+           //toWhiteLine2.addCondition(atwhiteline);
+           //runCommand(toWhiteLine2);
+           runCommand(new Pause(500));
+           runCommand(new Rotate(0, 1));
+           runCommand(new Pause(500));
            //FTCTakePicture pic = new FTCTakePicture(redIsLeft,vuforia); //Take a picture of beacon
-           //commands.add(pic);
-           commands.add(new Pause(500));
+           //runCommand(pic);
+           runCommand(new Pause(500));
 
        }
        else if (type==GodThread.Line.RED_SECOND_LINE || type==GodThread.Line.BLUE_FIRST_LINE) {
@@ -67,14 +67,14 @@ public class AllignLineUltraLine extends LogicThread<AutonomousRobot>  {
           // toWhiteLine2 =  new WallTrace(WallTrace.Direction.BACKWARD,  WALL_TRACE_SONAR_THRESHOLD, CORRECTION_VALUE);
            //else
                    //toWhiteLine2 =  new WallTrace(WallTrace.Direction.BACKWARD,  WALL_TRACE_SONAR_THRESHOLD, CORRECTION_VALUE_TWO);
-           //toWhiteLine2.setCondition(atwhiteline);
-           //commands.add(toWhiteLine2);
-           commands.add(new Pause(500));
-           commands.add(new Rotate(0, 1));
-           commands.add(new Pause(500));
+           //toWhiteLine2.addCondition(atwhiteline);
+           //runCommand(toWhiteLine2);
+           runCommand(new Pause(500));
+           runCommand(new Rotate(0, 1));
+           runCommand(new Pause(500));
            //FTCTakePicture pic = new FTCTakePicture(redIsLeft,vuforia); //Take a picture of beacon
-           //commands.add(pic);
-           commands.add(new Pause(500));
+           //runCommand(pic);
+           runCommand(new Pause(500));
 
        }
 

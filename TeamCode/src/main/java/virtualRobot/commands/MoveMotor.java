@@ -9,8 +9,7 @@ import virtualRobot.components.Sensor;
  * Created by shant on 11/5/2015.
  * Moves a Motor
  */
-public class MoveMotor implements Command {
-	private Condition condition;
+public class MoveMotor extends Command {
 	private Motor motor;
 	private Sensor encoder;
 	private boolean clearEncoders;
@@ -21,12 +20,6 @@ public class MoveMotor implements Command {
 	private double timeLimit = Double.MAX_VALUE;
 
 	public MoveMotor() {
-		condition = new Condition() {
-			@Override
-			public boolean isConditionMet() {
-				return false;
-			}
-		};
 
 		motor = null;
 		encoder = null;
@@ -82,14 +75,6 @@ public class MoveMotor implements Command {
 		this.motor = motor;
 	}
 
-	public void setCondition(Condition e) {
-		condition = e;
-	}
-
-	public Condition getCondition() {
-		return condition;
-	}
-
 	public void setEncoder(Sensor encoder) {
 		this.encoder = encoder;
 	}
@@ -113,6 +98,17 @@ public class MoveMotor implements Command {
 
 
 	@Override
+	protected int activate(String s) {
+		switch(s) {
+			case "BREAK":
+				return BREAK;
+			case "END":
+				return END;
+		}
+		return NO_CHANGE;
+	}
+
+	@Override
 	public boolean changeRobotState() throws InterruptedException {
 
 		boolean isInterrupted = false;
@@ -122,7 +118,13 @@ public class MoveMotor implements Command {
 			motor.setPower(power);
 			long start = System.currentTimeMillis();
 
-			while (!condition.isConditionMet() && (System.currentTimeMillis() - start < timeLimit)) {
+			MainLoop: while (!isInterrupted && (System.currentTimeMillis() - start < timeLimit)) {
+				switch (checkConditionals()) {
+					case BREAK:
+						break MainLoop;
+					case END:
+						return isInterrupted;
+				}
 
 				if (Thread.currentThread().isInterrupted()) {
 					isInterrupted = true;
@@ -143,7 +145,13 @@ public class MoveMotor implements Command {
 			motor.setPower(power);
 
 			if (power > 0) {
-				while (!condition.isConditionMet() && encoder.getValue() < pidController.getTarget()) {
+				MainLoop: while (!isInterrupted && encoder.getValue() < pidController.getTarget()) {
+					switch (checkConditionals()) {
+						case BREAK:
+							break MainLoop;
+						case END:
+							return isInterrupted;
+					}
 
 					if (Thread.currentThread().isInterrupted()) {
 						isInterrupted = true;
@@ -158,7 +166,13 @@ public class MoveMotor implements Command {
 					}
 				}
 			} else {
-				while (!condition.isConditionMet() && encoder.getValue() > pidController.getTarget()) {
+				MainLoop: while (!isInterrupted && encoder.getValue() > pidController.getTarget()) {
+					switch (checkConditionals()) {
+						case BREAK:
+							break MainLoop;
+						case END:
+							return isInterrupted;
+					}
 
 					if (Thread.currentThread().isInterrupted()) {
 						isInterrupted = true;
@@ -179,7 +193,13 @@ public class MoveMotor implements Command {
 		case WITH_PID:
 			if (clearEncoders) encoder.clearValue();
 
-			while (!condition.isConditionMet() && Math.abs(encoder.getValue() - pidController.getTarget()) > tolerance) {
+			MainLoop: while (!isInterrupted && Math.abs(encoder.getValue() - pidController.getTarget()) > tolerance) {
+				switch (checkConditionals()) {
+					case BREAK:
+						break MainLoop;
+					case END:
+						return isInterrupted;
+				}
 
 				double pidOutput = pidController.getPIDOutput(Math.abs(encoder.getValue()));
 

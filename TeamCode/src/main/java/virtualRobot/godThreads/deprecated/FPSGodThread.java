@@ -1,4 +1,4 @@
-package virtualRobot.godThreads;
+package virtualRobot.godThreads.deprecated;
 
 import virtualRobot.GodThread;
 import virtualRobot.SallyJoeBot;

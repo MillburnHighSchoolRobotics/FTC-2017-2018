@@ -8,7 +8,7 @@ import virtualRobot.commands.Command;
 import virtualRobot.components.AxisSensor;
 import virtualRobot.components.Sensor;
 import virtualRobot.components.StateSensor;
-import virtualRobot.godThreads.FPSGodThread;
+import virtualRobot.godThreads.deprecated.FPSGodThread;
 import virtualRobot.utils.Vector3f;
 
 /**

@@ -23,8 +23,13 @@ public class RotateAutoPIDTester extends LogicThread {
     }
 
     @Override
-    public void loadCommands() {
-        commands.add(new Command() {
+    public void realRun() {
+        runCommand(new Command() {
+
+            @Override
+            protected int activate(String s) {
+                return 0;
+            }
 
             @Override
             public boolean changeRobotState() throws InterruptedException {
@@ -68,6 +73,6 @@ public class RotateAutoPIDTester extends LogicThread {
         });
         Rotate r = new Rotate(kP,90,35000,shouldStop);
         robot.getHeadingSensor().clearValue();
-        commands.add(r);
+        runCommand(r);
     }
 }

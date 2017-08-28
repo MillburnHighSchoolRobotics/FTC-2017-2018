@@ -34,17 +34,17 @@ public class BlueMoveToSecondBeacon extends LogicThread{
         this.vuforia = vuforia;
     }
     @Override
-    public void loadCommands() {
+    public void realRun() {
         WallTrace toWhiteLine =  new WallTrace(WallTrace.Direction.BACKWARD, 8); //Move to the other beacon
-        toWhiteLine.setCondition(atwhiteline);
-        commands.add(toWhiteLine);
-        commands.add(new Pause(500));
+        toWhiteLine.addCondition(atwhiteline, "BREAK");
+        runCommand(toWhiteLine);
+        runCommand(new Pause(500));
         WallTrace toWhiteLine2 =  new WallTrace(WallTrace.Direction.FORWARD, 8); //Accounts for the slight overshoot
-        toWhiteLine2.setCondition(atwhiteline);
-        commands.add(toWhiteLine2);
+        toWhiteLine2.addCondition(atwhiteline, "BREAK");
+        runCommand(toWhiteLine2);
         robot.addToProgress("Went to Line");
-        commands.add(new Pause(500));
+        runCommand(new Pause(500));
         //FTCTakePicture pic = new FTCTakePicture(this.redIsLeft,this.vuforia); //Take another picture
-        //commands.add(pic);
+        //runCommand(pic);
     }
 }

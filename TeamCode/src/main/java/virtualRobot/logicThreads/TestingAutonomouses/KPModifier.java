@@ -4,14 +4,13 @@ import android.util.Log;
 
 import virtualRobot.JoystickController;
 import virtualRobot.LogicThread;
-import virtualRobot.TeleopRobot;
 import virtualRobot.commands.Command;
 
 /**
  * Created by ethachu19 on 1/15/2017.
  */
 
-public class KPModifier extends LogicThread<TeleopRobot> {
+public class KPModifier extends LogicThread {
     public static double kP = 0.01, increment = 0.01;
     JoystickController controller;
     public KPModifier() {
@@ -19,8 +18,13 @@ public class KPModifier extends LogicThread<TeleopRobot> {
     }
 
     @Override
-    public void loadCommands() {
-        commands.add(new Command() {
+    public void realRun() {
+        runCommand(new Command() {
+            @Override
+            protected int activate(String s) {
+                return 0;
+            }
+
             @Override
             public boolean changeRobotState() throws InterruptedException {
                 boolean isInterrupted = false;

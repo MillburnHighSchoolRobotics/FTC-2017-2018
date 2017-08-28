@@ -6,11 +6,11 @@ import android.util.Log;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import virtualRobot.AutonomousRobot;
+import virtualRobot.SallyJoeBot;
 import virtualRobot.Condition;
 import virtualRobot.GodThread;
 import virtualRobot.PIDController;
-import virtualRobot.SomeoneDunGoofed;
+import virtualRobot.exceptions.SomeoneDunGoofed;
 import virtualRobot.VuforiaLocalizerImplSubclass;
 import virtualRobot.utils.Vector2i;
 
@@ -18,7 +18,7 @@ import virtualRobot.utils.Vector2i;
  * Created by 17osullivand on 2/15/17.
  */
 
-public class PreciseAllign implements Command {
+public class PreciseAllign extends Command {
     private final static boolean flipUpsideDown = true;
     public final static AllignWithBeacon.Mode currentMode = AllignWithBeacon.Mode.MIDSPLIT;
     public volatile static double startXPercent = 0;
@@ -38,7 +38,7 @@ public class PreciseAllign implements Command {
     public volatile static double start2YPercent = 0;
     public volatile static double end2YPercent = 1;
 
-    AutonomousRobot robot = Command.AUTO_ROBOT;
+    SallyJoeBot robot = Command.ROBOT;
     VuforiaLocalizerImplSubclass vuforia;
     Condition condition = new Condition() {
         @Override
@@ -71,6 +71,18 @@ public class PreciseAllign implements Command {
         this.sonarWorks = sonarWorks;
         this.type = type;
     }
+
+    @Override
+    protected int activate(String s) {
+        switch(s) {
+            case "BREAK":
+                return BREAK;
+            case "END":
+                return END;
+        }
+        return NO_CHANGE;
+    }
+
     @Override
     public boolean changeRobotState() throws InterruptedException {
         robot.getLFEncoder().clearValue();

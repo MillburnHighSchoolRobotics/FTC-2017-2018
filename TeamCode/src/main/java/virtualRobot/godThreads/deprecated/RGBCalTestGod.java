@@ -1,4 +1,4 @@
-package virtualRobot.godThreads;
+package virtualRobot.godThreads.deprecated;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -48,10 +48,10 @@ public class RGBCalTestGod extends GodThread {
             end1 = new Vector2i((int) (DavidClass.end1XPercent*width), (int) (DavidClass.end1YPercent*height));
         }
         Log.d("RGBCal", "memes");
-        Command.AUTO_ROBOT.addToProgress("Start1: " + start1.toString());
-        Command.AUTO_ROBOT.addToProgress("Start2: " + start2.toString());
-        Command.AUTO_ROBOT.addToProgress("End1: " + end1.toString());
-        Command.AUTO_ROBOT.addToProgress("End2: " + end2.toString());
+        Command.ROBOT.addToProgress("Start1: " + start1.toString());
+        Command.ROBOT.addToProgress("Start2: " + start2.toString());
+        Command.ROBOT.addToProgress("End1: " + end1.toString());
+        Command.ROBOT.addToProgress("End2: " + end2.toString());
         Vector2i slope1 = new Vector2i(11,closestTo11(((double)(end1.y - start1.y))/(end1.x - start1.x)));
         Vector2i slope2 = new Vector2i(11,closestTo11(((double)(end2.y - start2.y))/(end2.x - start2.x)));
         Vector2i currentPos;
@@ -112,17 +112,17 @@ public class RGBCalTestGod extends GodThread {
                 currentPos.x += 4;
             }
             Log.d("RGBCal","Alpha " + temp);
-            Command.AUTO_ROBOT.addToTelemetry("Sum: ",currLeft + " " + currRight + " " + curr);
-            Command.AUTO_ROBOT.addToTelemetry("SumAlpha: ",avgAlphaLeft + " " + avgAlphaRight + " " + avgAlpha);
+            Command.ROBOT.addToTelemetry("Sum: ",currLeft + " " + currRight + " " + curr);
+            Command.ROBOT.addToTelemetry("SumAlpha: ",avgAlphaLeft + " " + avgAlphaRight + " " + avgAlpha);
             currLeft /= leftCovered;
             currRight /= rightCovered;
             curr /= covered;
             avgAlphaLeft /= leftCovered;
             avgAlphaRight /= rightCovered;
             avgAlpha /= covered;
-            Command.AUTO_ROBOT.addToTelemetry("RGB: ", currLeft + " " + currRight + " " + curr);
-            Command.AUTO_ROBOT.addToTelemetry("Covered: ", leftCovered + " " + rightCovered + " " + covered);
-            Command.AUTO_ROBOT.addToTelemetry("Alpha: ", avgAlphaLeft + " " + avgAlphaRight + " " + avgAlpha);
+            Command.ROBOT.addToTelemetry("RGB: ", currLeft + " " + currRight + " " + curr);
+            Command.ROBOT.addToTelemetry("Covered: ", leftCovered + " " + rightCovered + " " + covered);
+            Command.ROBOT.addToTelemetry("Alpha: ", avgAlphaLeft + " " + avgAlphaRight + " " + avgAlpha);
             Log.d("RGBCal", currLeft + " " + currRight + " " + curr + " " + leftCovered + " " + rightCovered + " " + covered + " " + avgAlphaLeft + " " + avgAlphaRight + " " +avgAlpha);
 
             if (Thread.currentThread().isInterrupted()) {

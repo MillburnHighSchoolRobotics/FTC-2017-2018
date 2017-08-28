@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import virtualRobot.godThreads.RGBCalTestGod;
+import virtualRobot.godThreads.deprecated.RGBCalTestGod;
 
 /**
  * Created by ethachu19 on 1/4/2017.

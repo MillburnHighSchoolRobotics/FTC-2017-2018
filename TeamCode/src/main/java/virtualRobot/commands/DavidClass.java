@@ -207,7 +207,7 @@ public class DavidClass {
 
         Log.d("qqq", Long.toString(lAvg) + " " + Long.toString(rAvg));
 
-        Command.AUTO_ROBOT.addToProgress("LAVG, RAVG, LAVG+RAVG/2: " + Long.toString(lAvg) + " " + Long.toString(rAvg) + " " + Long.toString((rAvg+lAvg)/2));
+        Command.ROBOT.addToProgress("LAVG, RAVG, LAVG+RAVG/2: " + Long.toString(lAvg) + " " + Long.toString(rAvg) + " " + Long.toString((rAvg+lAvg)/2));
 
 
         boolean[] info = {(lAvg+rAvg)/2 >TOLERANCE, lAvg>rAvg};
