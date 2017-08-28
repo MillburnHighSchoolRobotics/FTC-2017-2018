@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import virtualRobot.SallyJoeBot;
 import virtualRobot.Condition;
-import virtualRobot.GodThread;
+import virtualRobot.LogicThread;
 import virtualRobot.PIDController;
 import virtualRobot.exceptions.SomeoneDunGoofed;
 import virtualRobot.VuforiaLocalizerImplSubclass;
@@ -63,13 +63,11 @@ public class PreciseAllign extends Command {
     private AllignWithBeacon.Direction direction;
     AtomicBoolean redIsLeft;
     AtomicBoolean sonarWorks;
-    GodThread.Line type;
-    public PreciseAllign(double t, AtomicBoolean redIsLeft, AtomicBoolean sonarWorks, VuforiaLocalizerImplSubclass vuforia, GodThread.Line type) {
+    public PreciseAllign(double t, AtomicBoolean redIsLeft, AtomicBoolean sonarWorks, VuforiaLocalizerImplSubclass vuforia) {
         this.timeLimit = t;
         this.redIsLeft = redIsLeft;
         this.vuforia = vuforia;
         this.sonarWorks = sonarWorks;
-        this.type = type;
     }
 
     @Override
@@ -307,12 +305,8 @@ public class PreciseAllign extends Command {
             }
         }
         else {
-           if (type.getLine() == GodThread.LineType.FIRST)  {
-               return FIRST_LINE_TARGET;
-           }
-            else {
-               return SECOND_LINE_TARGET;
-           }
+
         }
+        return 0;
     }
 }

@@ -3,9 +3,8 @@ package virtualRobot.commands;
 import android.util.Log;
 
 import virtualRobot.SallyJoeBot;
-import virtualRobot.Condition;
 import virtualRobot.PIDController;
-import virtualRobot.components.UltrasonicSensor;
+import virtualRobot.hardware.UltrasonicSensor;
 
 /**
  * Created by ethachu19 on 10/29/2016.

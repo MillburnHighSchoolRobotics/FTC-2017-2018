@@ -6,7 +6,7 @@ import virtualRobot.commands.Command;
 
 /**
  * Created by shant on 1/10/2016.
- * Monitor threads are used by delegateMonitor in godthread.
+ * Monitor threads are used by delegateMonitor in LogicThread.
  * They have the abstract method setStatus, where a particular monitor thread is told how to determine whether
  * the monitor thread should be triggered or not.
  */

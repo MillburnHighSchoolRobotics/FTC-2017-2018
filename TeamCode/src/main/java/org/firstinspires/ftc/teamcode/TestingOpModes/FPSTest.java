@@ -5,10 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import virtualRobot.SallyJoeBot;
 import virtualRobot.commands.Command;
-import virtualRobot.components.AxisSensor;
-import virtualRobot.components.Sensor;
-import virtualRobot.components.StateSensor;
-import virtualRobot.godThreads.deprecated.FPSGodThread;
+import virtualRobot.hardware.AxisSensor;
+import virtualRobot.hardware.Sensor;
+import virtualRobot.hardware.StateSensor;
+//import virtualRobot.LogicThreads.deprecated.FPSLogicThread;
 import virtualRobot.utils.Vector3f;
 
 /**
@@ -21,7 +21,7 @@ public class FPSTest extends OpMode {
     StateSensor vStateSensor;
     Sensor vHeadingSensor, vPitchSensor, vRollSensor;
     AxisSensor vRawAccel;
-    Thread godThread;
+    Thread LogicThread;
     @Override
     public void init() {
         imu = MPU9250.getInstance(hardwareMap.deviceInterfaceModule.get("dim"), 1);
@@ -30,13 +30,13 @@ public class FPSTest extends OpMode {
         vPitchSensor = robot.getPitchSensor();
         vRollSensor = robot.getRollSensor();
         vRawAccel = robot.getRawAccel();
-        try {
-            godThread = new Thread(FPSGodThread.class.newInstance());
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            LogicThread = new Thread(FPSLogicThread.class.newInstance());
+//        } catch (InstantiationException e) {
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
@@ -50,6 +50,6 @@ public class FPSTest extends OpMode {
 
     public void stop() {
         imu.close();
-        godThread.interrupt();
+        LogicThread.interrupt();
     }
 }

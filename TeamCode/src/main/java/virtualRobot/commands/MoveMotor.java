@@ -1,9 +1,8 @@
 package virtualRobot.commands;
 
-import virtualRobot.Condition;
 import virtualRobot.PIDController;
-import virtualRobot.components.Motor;
-import virtualRobot.components.Sensor;
+import virtualRobot.hardware.Motor;
+import virtualRobot.hardware.Sensor;
 
 /**
  * Created by shant on 11/5/2015.
@@ -126,13 +125,13 @@ public class MoveMotor extends Command {
 						return isInterrupted;
 				}
 
-				if (Thread.currentThread().isInterrupted()) {
-					isInterrupted = true;
-					break;
-				}
+//				if (Thread.currentThread().isInterrupted()) {
+//					isInterrupted = true;
+//					break;
+//				}
 
 				try {
-					Thread.currentThread().sleep(10);
+					Thread.sleep(10);
 				} catch (InterruptedException e) {
 					isInterrupted = true;
 					break;
@@ -159,7 +158,7 @@ public class MoveMotor extends Command {
 					}
 
 					try {
-						Thread.currentThread().sleep(25);
+						Thread.sleep(25);
 					} catch (InterruptedException e) {
 						isInterrupted = true;
 						break;
@@ -180,7 +179,7 @@ public class MoveMotor extends Command {
 					}
 
 					try {
-						Thread.currentThread().sleep(10);
+						Thread.sleep(10);
 					} catch (InterruptedException e) {
 						isInterrupted = true;
 						break;
@@ -211,7 +210,7 @@ public class MoveMotor extends Command {
 				}
 
 				try {
-					Thread.currentThread().sleep(10);
+					Thread.sleep(10);
 				} catch (InterruptedException e) {
 					isInterrupted = true;
 					break;

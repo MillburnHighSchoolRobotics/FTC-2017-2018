@@ -9,7 +9,7 @@ import virtualRobot.LogicThread;
 
 public class killChildren extends Command {
     private LogicThread logicThread;
-    public killChildren(LogicThread logicThread) {
+    public killChildren(LogicThread LogicThread) {
         this.logicThread = logicThread;
     }
 

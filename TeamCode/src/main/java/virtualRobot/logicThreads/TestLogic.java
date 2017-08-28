@@ -1,5 +1,7 @@
 package virtualRobot.logicThreads;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 import virtualRobot.LogicThread;
 import virtualRobot.commands.Rotate;
 import virtualRobot.monitorThreads.TimeMonitor;
@@ -8,10 +10,10 @@ import virtualRobot.monitorThreads.TimeMonitor;
  * Created by ethachu19 on 3/31/2017.
  */
 
+@Autonomous(name="Test Backend", group="Testing")
 public class TestLogic extends LogicThread {
     @Override
-    protected void realRun() {
-        if (runCommand(new Rotate(90)))
-            return;
+    protected void realRun() throws InterruptedException throws InterruptedException {
+        runCommand(new Rotate(90));
     }
 }

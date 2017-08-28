@@ -2,8 +2,8 @@ package virtualRobot.commands;
 
 import virtualRobot.Condition;
 import virtualRobot.PIDController;
-import virtualRobot.components.Motor;
-import virtualRobot.components.Sensor;
+import virtualRobot.hardware.Motor;
+import virtualRobot.hardware.Sensor;
 import virtualRobot.utils.MathUtils;
 
 /**

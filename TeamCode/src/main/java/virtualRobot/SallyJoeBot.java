@@ -1,22 +1,21 @@
 package virtualRobot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-import virtualRobot.components.AxisSensor;
-import virtualRobot.components.ColorSensor;
-import virtualRobot.components.ContinuousRotationServo;
-import virtualRobot.components.StateSensor;
-import virtualRobot.components.Motor;
-import virtualRobot.components.Sensor;
-import virtualRobot.components.Servo;
-import virtualRobot.components.SyncedMotors;
-import virtualRobot.components.UltrasonicSensor;
+import virtualRobot.hardware.AxisSensor;
+import virtualRobot.hardware.ColorSensor;
+import virtualRobot.hardware.ContinuousRotationServo;
+import virtualRobot.hardware.StateSensor;
+import virtualRobot.hardware.Motor;
+import virtualRobot.hardware.Sensor;
+import virtualRobot.hardware.Servo;
+import virtualRobot.hardware.SyncedMotors;
+import virtualRobot.hardware.UltrasonicSensor;
 
 /**
  * Created by DOSullivan on 9/14/16.
- * All of our our virtual components and there getters are housed in SallyJoeBot
+ * All of our our virtual hardware and there getters are housed in SallyJoeBot
  */
 public class SallyJoeBot {
     //Motors, sensors, servos referenced (e.g. private Motor...)

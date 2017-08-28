@@ -3,7 +3,7 @@ package virtualRobot.commands;
 import java.util.ArrayList;
 
 import virtualRobot.Condition;
-import virtualRobot.components.Servo;
+import virtualRobot.hardware.Servo;
 
 /**
  * Created by shant on 10/9/2015.

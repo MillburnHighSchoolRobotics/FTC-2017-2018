@@ -7,10 +7,10 @@ import virtualRobot.LogicThread;
  */
 
 public class addData extends Command {
-    private LogicThread logicThread;
+    private LogicThread LogicThread;
    private Object[] myData;
-    public addData(LogicThread logicThread, Object... data) {
-        this.logicThread = logicThread;
+    public addData(LogicThread LogicThread, Object... data) {
+        this.LogicThread = LogicThread;
         this.myData = data;
     }
 
@@ -24,7 +24,7 @@ public class addData extends Command {
         return false;
     }
     public LogicThread getLogicThread() {
-        return logicThread;
+        return LogicThread;
     }
     public Object[] getMyData() {
         return myData;

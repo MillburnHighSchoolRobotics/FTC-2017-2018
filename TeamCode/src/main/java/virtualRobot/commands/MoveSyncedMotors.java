@@ -1,6 +1,6 @@
 package virtualRobot.commands;
 
-import virtualRobot.components.SyncedMotors;
+import virtualRobot.hardware.SyncedMotors;
 
 /**
  * Created by ethachu19 on 9/24/2016.

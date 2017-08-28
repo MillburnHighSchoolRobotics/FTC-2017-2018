@@ -18,8 +18,8 @@ public abstract class Command  {
     final int BREAK = 2;
     final int END = 1;
     final int NO_CHANGE = 0;
-    private HashMap<Condition, String> conditionals = new HashMap<>();
-    private AtomicBoolean stopCommand = new AtomicBoolean(false);
+    private final HashMap<Condition, String> conditionals = new HashMap<>();
+    private final AtomicBoolean stopCommand = new AtomicBoolean(false);
     private LogicThread parentThread = null;
 
     /**
@@ -68,6 +68,8 @@ public abstract class Command  {
         if (stopCommand.get())
             return END;
         for (Map.Entry<Condition, String> entry : conditionals.entrySet()) {
+            if (entry.getKey() == null)
+                continue;
             if (entry.getKey().isConditionMet())
                 return activate(entry.getValue());
         }

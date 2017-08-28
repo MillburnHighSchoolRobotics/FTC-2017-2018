@@ -22,13 +22,13 @@ import virtualRobot.commands.Translate;
  * HAHA TAKE THAT SUCKERS
  */
 public abstract class LogicThread implements Runnable {
-    protected List<Thread> children; //contains a list of threads created under this logic Thread using spawn new thread
-    protected SallyJoeBot robot;
+    protected List<Thread> children = new ArrayList<>(); //contains a list of threads created under this logic Thread using spawn new thread
+    protected SallyJoeBot robot = Command.ROBOT;
     protected ConcurrentHashMap<String, Boolean> monitorData = new ConcurrentHashMap<>();
     private ConcurrentHashMap<Condition, LogicThread> interrupts = new ConcurrentHashMap<>();
-    protected Command lastRunCommand = null;
+    protected volatile Command lastRunCommand = null;
     private List<MonitorThread> monitorThreads = Collections.synchronizedList(new ArrayList<MonitorThread>());
-    private volatile long startTime, elapsedTime;
+    private volatile long startTime, elapsedTime = 0;
 
     private enum ThreadState{
         NOT_RUNNING,
@@ -38,22 +38,21 @@ public abstract class LogicThread implements Runnable {
     private volatile ThreadState state;
 
     //The thread to check all monitorThreads and put data in HashMap
-    private Thread interruptHandler = new Thread(this) {
+    private Thread interruptHandler = new Thread() {
 
-        public LogicThread parent;
+        public LogicThread parent = null;
 
-        public void Thread(LogicThread thread) {
-            parent = thread;
+        public Thread setParent(LogicThread logicThread) {
+            parent = logicThread;
+            return this;
         }
 
         public void run() {
-            parent.startTime = System.currentTimeMillis();
+//            parent.startTime = System.currentTimeMillis();
             boolean isInterrupted = false;
             while (!isInterrupted) {
                 for (MonitorThread m : parent.monitorThreads) {
-                    if (!m.getStatus()) {
-                        parent.monitorData.put(m.getClass().getName(), true);
-                    }
+                    parent.monitorData.put(m.getClass().getName(), !m.getStatus());
                 }
 
                 for (Map.Entry<Condition, LogicThread> entry : parent.interrupts.entrySet()) {
@@ -68,31 +67,40 @@ public abstract class LogicThread implements Runnable {
                         if (parent.lastRunCommand != null)
                             parent.lastRunCommand.stopCommand(); //stops currently running command
                         entry.getValue().state = ThreadState.RUNNING;
-                        entry.getValue().realRun();
+                        try {
+                            entry.getValue().realRun();
+                        } catch (InterruptedException e) {
+                            isInterrupted = true;
+                        }
                         entry.getValue().killChildren();
                         entry.getValue().state = ThreadState.NOT_RUNNING;
                         parent.resumeParent();
                         parent.notify();
                     }
                 }
-                parent.elapsedTime = System.currentTimeMillis() - startTime;
+//                parent.elapsedTime = System.currentTimeMillis() - startTime;
                 isInterrupted = Thread.currentThread().isInterrupted();
+                if (isInterrupted)
+                    break;
 
                 try {
                     Thread.sleep(1);
                 } catch (InterruptedException ex) {
                     isInterrupted = true;
+                    break;
                 }
             }
         }
-    };
+    }.setParent(this);
 
     @Override
     public void run(){
         state = ThreadState.RUNNING;
-        elapsedTime = 0;
         interruptHandler.start();
-        realRun();
+        try {
+            realRun();
+        } catch (InterruptedException e) {
+        }
         killChildren();
         interruptHandler.interrupt();
         state = ThreadState.NOT_RUNNING;
@@ -104,29 +112,26 @@ public abstract class LogicThread implements Runnable {
      * @param c Command to run
      * @return Whether command stopped by interrupt
      */
-    protected boolean runCommand(Command c) {
+    protected synchronized boolean runCommand(Command c) throws InterruptedException{
         boolean isInterrupted = false;
         boolean stopByIH = false;
         lastRunCommand = c;
+
         if (state == ThreadState.PAUSE){
             if (waitForNotify())
                 return true;
         }
-        
-//        if (c instanceof Rotate) {
-//            if (((Rotate)c).getName() != null) robot.addToProgress(((Rotate)c).getName());
-//        }
-//        if (c instanceof Translate) {
-//            if (((Translate)c).getName() != null) robot.addToProgress(((Translate)c).getName());
-//        }
+
         if (c instanceof SpawnNewThread) { //Add all children thread to list to kill later
             children.addAll(((SpawnNewThread)c).getThreads());
         }
+
         try {
             isInterrupted  = c.changeRobotState(); //Actually run the command
         } catch (InterruptedException e) {
             isInterrupted = true;
         }
+
         if (state == ThreadState.PAUSE && !isInterrupted) {
             stopByIH = true;
             if (c instanceof Translate) {
@@ -162,10 +167,12 @@ public abstract class LogicThread implements Runnable {
                 }
             }
         }
+
         if (state == ThreadState.PAUSE){
             if (waitForNotify())
                 return true;
         }
+
         if (stopByIH) //Resuming after stopped by Interrupt Handler, call command again and resume Translate where it left off
             try {
                 if (c instanceof Translate) {
@@ -194,13 +201,20 @@ public abstract class LogicThread implements Runnable {
     }
 
     public synchronized void removeMonitor(Class<?> object) {
-
+        List<MonitorThread> remove = new ArrayList<>();
+        for (MonitorThread mt : monitorThreads) {
+            if (object.isInstance(mt))
+                remove.add(mt);
+        }
+        for (MonitorThread mt : remove) {
+            monitorThreads.remove(mt);
+        }
     }
 
     /**
      * Method with real commands and running commands
      */
-    protected abstract void realRun();
+    protected abstract void realRun() throws InterruptedException;
 
 
     /**
@@ -215,25 +229,25 @@ public abstract class LogicThread implements Runnable {
     /**
      * Kills all children spawned by SpawnNewThread
      */
-    public void killChildren() {
+    public synchronized void killChildren() {
         for (Thread x : children) //Kill any threads made using spawn new thread
             if (x.isAlive())
                 x.interrupt();
     }
 
     /**
-     * Binds monitorThread to logicThread so that it can reference it in code
+     * Binds monitorThread to LogicThread so that it can reference it in code
      *
-     * @param logicThread The logic thread to
+     * @param LogicThread The logic thread to
      * @param monitorThread monitorThread to be bound to LogicThread
      */
-    public static void delegateMonitor(LogicThread logicThread, MonitorThread monitorThread) {
-        logicThread.monitorThreads.add(monitorThread);
-        logicThread.monitorData.put(monitorThread.getClass().getName(), false);
+    public static void delegateMonitor(LogicThread LogicThread, MonitorThread monitorThread) {
+        LogicThread.monitorThreads.add(monitorThread);
+        LogicThread.monitorData.put(monitorThread.getClass().getName(), false);
     }
 
     /**
-     * Put this logic thread into a pause state and notif other threads
+     * Put this logic thread into a pause state and notify other threads
      */
     protected synchronized void pauseParent() {
         synchronized (this) {
