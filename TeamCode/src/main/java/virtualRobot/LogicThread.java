@@ -21,7 +21,7 @@ import virtualRobot.commands.Translate;
  *
  * HAHA TAKE THAT SUCKERS
  */
-public abstract class LogicThread implements Runnable {
+public abstract class LogicThread extends Thread {
     protected List<Thread> children = new ArrayList<>(); //contains a list of threads created under this logic Thread using spawn new thread
     protected SallyJoeBot robot = Command.ROBOT;
     protected ConcurrentHashMap<String, Boolean> monitorData = new ConcurrentHashMap<>();
@@ -209,6 +209,10 @@ public abstract class LogicThread implements Runnable {
         for (MonitorThread mt : remove) {
             monitorThreads.remove(mt);
         }
+    }
+
+    public synchronized boolean interruptIsAlive() {
+        return interruptHandler.isAlive();
     }
 
     /**

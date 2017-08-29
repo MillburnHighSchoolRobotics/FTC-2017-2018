@@ -1,8 +1,10 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.UpdateOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import virtualRobot.logicThreads.*;
+import org.firstinspires.ftc.teamcode.UpdateThread;
+
+import virtualRobot.logicThreads.testing.TestBackendLogic;
 
 /**
  * Created by Ethan Mak on 8/28/2017.

@@ -45,9 +45,10 @@ public class VuforiaLocalizerImplSubclass extends VuforiaLocalizerImpl {
             //Important Stuff:
             long num = frame.getNumImages();
 
-            for(int i = 0; i < num; i++){
+            for(int i = (int) (num - 1); i >= 0; i--){
                 if(frame.getImage(i).getFormat() == PIXEL_FORMAT.RGB565){
                     rgb = frame.getImage(i);
+                    break;
                 }
             }
             //End important stuff.

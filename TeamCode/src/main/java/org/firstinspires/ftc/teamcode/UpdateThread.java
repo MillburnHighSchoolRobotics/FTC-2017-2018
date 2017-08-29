@@ -6,11 +6,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+
 import java.util.ArrayList;
 import java.util.Map;
 
 import virtualRobot.LogicThread;
 import virtualRobot.SallyJoeBot;
+import virtualRobot.VuforiaLocalizerImplSubclass;
 import virtualRobot.commands.Command;
 import virtualRobot.commands.Rotate;
 import virtualRobot.commands.Translate;
@@ -25,10 +28,18 @@ Updates Real hardware (e.g. motors) to correspond to the values of their virtual
 public abstract class UpdateThread extends OpMode {
 	private SallyJoeBot robot;
 	protected Class<? extends LogicThread> logicThread;
-	private Thread t;
+	private LogicThread t;
 	private CreateVuforia cv;
 	boolean tInstantiated= false;
 	public static boolean allDone = false;
+	public static VuforiaLocalizerImplSubclass vuforiaInstance = null;
+	private static ArrayList<Class<? extends LogicThread>> exceptions = new ArrayList<>();
+
+	//Here we add all the exception logic threads that are exempt from vuforia initialization
+	//This just helps to lessen the time needed to test
+	static {
+
+	}
 
 	//here we will initiate all of our PHYSICAL hardware. E.g: private DcMotor leftBack...
 	//also initiate sensors. E.g. private AnalogInput sonar, private ColorSensor colorSensor, private DigitalChannel ...
@@ -42,10 +53,6 @@ public abstract class UpdateThread extends OpMode {
 	private Motor vLeftFront;
 
     private ElapsedTime runtime = new ElapsedTime();
-
-	private ArrayList<String> robotProgress;
-
-	private long timePerIter = 1000, startTime, iterCount = 0;
 
 	@Override
 	public void init() {
@@ -72,6 +79,12 @@ public abstract class UpdateThread extends OpMode {
         setLogicThread();
 //		cv = new CreateVuforia(LogicThread, vuforiaEverywhere, t);
 //		new Thread (cv).start();
+		if (!exceptions.contains(logicThread)){
+			VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
+			params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+			params.vuforiaLicenseKey = "AdVGalv/////AAAAGYhiDIdk+UI+ivt0Y7WGvUJnm5cKX/lWesW2pH7gnK3eOLTKThLekYSO1q65ttw7X1FvNhxxhdQl3McS+mzYjO+HkaFNJlHxltsI5+b4giqNQKWhyKjzbYbNw8aWarI5YCYUFnyiPPjH39/CbBzzFk3G2RWIzNB7cy4AYhjwYRKRiL3k33YvXv0ZHRzJRkMpnytgvdv5jEQyWa20DIkriC+ZBaj8dph8/akyYfyD1/U19vowknmzxef3ncefgOZoI9yrK82T4GBWazgWvZkIz7bPy/ApGiwnkVzp44gVGsCJCUFERiPVwfFa0SBLeCrQMrQaMDy3kOIVcWTotFn4m1ridgE5ZP/lvRzEC4/vcuV0";
+			UpdateThread.vuforiaInstance = new VuforiaLocalizerImplSubclass(params);
+		}
 	}
 
 	public void init_loop () {
@@ -88,7 +101,7 @@ public abstract class UpdateThread extends OpMode {
 		Rotate.setCurrentAngle(0);
 		telemetry.addData("Before thread", "");
 		try {
-			t = new Thread(logicThread.newInstance());
+			t = logicThread.newInstance();
 			tInstantiated = true;
 		} catch (InstantiationException e) {
 			tInstantiated = false;
@@ -101,11 +114,11 @@ public abstract class UpdateThread extends OpMode {
 			t.start();
 //		telemetry.addData("Started Logic ", t.isAlive());
 		Thread.currentThread().setPriority(10);
+		runtime.reset();
 	}
 	
 	public void loop() {
 		// Update Location. E.g.: double prevEcnoderValue=?, newEncoderValue=?,
-		startTime = System.currentTimeMillis();
 		//TODO: Calculate values for prev and newEncoderValues (Not top priority, locationSensor may not be used)
 
 		// Update Sensor Values E.g. vPitchSensor.setRawValue(imu.getIntegratedPitch()); vHeadingSensor, vRollSensor, vColorSensor...
@@ -124,17 +137,19 @@ public abstract class UpdateThread extends OpMode {
 			telemetry.addData("robot progress " + i, robot.getProgress().get(i));
 		}
 		telemetry.addData("Logic is Alive: ", t.isAlive());
+		telemetry.addData("Interrupt is Alive", t.interruptIsAlive());
 		telemetry.addData("Motor Power: ", leftPower);
 		telemetry.addData("Motor: ", robot.getLFMotor().toString());
-		telemetry.addData("Iterations: ", iterCount);
-		iterCount++;
+		telemetry.addData("Loop Time: ", runtime.toString());
     }
 	
 	public void stop() {
 //		imu.close();
+		vuforiaInstance = null;
 		allDone = true;
 		if (tInstantiated)
 			t.interrupt();
+		System.gc();
 	}
 
 	public abstract void setLogicThread();
