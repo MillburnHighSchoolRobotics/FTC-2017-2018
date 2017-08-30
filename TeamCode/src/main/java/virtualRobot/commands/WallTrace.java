@@ -62,17 +62,6 @@ public class WallTrace extends Command {
     public Direction getDirection() { return direction; }
 
     @Override
-    protected int activate(String s) {
-        switch(s) {
-            case "BREAK":
-                return BREAK;
-            case "END":
-                return END;
-        }
-        return NO_CHANGE;
-    }
-
-    @Override
     public boolean changeRobotState() throws InterruptedException {
         boolean isInterrupted = false;
         UltrasonicSensor sonarLeft = direction == Direction.FORWARD ? robot.getSonarLeft() : robot.getSonarRight();

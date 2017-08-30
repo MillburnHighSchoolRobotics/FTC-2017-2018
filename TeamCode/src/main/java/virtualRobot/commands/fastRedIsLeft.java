@@ -58,11 +58,6 @@ public class fastRedIsLeft extends Command {
     }
 
     @Override
-    protected int activate(String s) {
-        return NO_CHANGE;
-    }
-
-    @Override
     public boolean changeRobotState() throws InterruptedException {
         robot.getLFEncoder().clearValue();
         robot.getRFEncoder().clearValue();

@@ -1,16 +1,21 @@
 package virtualRobot;
 
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import virtualRobot.commands.Command;
 import virtualRobot.commands.Rotate;
 import virtualRobot.commands.SpawnNewThread;
 import virtualRobot.commands.Translate;
+
+import static android.R.attr.name;
 
 /**
  * Created by ethachu19 on 3/31/17
@@ -24,18 +29,13 @@ import virtualRobot.commands.Translate;
 public abstract class LogicThread extends Thread {
     protected List<Thread> children = new ArrayList<>(); //contains a list of threads created under this logic Thread using spawn new thread
     protected SallyJoeBot robot = Command.ROBOT;
-    protected ConcurrentHashMap<String, Boolean> monitorData = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Boolean> monitorData = new ConcurrentHashMap<>();
     private ConcurrentHashMap<Condition, LogicThread> interrupts = new ConcurrentHashMap<>();
     protected volatile Command lastRunCommand = null;
     private List<MonitorThread> monitorThreads = Collections.synchronizedList(new ArrayList<MonitorThread>());
     private volatile long startTime, elapsedTime = 0;
 
-    private enum ThreadState{
-        NOT_RUNNING,
-        RUNNING,
-        PAUSE
-    };
-    private volatile ThreadState state;
+    private AtomicBoolean isPaused = new AtomicBoolean(false);
 
     //The thread to check all monitorThreads and put data in HashMap
     private Thread interruptHandler = new Thread() {
@@ -48,38 +48,31 @@ public abstract class LogicThread extends Thread {
         }
 
         public void run() {
-//            parent.startTime = System.currentTimeMillis();
+            parent.startTime = System.currentTimeMillis();
             boolean isInterrupted = false;
             while (!isInterrupted) {
                 for (MonitorThread m : parent.monitorThreads) {
-                    parent.monitorData.put(m.getClass().getName(), !m.getStatus());
+                    parent.monitorData.put(m.getClass().getName(), !m.getStatus() || parent.monitorData.get(m.getClass().getName()));
                 }
 
                 for (Map.Entry<Condition, LogicThread> entry : parent.interrupts.entrySet()) {
                     if (entry.getKey().isConditionMet()) {
-                        parent.pauseParent();
-                        try {
-                            parent.wait();
-                        } catch (InterruptedException e) {
-                            isInterrupted = true;
-                            return;
-                        }
+                        parent.isPaused.set(true);
                         if (parent.lastRunCommand != null)
                             parent.lastRunCommand.stopCommand(); //stops currently running command
-                        entry.getValue().state = ThreadState.RUNNING;
+                        robot.stopMotors();
                         try {
                             entry.getValue().realRun();
                         } catch (InterruptedException e) {
                             isInterrupted = true;
                         }
                         entry.getValue().killChildren();
-                        entry.getValue().state = ThreadState.NOT_RUNNING;
-                        parent.resumeParent();
-                        parent.notify();
+                        parent.lastRunCommand.resetStopCommand();
+                        parent.isPaused.set(false);
                     }
                 }
-//                parent.elapsedTime = System.currentTimeMillis() - startTime;
-                isInterrupted = Thread.currentThread().isInterrupted();
+                parent.elapsedTime = System.currentTimeMillis() - startTime;
+                isInterrupted = Thread.currentThread().isInterrupted() || isInterrupted;
                 if (isInterrupted)
                     break;
 
@@ -95,15 +88,19 @@ public abstract class LogicThread extends Thread {
 
     @Override
     public void run(){
-        state = ThreadState.RUNNING;
+        isPaused.set(false);
+        addPresets();
         interruptHandler.start();
         try {
             realRun();
         } catch (InterruptedException e) {
+            Log.d("INTERRUPTS", this.getClass().getName() + " was interrupted");
+        }finally {
+            killChildren();
+            killMonitorThreads();
+            interruptHandler.interrupt();
+            isPaused.set(false);
         }
-        killChildren();
-        interruptHandler.interrupt();
-        state = ThreadState.NOT_RUNNING;
     }
 
     /**
@@ -112,14 +109,14 @@ public abstract class LogicThread extends Thread {
      * @param c Command to run
      * @return Whether command stopped by interrupt
      */
-    protected synchronized boolean runCommand(Command c) throws InterruptedException{
+    protected synchronized void runCommand(Command c) throws InterruptedException{
         boolean isInterrupted = false;
         boolean stopByIH = false;
         lastRunCommand = c;
 
-        if (state == ThreadState.PAUSE){
+        if (isPaused.get()){
             if (waitForNotify())
-                return true;
+                throw new InterruptedException("waitForNotify was interrupted");
         }
 
         if (c instanceof SpawnNewThread) { //Add all children thread to list to kill later
@@ -132,7 +129,10 @@ public abstract class LogicThread extends Thread {
             isInterrupted = true;
         }
 
-        if (state == ThreadState.PAUSE && !isInterrupted) {
+        if (isInterrupted)
+            throw new InterruptedException(c.getClass().getName() + " was interrupted");
+
+        if (isPaused.get()) {
             stopByIH = true;
             if (c instanceof Translate) {
                 Translate t = (Translate) c;
@@ -168,9 +168,9 @@ public abstract class LogicThread extends Thread {
             }
         }
 
-        if (state == ThreadState.PAUSE){
+        if (isPaused.get()){
             if (waitForNotify())
-                return true;
+                throw new InterruptedException("waitForNotify was interrupted");
         }
 
         if (stopByIH) //Resuming after stopped by Interrupt Handler, call command again and resume Translate where it left off
@@ -184,14 +184,22 @@ public abstract class LogicThread extends Thread {
             } catch (InterruptedException e) {
                 isInterrupted = true;
             }
-        return isInterrupted;
+        if (isInterrupted)
+            throw new InterruptedException(c.getClass().getName() + " was interrupted");
+    }
+
+    protected boolean getMonitorData(Class<? extends MonitorThread> obj) {
+        boolean temp = monitorData.get(obj.getName());
+        monitorData.put(obj.getName(), false);
+        return temp;
     }
 
     private boolean waitForNotify() {
         synchronized (this) {
-            while (state == ThreadState.PAUSE) {
+            while (isPaused.get()) {
                 try {
-                    this.wait();
+//                    this.wait();
+                    Thread.sleep(10);
                 } catch (InterruptedException e) {
                     return true;
                 }
@@ -200,25 +208,29 @@ public abstract class LogicThread extends Thread {
         return false;
     }
 
-    public synchronized void removeMonitor(Class<?> object) {
+    public synchronized void removeMonitor(Class<? extends MonitorThread> object) {
         List<MonitorThread> remove = new ArrayList<>();
         for (MonitorThread mt : monitorThreads) {
             if (object.isInstance(mt))
                 remove.add(mt);
         }
+        monitorData.remove(object.getName());
         for (MonitorThread mt : remove) {
+            mt.interrupt();
             monitorThreads.remove(mt);
         }
     }
 
-    public synchronized boolean interruptIsAlive() {
-        return interruptHandler.isAlive();
+    public boolean allIsAlive() {
+        return this.isAlive() || interruptHandler.isAlive();
     }
 
     /**
      * Method with real commands and running commands
      */
     protected abstract void realRun() throws InterruptedException;
+
+    protected void addPresets() {};
 
 
     /**
@@ -239,34 +251,28 @@ public abstract class LogicThread extends Thread {
                 x.interrupt();
     }
 
+    private synchronized void killMonitorThreads() {
+        for (MonitorThread x : monitorThreads)
+            if (x.isAlive())
+                x.interrupt();
+    }
+
     /**
      * Binds monitorThread to LogicThread so that it can reference it in code
      *
-     * @param LogicThread The logic thread to
+     * @param logicThread The logic thread to
      * @param monitorThread monitorThread to be bound to LogicThread
      */
-    public static void delegateMonitor(LogicThread LogicThread, MonitorThread monitorThread) {
-        LogicThread.monitorThreads.add(monitorThread);
-        LogicThread.monitorData.put(monitorThread.getClass().getName(), false);
-    }
-
-    /**
-     * Put this logic thread into a pause state and notify other threads
-     */
-    protected synchronized void pauseParent() {
-        synchronized (this) {
-            state = ThreadState.PAUSE;
-            notifyAll();
+    public static void delegateMonitor(LogicThread logicThread, MonitorThread monitorThread, boolean runAsThread) {
+        logicThread.monitorThreads.add(monitorThread);
+        logicThread.monitorData.put(monitorThread.getClass().getName(), false);
+        if (runAsThread) {
+            monitorThread.setThread(true);
+            monitorThread.start();
         }
     }
 
-    /**
-     * Resumes this logic thread and notifies other threads
-     */
-    protected synchronized void resumeParent() {
-        synchronized (this) {
-            state = ThreadState.RUNNING;
-            notifyAll();
-        }
+    public static void delegateMonitor(LogicThread logicThread, MonitorThread monitorThread) {
+        delegateMonitor(logicThread,monitorThread,false);
     }
 }

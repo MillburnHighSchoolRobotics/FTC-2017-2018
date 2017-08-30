@@ -15,11 +15,6 @@ public class addData extends Command {
     }
 
     @Override
-    protected int activate(String s) {
-        return 0;
-    }
-
-    @Override
     public boolean changeRobotState() throws InterruptedException {
         return false;
     }

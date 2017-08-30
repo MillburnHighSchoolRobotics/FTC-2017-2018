@@ -49,17 +49,6 @@ public class NavigateToBeacon extends Command {
     public void addCondition(Condition condition) { this.condition = condition; }
 
     @Override
-    protected int activate(String s) {
-        switch(s) {
-            case "BREAK":
-                return BREAK;
-            case "END":
-                return END;
-        }
-        return NO_CHANGE;
-    }
-
-    @Override
     public boolean changeRobotState(){
         OpenGLMatrix targetMatrix;
 

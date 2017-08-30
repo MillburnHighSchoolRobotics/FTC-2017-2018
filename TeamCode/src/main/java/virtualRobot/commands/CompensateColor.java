@@ -38,17 +38,6 @@ public class CompensateColor extends Command {
     }
 
     @Override
-    protected int activate(String s) {
-        switch(s) {
-            case "BREAK":
-                return BREAK;
-            case "END":
-                return END;
-        }
-        return NO_CHANGE;
-    }
-
-    @Override
     public boolean changeRobotState() throws InterruptedException {
         boolean isInterrupted = false;
         PIDController rotation = new PIDController(0.008,0,0,0,referenceAngle);

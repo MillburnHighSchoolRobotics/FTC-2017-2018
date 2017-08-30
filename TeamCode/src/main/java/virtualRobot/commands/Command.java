@@ -28,7 +28,15 @@ public abstract class Command  {
      * @param s Action string
      * @return An int associated with the action needed in the method changeRobotState
      */
-    protected abstract int activate(String s);
+    protected int activate(String s) {
+        switch(s) {
+            case "BREAK":
+                return BREAK;
+            case "END":
+                return END;
+        }
+        return NO_CHANGE;
+    }
 
     /**
      * Adds a condition to HashMap of condiiton and associates it with an action
@@ -38,6 +46,11 @@ public abstract class Command  {
      */
     public synchronized void addCondition(Condition condition, String action) {
         conditionals.put(condition, action);
+    }
+
+    public synchronized Command addConditionThis(Condition condition, String action) {
+        conditionals.put(condition, action);
+        return this;
     }
 
     /**
@@ -76,8 +89,12 @@ public abstract class Command  {
         return NO_CHANGE;
     }
 
-    public synchronized void stopCommand() {
+    public void stopCommand() {
         stopCommand.set(true);
+    }
+
+    public void resetStopCommand() {
+        stopCommand.set(false);
     }
 
     public final static SallyJoeBot ROBOT = new SallyJoeBot();

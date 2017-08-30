@@ -95,18 +95,6 @@ public class MoveMotor extends Command {
 		this.tolerance = tolerance;
 	}
 
-
-	@Override
-	protected int activate(String s) {
-		switch(s) {
-			case "BREAK":
-				return BREAK;
-			case "END":
-				return END;
-		}
-		return NO_CHANGE;
-	}
-
 	@Override
 	public boolean changeRobotState() throws InterruptedException {
 
@@ -125,10 +113,10 @@ public class MoveMotor extends Command {
 						return isInterrupted;
 				}
 
-//				if (Thread.currentThread().isInterrupted()) {
-//					isInterrupted = true;
-//					break;
-//				}
+				if (Thread.currentThread().isInterrupted()) {
+					isInterrupted = true;
+					break;
+				}
 
 				try {
 					Thread.sleep(10);

@@ -19,11 +19,6 @@ public class PlayMusic extends Command {
     }
 
     @Override
-    protected int activate(String s) {
-        return 0;
-    }
-
-    @Override
     public boolean changeRobotState() throws InterruptedException {
         final MediaPlayer mp = new MediaPlayer();
 

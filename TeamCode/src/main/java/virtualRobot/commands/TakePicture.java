@@ -12,10 +12,6 @@ import static com.qualcomm.ftcrobotcontroller.FtcRobotControllerActivity.mCamera
  */
 @Deprecated
 public class TakePicture extends Command {
-    @Override
-    protected int activate(String s) {
-        return 0;
-    }
 
     @Override
     public boolean changeRobotState() throws InterruptedException {

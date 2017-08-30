@@ -16,17 +16,6 @@ public class LineTrace extends Command {
     }
 
     @Override
-    protected int activate(String s) {
-        switch(s) {
-            case "BREAK":
-                return BREAK;
-            case "END":
-                return END;
-        }
-        return NO_CHANGE;
-    }
-
-    @Override
     public boolean changeRobotState() throws InterruptedException {
         double basePower = 0.3, adjustedPower;
         boolean isInterrupted = false;

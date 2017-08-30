@@ -15,17 +15,6 @@ public class MoveSyncedMotors extends Command {
 	}
 
     @Override
-    protected int activate(String s) {
-        switch(s) {
-            case "BREAK":
-                return BREAK;
-            case "END":
-                return END;
-        }
-        return NO_CHANGE;
-    }
-
-    @Override
     public boolean changeRobotState() throws InterruptedException {
         synced.setPower(power);
         return Thread.currentThread().isInterrupted();

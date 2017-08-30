@@ -14,11 +14,6 @@ public class killChildren extends Command {
     }
 
     @Override
-    protected int activate(String s) {
-        return NO_CHANGE;
-    }
-
-    @Override
     public boolean changeRobotState() throws InterruptedException {
         logicThread.killChildren();
         return false;

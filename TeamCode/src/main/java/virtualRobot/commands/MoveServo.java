@@ -68,17 +68,6 @@ public class MoveServo extends Command {
     }
 
     @Override
-    protected int activate(String s) {
-        switch(s) {
-            case "BREAK":
-                return BREAK;
-            case "END":
-                return END;
-        }
-        return NO_CHANGE;
-    }
-
-    @Override
     public boolean changeRobotState() {
         int i = 0;
         boolean isInterrupted = false;

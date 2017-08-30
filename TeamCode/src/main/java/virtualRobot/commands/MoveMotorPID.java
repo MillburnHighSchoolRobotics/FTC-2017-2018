@@ -90,17 +90,6 @@ public class MoveMotorPID extends Command {
         return lastSpeed;
     }
 
-    @Override
-    protected int activate(String s) {
-        switch(s) {
-            case "BREAK":
-                return BREAK;
-            case "END":
-                return END;
-        }
-        return NO_CHANGE;
-    }
-
     //shuyd
     @Override
     public boolean changeRobotState() throws InterruptedException {

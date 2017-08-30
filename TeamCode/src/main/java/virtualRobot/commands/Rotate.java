@@ -163,17 +163,6 @@ public class Rotate extends Command {
     }
 
     @Override
-    protected int activate(String s) {
-        switch(s) {
-            case "BREAK":
-                return BREAK;
-            case "END":
-                return END;
-        }
-        return NO_CHANGE;
-    }
-
-    @Override
     public boolean changeRobotState() throws InterruptedException {
         boolean isInterrupted = false;
         time = System.currentTimeMillis();

@@ -10,9 +10,10 @@ import virtualRobot.commands.Command;
  * They have the abstract method setStatus, where a particular monitor thread is told how to determine whether
  * the monitor thread should be triggered or not.
  */
-public abstract class MonitorThread implements Runnable {
-    private boolean status; //usually should be TRUE, if stuff goes wrong, make it FALSE
+public abstract class MonitorThread extends Thread {
+    private volatile boolean status; //usually should be TRUE, if stuff goes wrong, make it FALSE
     public static boolean NORMAL;
+    public boolean isThread = false;
     protected SallyJoeBot robot;
 
     public MonitorThread () {
@@ -21,23 +22,32 @@ public abstract class MonitorThread implements Runnable {
         status = true;
     }
 
+    public void setThread(boolean isThread) {
+        this.isThread = isThread;
+    }
+
     @Override
     public void run() { //Constantly Runs as long as the status is normal. As soon as it isn't, it stops running. The god Thread in the meantime will have detected that the status is not normal.
-        while (!Thread.currentThread().isInterrupted() && (status == NORMAL)) {
-            status = setStatus();
-            Log.d("Monitor", Boolean.toString(status));
-            if (status == false) {
-                break;
+        while (!Thread.currentThread().isInterrupted()) {
+            if (setStatus() != NORMAL) {
+                status = !NORMAL;
             }
+            //Log.d("Monitor", Boolean.toString(status));
         }
-        if (status != NORMAL) {
-            return;
-        }
+
     }
 
-    public boolean getStatus() {
-        return status;
+    public synchronized boolean getStatus() {
+        if (!isThread)
+            return setStatus();
+        boolean temp = status;
+        resetStatus();
+        return temp;
     }
 
-    public abstract boolean setStatus ();
+    private void resetStatus() {
+        status = NORMAL;
+    }
+
+    public abstract boolean setStatus();
 }

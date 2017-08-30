@@ -31,11 +31,6 @@ public class FTCTakePicture extends Command{
         this.vuforia = vuforia;
     }
 
-    @Override
-    protected int activate(String s) {
-        return NO_CHANGE;
-    }
-
     public boolean changeRobotState() throws InterruptedException {
 
         //Converts VuforiaLocalizerImplSubclass' picture to a bitmap for analysis by DavidClass

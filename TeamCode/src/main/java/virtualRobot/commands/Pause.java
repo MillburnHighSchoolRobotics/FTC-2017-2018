@@ -1,5 +1,7 @@
 package virtualRobot.commands;
 
+import android.util.Log;
+
 import virtualRobot.commands.Command;
 
 /**
@@ -15,16 +17,11 @@ public class Pause extends Command {
     }
 
     @Override
-    public int activate(String s) {
-        return 0;
-    }
-
-    @Override
     public boolean changeRobotState() throws InterruptedException {
         boolean isInterrupted = false;
 
         try {
-            Thread.currentThread().sleep(nMillis);
+            Thread.sleep(nMillis);
         } catch (InterruptedException e) {
             isInterrupted = true;
         }

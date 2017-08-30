@@ -33,11 +33,6 @@ public class SpawnNewThread extends Command {
     }
 
     @Override
-    protected int activate(String s) {
-        return NO_CHANGE;
-    }
-
-    @Override
     public boolean changeRobotState() {
         int i = 0;
         boolean isInterrupted = false;

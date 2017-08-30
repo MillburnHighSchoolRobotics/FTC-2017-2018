@@ -18,6 +18,7 @@ import virtualRobot.commands.Command;
 import virtualRobot.commands.Rotate;
 import virtualRobot.commands.Translate;
 import virtualRobot.hardware.Motor;
+import virtualRobot.logicThreads.testing.TestBackendLogic;
 //import virtualRobot.LogicThreads.TeleopLogic;
 
 
@@ -38,7 +39,7 @@ public abstract class UpdateThread extends OpMode {
 	//Here we add all the exception logic threads that are exempt from vuforia initialization
 	//This just helps to lessen the time needed to test
 	static {
-
+		exceptions.add(TestBackendLogic.class);
 	}
 
 	//here we will initiate all of our PHYSICAL hardware. E.g: private DcMotor leftBack...
@@ -137,9 +138,9 @@ public abstract class UpdateThread extends OpMode {
 			telemetry.addData("robot progress " + i, robot.getProgress().get(i));
 		}
 		telemetry.addData("Logic is Alive: ", t.isAlive());
-		telemetry.addData("Interrupt is Alive", t.interruptIsAlive());
+		telemetry.addData("All is Alive", t.allIsAlive());
 		telemetry.addData("Motor Power: ", leftPower);
-		telemetry.addData("Motor: ", robot.getLFMotor().toString());
+		//telemetry.addData("Motor: ", robot.getLFMotor().toString());
 		telemetry.addData("Loop Time: ", runtime.toString());
     }
 	
