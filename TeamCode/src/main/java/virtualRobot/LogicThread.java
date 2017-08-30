@@ -37,7 +37,7 @@ public abstract class LogicThread extends Thread {
 
     private AtomicBoolean isPaused = new AtomicBoolean(false);
 
-    //The thread to check all monitorThreads and put data in HashMap
+    //The thread to check all monitorThreads and put data in HashMap and check for interrupts
     private Thread interruptHandler = new Thread() {
 
         public LogicThread parent = null;
@@ -188,6 +188,12 @@ public abstract class LogicThread extends Thread {
             throw new InterruptedException(c.getClass().getName() + " was interrupted");
     }
 
+    /**
+     * Gets the data related to the monitorThread given
+     *
+     * @param obj Class to look for
+     * @return Data
+     */
     protected boolean getMonitorData(Class<? extends MonitorThread> obj) {
         boolean temp = monitorData.get(obj.getName());
         monitorData.put(obj.getName(), false);
@@ -208,6 +214,11 @@ public abstract class LogicThread extends Thread {
         return false;
     }
 
+    /**
+     * Removes all monitorThreads of class type object
+     *
+     * @param object class to remove
+     */
     public synchronized void removeMonitor(Class<? extends MonitorThread> object) {
         List<MonitorThread> remove = new ArrayList<>();
         for (MonitorThread mt : monitorThreads) {
@@ -221,6 +232,11 @@ public abstract class LogicThread extends Thread {
         }
     }
 
+    /**
+     * Determines whether this thread or ISR is alive
+     *
+     * @return isAlive
+     */
     public boolean allIsAlive() {
         return this.isAlive() || interruptHandler.isAlive();
     }
@@ -230,10 +246,13 @@ public abstract class LogicThread extends Thread {
      */
     protected abstract void realRun() throws InterruptedException;
 
+    /**
+     * Used to delegate monitorThreads and attach interrupts
+     */
     protected void addPresets() {};
 
-
     /**
+     * Attaches intterupt to the ISR with a certain procedure
      *
      * @param condition
      * @param action
@@ -251,6 +270,9 @@ public abstract class LogicThread extends Thread {
                 x.interrupt();
     }
 
+    /**
+     * Kills all monitorThreads associated with this LogicThread
+     */
     private synchronized void killMonitorThreads() {
         for (MonitorThread x : monitorThreads)
             if (x.isAlive())
@@ -262,6 +284,7 @@ public abstract class LogicThread extends Thread {
      *
      * @param logicThread The logic thread to
      * @param monitorThread monitorThread to be bound to LogicThread
+     * @param runAsThread Whether or not monitorThread should be start as new Thread
      */
     public static void delegateMonitor(LogicThread logicThread, MonitorThread monitorThread, boolean runAsThread) {
         logicThread.monitorThreads.add(monitorThread);
@@ -272,6 +295,12 @@ public abstract class LogicThread extends Thread {
         }
     }
 
+    /**
+     * Binds monitorThread to LogicThread so that it can reference it in code without starting it as a Thread
+     *
+     * @param logicThread The logic thread to
+     * @param monitorThread monitorThread to be bound to LogicThread
+     */
     public static void delegateMonitor(LogicThread logicThread, MonitorThread monitorThread) {
         delegateMonitor(logicThread,monitorThread,false);
     }

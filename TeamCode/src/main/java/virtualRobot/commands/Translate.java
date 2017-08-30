@@ -253,15 +253,13 @@ public class Translate extends Command {
         this.timeLimit = timeLimit;
     }
 
-    public Translate(double kP, int i, int timeLimit, AtomicBoolean shouldStop, Translate.Direction dir) {
+    public Translate(double kP, int i, int timeLimit, Translate.Direction dir) {
         this(i, dir, 0, 1, 0, "AutoPID", timeLimit);
         headingController.setKP(0);
         setKPRotate(0);
         translateController.setKP(kP);
         translateController.setKI(0);
         translateController.setKD(0);
-        testing = true;
-        stop = shouldStop;
         THRESHOLDt = 0;
     }
 

@@ -22,6 +22,11 @@ public abstract class MonitorThread extends Thread {
         status = true;
     }
 
+    /**
+     * Sets isThread
+     *
+     * @param isThread
+     */
     public void setThread(boolean isThread) {
         this.isThread = isThread;
     }
@@ -37,6 +42,11 @@ public abstract class MonitorThread extends Thread {
 
     }
 
+    /**
+     * Gets the status bast
+     *
+     * @return Current Status
+     */
     public synchronized boolean getStatus() {
         if (!isThread)
             return setStatus();
@@ -45,6 +55,9 @@ public abstract class MonitorThread extends Thread {
         return temp;
     }
 
+    /**
+     * Puts status back to normal
+     */
     private void resetStatus() {
         status = NORMAL;
     }

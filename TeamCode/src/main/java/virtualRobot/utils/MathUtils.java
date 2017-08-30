@@ -24,6 +24,8 @@ public class MathUtils {
         return equals(d,e,epsilon);
     }
     public static boolean equals(double d, double e, double tolerance) {
+        if (Double.isNaN(d) || Double.isNaN(e))
+            return false;
         return Math.abs(d-e) < tolerance;
     }
 }
