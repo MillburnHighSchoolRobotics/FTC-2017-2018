@@ -16,7 +16,7 @@ import virtualRobot.monitorThreads.TimeMonitor;
 public class TestBackendLogic extends LogicThread {
 
     protected void addPresets() {
-        LogicThread.delegateMonitor(this, new TimeMonitor(3000));
+        delegateMonitor(new TimeMonitor(3000));
         attachInterrupt(new Condition() {
             boolean triggered = false;
             @Override
