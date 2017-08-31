@@ -282,13 +282,12 @@ public abstract class LogicThread extends Thread {
     /**
      * Binds monitorThread to LogicThread so that it can reference it in code
      *
-     * @param logicThread The logic thread to
      * @param monitorThread monitorThread to be bound to LogicThread
      * @param runAsThread Whether or not monitorThread should be start as new Thread
      */
-    public static void delegateMonitor(LogicThread logicThread, MonitorThread monitorThread, boolean runAsThread) {
-        logicThread.monitorThreads.add(monitorThread);
-        logicThread.monitorData.put(monitorThread.getClass().getName(), false);
+    public void delegateMonitor(MonitorThread monitorThread, boolean runAsThread) {
+        monitorThreads.add(monitorThread);
+        monitorData.put(monitorThread.getClass().getName(), false);
         if (runAsThread) {
             monitorThread.setThread(true);
             monitorThread.start();
@@ -298,10 +297,9 @@ public abstract class LogicThread extends Thread {
     /**
      * Binds monitorThread to LogicThread so that it can reference it in code without starting it as a Thread
      *
-     * @param logicThread The logic thread to
      * @param monitorThread monitorThread to be bound to LogicThread
      */
-    public static void delegateMonitor(LogicThread logicThread, MonitorThread monitorThread) {
-        delegateMonitor(logicThread,monitorThread,false);
+    public void delegateMonitor(MonitorThread monitorThread) {
+        delegateMonitor(monitorThread,false);
     }
 }
