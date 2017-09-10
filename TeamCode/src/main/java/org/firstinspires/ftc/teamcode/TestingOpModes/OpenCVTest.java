@@ -48,7 +48,6 @@ public class OpenCVTest extends OpMode {
     @Override
     public void loop() {
         Mat img = new Mat();
-        Utils.bitmapToMat();
         telemetry.addData("Data: ", img.cols());
     }
 

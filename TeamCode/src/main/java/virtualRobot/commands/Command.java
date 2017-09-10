@@ -20,7 +20,7 @@ public abstract class Command  {
     final int NO_CHANGE = 0;
     private final HashMap<Condition, String> conditionals = new HashMap<>();
     private final AtomicBoolean stopCommand = new AtomicBoolean(false);
-    private LogicThread parentThread = null;
+    protected LogicThread parentThread = null;
 
     /**
      * To evaluate the action of the string and act accordingly

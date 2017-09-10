@@ -35,7 +35,6 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.view.View;
 
-import com.qualcomm.ftccommon.DbgLog;
 import com.qualcomm.ftcrobotcontroller.R;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -131,7 +130,7 @@ public class AdafruitRGBExample extends LinearOpMode {
         // button is transitioning to a pressed state.
 
         // print a debug statement.
-        DbgLog.msg("MY_DEBUG - x button was pressed!");
+        //DbgLog.msg("MY_DEBUG - x button was pressed!");
 
         // update previous state variable.
         bPrevState = bCurrState;
@@ -146,7 +145,7 @@ public class AdafruitRGBExample extends LinearOpMode {
         // button is transitioning to a released state.
 
         // print a debug statement.
-        DbgLog.msg("MY_DEBUG - x button was released!");
+        //DbgLog.msg("MY_DEBUG - x button was released!");
 
         // update previous state variable.
         bPrevState = bCurrState;
