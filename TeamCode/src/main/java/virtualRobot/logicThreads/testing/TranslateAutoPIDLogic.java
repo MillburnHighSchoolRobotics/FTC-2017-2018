@@ -30,7 +30,7 @@ public class TranslateAutoPIDLogic extends LogicThread {
                 @Override
                 public boolean isConditionMet() {
                     boolean temp = MathUtils.equals(robot.getHeadingSensor().getValue(), lastEncoder);
-                    lastEncoder = robot.getLFEncoder().getValue();
+                    lastEncoder = robot.getLFMotor().getPosition();
                     return temp;
                 }
             }, "BREAK"));

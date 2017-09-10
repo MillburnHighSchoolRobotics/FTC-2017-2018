@@ -366,10 +366,10 @@ public class Translate extends Command {
                 break;
 
             case WITH_ENCODERS:
-                robot.getLFEncoder().clearValue();
-                robot.getRFEncoder().clearValue();
-                robot.getLBEncoder().clearValue();
-                robot.getRBEncoder().clearValue();
+                robot.getLFMotor().clearEncoder();
+                robot.getRFMotor().clearEncoder();
+                robot.getLBMotor().clearEncoder();
+                robot.getRBMotor().clearEncoder();
 
 
                 robot.getLFMotor().setPower(maxPower * multiplier[0]);
@@ -379,10 +379,10 @@ public class Translate extends Command {
                 boolean notDone = true;
                 MainLoop:
                 while (notDone && (timeLimit == -1 || (System.currentTimeMillis() - time) < timeLimit)) {
-                    double LFvalue = robot.getLFEncoder().getValue();
-                    double RFvalue = robot.getRFEncoder().getValue();
-                    double LBvalue = robot.getLBEncoder().getValue();
-                    double RBvalue = robot.getRBEncoder().getValue();
+                    double LFvalue = robot.getLFMotor().getPosition();
+                    double RFvalue = robot.getRFMotor().getPosition();
+                    double LBvalue = robot.getLBMotor().getPosition();
+                    double RBvalue = robot.getRBMotor().getPosition();
                     double position = 0;
                     if (angleModifier == 0) {
                         if (direction.getCode() % 2 == 0)
@@ -414,10 +414,10 @@ public class Translate extends Command {
 
                 break;
             case WITH_PID:
-                robot.getLFEncoder().clearValue();
-                robot.getRFEncoder().clearValue();
-                robot.getLBEncoder().clearValue();
-                robot.getRBEncoder().clearValue();
+                robot.getLFMotor().clearEncoder();
+                robot.getRFMotor().clearEncoder();
+                robot.getLBMotor().clearEncoder();
+                robot.getRBMotor().clearEncoder();
                 double LFvalue = 0;
                 double RFvalue = 0;
                 double LBvalue = 0;
@@ -438,10 +438,10 @@ public class Translate extends Command {
                                 return isInterrupted;
                         }
 
-                        LFvalue = robot.getLFEncoder().getValue();
-                        RFvalue = robot.getRFEncoder().getValue();
-                        LBvalue = robot.getLBEncoder().getValue();
-                        RBvalue = robot.getRBEncoder().getValue();
+                        LFvalue = robot.getLFMotor().getPosition();
+                        RFvalue = robot.getRFMotor().getPosition();
+                        LBvalue = robot.getLBMotor().getPosition();
+                        RBvalue = robot.getRBMotor().getPosition();
 
 
                         double LFpidOutput = LFtranslateController.getPIDOutput(LFvalue);
@@ -536,10 +536,10 @@ public class Translate extends Command {
                             case END:
                                 return isInterrupted;
                         }
-                        LFvalue = robot.getLFEncoder().getValue();
-                        RFvalue = robot.getRFEncoder().getValue();
-                        LBvalue = robot.getLBEncoder().getValue();
-                        RBvalue = robot.getRBEncoder().getValue();
+                        LFvalue = robot.getLFMotor().getPosition();
+                        RFvalue = robot.getRFMotor().getPosition();
+                        LBvalue = robot.getLBMotor().getPosition();
+                        RBvalue = robot.getRBMotor().getPosition();
                         double pidOutput;
                         Log.d("direction", "" + direction.getCode() % 2);
                         if (direction.getCode() % 2 == 0)

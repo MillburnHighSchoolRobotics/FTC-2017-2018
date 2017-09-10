@@ -137,9 +137,9 @@ public abstract class LogicThread extends Thread {
             if (c instanceof Translate) {
                 Translate t = (Translate) c;
                 if (t.getDirection().getCode() % 4 == 0) { // Went forward or backward
-                    t.setTarget(t.getTarget() - Math.abs(robot.getLFEncoder().getValue() + robot.getRFEncoder().getValue() + robot.getLBEncoder().getValue() + robot.getRBEncoder().getValue()) / 4);
+                    t.setTarget(t.getTarget() - Math.abs(robot.getLFMotor().getPosition() + robot.getRFMotor().getPosition() + robot.getLBMotor().getPosition() + robot.getRBMotor().getPosition()) / 4);
                 } else if (t.getDirection().getCode() % 2 == 0) { //Went left or right
-                    t.setTarget(t.getTarget() - Math.abs(robot.getLFEncoder().getValue() + robot.getLBEncoder().getValue()) / 2);
+                    t.setTarget(t.getTarget() - Math.abs(robot.getLFMotor().getPosition() + robot.getLBMotor().getPosition()) / 2);
                 } else {
                     int count = 0;
                     double avg = 0;
@@ -148,16 +148,16 @@ public abstract class LogicThread extends Thread {
                             count++;
                             switch (i) {
                                 case 0:
-                                    avg += robot.getLFEncoder().getValue();
+                                    avg += robot.getLFMotor().getPosition();
                                     break;
                                 case 1:
-                                    avg += robot.getRFEncoder().getValue();
+                                    avg += robot.getRFMotor().getPosition();
                                     break;
                                 case 2:
-                                    avg += robot.getLBEncoder().getValue();
+                                    avg += robot.getLBMotor().getPosition();
                                     break;
                                 case 3:
-                                    avg += robot.getRBEncoder().getValue();
+                                    avg += robot.getRBMotor().getPosition();
                                     break;
                             }
                         }

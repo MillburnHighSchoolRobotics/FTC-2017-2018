@@ -17,9 +17,13 @@ import virtualRobot.utils.Vector2i;
  */
 
 public class fastRedIsLeft extends Command {
+    public enum Mode {
+        MIDSPLIT, TWORECTANGLES
+    }
+
     AtomicBoolean redIsLeft;
     private final static boolean flipUpsideDown = true;
-    public final static AllignWithBeacon.Mode currentMode = AllignWithBeacon.Mode.MIDSPLIT;
+    public final static Mode currentMode = Mode.MIDSPLIT;
     public volatile static double startXPercent = 0;
     public volatile static double endXPercent = 1;
     public volatile static double startYPercent = 0.135;
@@ -59,10 +63,10 @@ public class fastRedIsLeft extends Command {
 
     @Override
     public boolean changeRobotState() throws InterruptedException {
-        robot.getLFEncoder().clearValue();
-        robot.getRFEncoder().clearValue();
-        robot.getLBEncoder().clearValue();
-        robot.getRBEncoder().clearValue();
+        robot.getLFMotor().clearEncoder();
+        robot.getRFMotor().clearEncoder();
+        robot.getLBMotor().clearEncoder();
+        robot.getRBMotor().clearEncoder();
         int width = vuforia.rgb.getWidth(), height = vuforia.rgb.getHeight();
         Vector2i start1;
         Vector2i end1;

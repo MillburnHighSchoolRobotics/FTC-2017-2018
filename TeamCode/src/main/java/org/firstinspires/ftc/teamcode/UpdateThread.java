@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.kauailabs.navx.ftc.MPU9250;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import java.util.ArrayList;
 import java.util.Map;
 
+import virtualRobot.JoystickController;
 import virtualRobot.LogicThread;
 import virtualRobot.SallyJoeBot;
 import virtualRobot.VuforiaLocalizerImplSubclass;
@@ -18,8 +20,8 @@ import virtualRobot.commands.Command;
 import virtualRobot.commands.Rotate;
 import virtualRobot.commands.Translate;
 import virtualRobot.hardware.Motor;
+import virtualRobot.hardware.Sensor;
 import virtualRobot.logicThreads.testing.TestBackendLogic;
-//import virtualRobot.LogicThreads.TeleopLogic;
 
 
 /*
@@ -51,7 +53,13 @@ public abstract class UpdateThread extends OpMode {
 
 //Now initiate the VIRTUAL componenents (from VirtualRobot!!), e.g. private Motor vDriveRightMotor, private virtualRobot.hardware.Servo ..., private Sensor vDriveRightMotorEncoder, private LocationSensor vLocationSensor
 
+    private Sensor vVoltageSensor;
+
 	private Motor vLeftFront;
+
+
+	private JoystickController vJoystickController1;
+	private JoystickController vJoystickController2;
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -73,6 +81,9 @@ public abstract class UpdateThread extends OpMode {
 
         //FETCH VIRTUAL COMPONENTS OF VIRTUAL ROBOT from robot. E.g. vDriveLeftMotor = robot.getDriveLeftMotor();
 		vLeftFront = robot.getLFMotor();
+		vJoystickController1 = robot.getJoystickController1();
+		vJoystickController2 = robot.getJoystickController2();
+        vVoltageSensor = robot.getVoltageSensor();
 
 		//Setup Physical Components
 
@@ -98,9 +109,12 @@ public abstract class UpdateThread extends OpMode {
 
 	public void start() {
 		//set encoders e.g. vDriveRightMotorEncoder.setRawValue(-rightFront.getCurrentPosition())
+        vVoltageSensor.setRawValue(getBatteryVoltage());
+        robot.initialBattery = vVoltageSensor.getRawValue();
+
 
 		Rotate.setCurrentAngle(0);
-		telemetry.addData("Before thread", "");
+//		telemetry.addData("Before thread", "");
 		try {
 			t = logicThread.newInstance();
 			tInstantiated = true;
@@ -123,6 +137,16 @@ public abstract class UpdateThread extends OpMode {
 		//TODO: Calculate values for prev and newEncoderValues (Not top priority, locationSensor may not be used)
 
 		// Update Sensor Values E.g. vPitchSensor.setRawValue(imu.getIntegratedPitch()); vHeadingSensor, vRollSensor, vColorSensor...
+        vVoltageSensor.setRawValue(getBatteryVoltage());
+
+        vLeftFront.setPosition(leftFront.getCurrentPosition());
+
+		try {
+			vJoystickController1.copyStates(gamepad1);
+			vJoystickController2.copyStates(gamepad2);
+		} catch (RobotCoreException e) {
+			e.printStackTrace();
+		}
 
 		// Capture Motor Powers,E.g. double leftPower = vDriveLeftMotore.getPower();
 		double leftPower = vLeftFront.getPower();

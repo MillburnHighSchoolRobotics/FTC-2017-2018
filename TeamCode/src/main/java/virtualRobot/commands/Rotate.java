@@ -218,10 +218,10 @@ public class Rotate extends Command {
             case WITH_ENCODER:
                 robot.addToProgress("Mode: " + "Encoder");
 
-                robot.getLFEncoder().clearValue();
-                robot.getLBEncoder().clearValue();
-                robot.getRFEncoder().clearValue();
-                robot.getRBEncoder().clearValue();
+                robot.getLFMotor().clearEncoder();
+                robot.getLBMotor().clearEncoder();
+                robot.getRFMotor().clearEncoder();
+                robot.getRBMotor().clearEncoder();
                 robot.addToProgress("Rotate Angle: " + currentAngle);
                 double angle = currentAngle;
                 MainLoop: while ((Math.abs(angleInDegrees - currentAngle) > TOLERANCE || isTesting) && (timeLimit == -1 || (System.currentTimeMillis() - time) < timeLimit)) {//Mehmet: Unsure of relevance of 20, may need to be changed.
@@ -232,7 +232,7 @@ public class Rotate extends Command {
                             return isInterrupted;
                     }
 
-                    currentAngle = angle + ((robot.getRFEncoder().getValue() / robot.getRFMotor().getMotorType().getTicksPerRevolution()) * SallyJoeBot.wheelDiameter * Math.PI) / (Math.sqrt((Math.pow(SallyJoeBot.botWidth, 2) + Math.pow(SallyJoeBot.botLength, 2))) * Math.PI) * 360;
+                    currentAngle = angle + ((robot.getRFMotor().getPosition() / robot.getRFMotor().getMotorType().getTicksPerRev()) * robot.wheelDiameter * Math.PI) / (Math.sqrt((Math.pow(robot.botWidth, 2) + Math.pow(robot.botLength, 2))) * Math.PI) * 360;
                     robot.addToTelemetry("Rotate: ", currentAngle);
                     adjustedPower = MathUtils.clamp(pidController.getPIDOutput(currentAngle), -1, 1);
                     robot.getLBMotor().setPower(adjustedPower);
@@ -248,52 +248,6 @@ public class Rotate extends Command {
                     Thread.currentThread().sleep(10);
                 }
                 break;
-            case WALL_ALIGN:
-                robot.addToProgress("Mode: " + "WallAllign");
-
-                Condition wall = new Condition() {
-                    @Override
-                    public boolean isConditionMet() {
-                        if (robot.getSonarLeft().getFilteredValue() == robot.getSonarRight().getFilteredValue()) {
-                            robot.stopMotors();
-                            robot.addToProgress("SONAR: " + "We cool");
-                            return true;
-
-                        }
-                        return false;
-                    }
-                };
-                robot.getLFEncoder().clearValue();
-                robot.getLBEncoder().clearValue();
-                robot.getRFEncoder().clearValue();
-                robot.getRBEncoder().clearValue();
-                robot.addToProgress("Rotate Angle: " + currentAngle);
-                double thisAngle = currentAngle;
-                MainLoop: while ((timeLimit == -1 || (System.currentTimeMillis() - time) < timeLimit)) {//Mehmet: Unsure of relevance of 20, may need to be changed.
-                    switch (checkConditionals()) {
-                        case BREAK:
-                            break MainLoop;
-                        case END:
-                            return isInterrupted;
-                    }
-
-                    currentAngle = thisAngle + ((robot.getRFEncoder().getValue() / robot.getRFMotor().getMotorType().getTicksPerRevolution()) * SallyJoeBot.wheelDiameter * Math.PI) / (Math.sqrt((Math.pow(SallyJoeBot.botWidth, 2) + Math.pow(SallyJoeBot.botLength, 2))) * Math.PI) * 360;
-                    robot.addToTelemetry("Rotate: ", currentAngle);
-                    adjustedPower = MathUtils.clamp(pidController.getPIDOutput(currentAngle), -1, 1);
-                    robot.getLBMotor().setPower(adjustedPower);
-                    robot.getLFMotor().setPower(adjustedPower);
-                    robot.getRFMotor().setPower(-adjustedPower);
-                    robot.getRBMotor().setPower(-adjustedPower);
-
-                    if (Thread.currentThread().isInterrupted()) {
-                        isInterrupted = true;
-                        break;
-                    }
-
-                    Thread.currentThread().sleep(10);
-                }
-                break;
-
 
         }
         stop.set(true);
