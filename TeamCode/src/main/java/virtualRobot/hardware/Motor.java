@@ -2,8 +2,6 @@ package virtualRobot.hardware;
 
 import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
 
-import virtualRobot.exceptions.SomeoneDunGoofed;
-
 /*
 The virtual Motor component
  */
@@ -31,7 +29,7 @@ public class Motor {
 
     public synchronized void setPower(double newPower) {
 		if (Double.isNaN(newPower)) {
-			throw new SomeoneDunGoofed("FUCK YOU BRO");
+			throw new IllegalArgumentException("Motor power cannot be NaN");
 		}
 		power = newPower;
 		if (power > MAX_POWER) {

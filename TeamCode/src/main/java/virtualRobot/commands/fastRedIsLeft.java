@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import virtualRobot.Condition;
 import virtualRobot.SallyJoeBot;
-import virtualRobot.exceptions.SomeoneDunGoofed;
+import virtualRobot.exceptions.CameraException;
 import virtualRobot.VuforiaLocalizerImplSubclass;
 import virtualRobot.utils.Vector2i;
 
@@ -133,7 +133,7 @@ public class fastRedIsLeft extends Command {
             Log.d("CURRPOS","LEFT: " + currentPos.toString() + " " + currentPos2.toString() + " " + currLeft);
         }
         if (leftCovered == 0)
-            throw new SomeoneDunGoofed("FUCK"); //TODO: Implement
+            throw new CameraException("Failed to get appropriate data from left side"); //TODO: Implement
         currLeft /= leftCovered;
         robot.addToTelemetry("currLEFT: ", currLeft);
         currentPos = new Vector2i(start2);
@@ -166,7 +166,7 @@ public class fastRedIsLeft extends Command {
             Log.d("CURRPOS","RIGHT: " + currentPos.toString() + " " + currentPos2.toString());
         }
         if (rightCovered == 0)
-            throw new SomeoneDunGoofed("FUCK"); //TODO: Implement
+            throw new CameraException("Failed to get appropriate data from right side"); //TODO: Implement
         currRight /= rightCovered;
         robot.addToTelemetry("currRIGHT: ", currRight);
         //  Log.d("currRIGHT", String.valueOf(currRight));
