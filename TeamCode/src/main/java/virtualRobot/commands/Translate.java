@@ -732,6 +732,7 @@ public class Translate extends Command {
 
 
                         //Multiplier: LF, RF, LB, RB
+                        //TODO: Add strafe stabilization?
                         switch (direction) {
                             case FORWARD:
                                 if (headingOutput > 0) { //Right skew
@@ -904,6 +905,7 @@ public class Translate extends Command {
     }
 
     public enum Direction {
+        //TODO: Add a NONE value?
         FORWARD(0, 90), //90 degrees
         FORWARD_RIGHT(1, 45), //45 degrees
         RIGHT(2, 0), //0 degrees
