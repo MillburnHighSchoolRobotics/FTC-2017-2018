@@ -22,7 +22,6 @@ public class TeleOpLogic extends LogicThread {
         while (true) {
             controller1.logicalRefresh();
             controller2.logicalRefresh();
-            //TODO: Set direction using controller1
             double movementTheta = Math.toDegrees(controller1.getValue(JoystickController.THETA_1)); //movement angle
             if (movementTheta < 0) movementTheta += 360;
             double movementMag = Math.toDegrees(controller1.getValue(JoystickController.R_1)); //movement magnitude
@@ -56,6 +55,7 @@ public class TeleOpLogic extends LogicThread {
                 headingMovement.setDirection(direction);
             }
             lastDirection = direction;
+            //TODO: Use THETA_2 to rotate
             if (Thread.currentThread().isInterrupted())
                 throw new InterruptedException();
             Thread.sleep(10);
