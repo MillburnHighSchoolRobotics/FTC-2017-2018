@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.os.Environment;
-import android.util.Log;
+import virtualRobot.utils.BetterLog;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -49,7 +49,7 @@ public class DavidClass {
 
     }
     public static boolean analyzePic2(Bitmap bmp) {
-        Log.d("DavidClass", "Color.RED: " + Long.toString(RED));
+        BetterLog.d("DavidClass", "Color.RED: " + Long.toString(RED));
         Bitmap image= Bitmap.createScaledBitmap(bmp, bmp.getWidth() / 2, bmp.getHeight() / 2, true);
 //        image= Bitmap.createScaledBitmap(bmp, image.getWidth() / 2, image.getHeight() / 2, true);
         Matrix matrix = new Matrix();
@@ -94,16 +94,16 @@ public class DavidClass {
                 }
 
             }
-            Log.d("DavidClass", "Width: "+ width);
-            Log.d("DavidClass", "Height: " + height);
-            Log.d("DavidClass","Mid: " + midX);
+            BetterLog.d("DavidClass", "Width: "+ width);
+            BetterLog.d("DavidClass", "Height: " + height);
+            BetterLog.d("DavidClass","Mid: " + midX);
             //lAvg = roundUp(lSum, lNum);
             //rAvg = roundUp(rSum, rNum);
-            Log.d("DavidClass", "Pic Size: " + Long.toString(midX - startX) + " by " + Long.toString(endX - midX));
+            BetterLog.d("DavidClass", "Pic Size: " + Long.toString(midX - startX) + " by " + Long.toString(endX - midX));
 
             lAvg = roundUp(lSum, ((midX - startX) * (endY - startY)));
             rAvg = roundUp(rSum, ((endX - midX) * (endY - startY)));
-            Log.d("DavidClass", "Left: " + Long.toString(lAvg) + " Right: " + Long.toString(rAvg));
+            BetterLog.d("DavidClass", "Left: " + Long.toString(lAvg) + " Right: " + Long.toString(rAvg));
             result = (lAvg-RED > rAvg-RED);
         } else {
             Vector2i start1 = new Vector2i((int) DavidClass.start1XPercent*width, (int) DavidClass.startYPercent*height);
@@ -135,15 +135,15 @@ public class DavidClass {
 
             //lAvg = roundUp(lSum, lNum);
             //rAvg = roundUp(rSum, rNum);
-            Log.d("DavidClass", "Pic1 Size: " + Long.toString(end1.x-start1.x) + " by " + Long.toString(end1.y - start1.y));
-            Log.d("DavidClass", "Pic2 Size: " + Long.toString(end2.x-start2.x) + " by " + Long.toString(end2.y - start2.y));
+            BetterLog.d("DavidClass", "Pic1 Size: " + Long.toString(end1.x-start1.x) + " by " + Long.toString(end1.y - start1.y));
+            BetterLog.d("DavidClass", "Pic2 Size: " + Long.toString(end2.x-start2.x) + " by " + Long.toString(end2.y - start2.y));
 
             lAvg = roundUp(lSum, ((end1.x-start1.x) * (end1.y - start1.y)));
             rAvg = roundUp(rSum, ((end2.x - start2.x) * (end2.y - start2.y)));
-            Log.d("DavidClass", "Left: " + Long.toString(lAvg) + " Right: " + Long.toString(rAvg));
+            BetterLog.d("DavidClass", "Left: " + Long.toString(lAvg) + " Right: " + Long.toString(rAvg));
             result = (lAvg-RED > rAvg-RED);
         }
-        /*Log.d("qqq", Long.toString(lAvg) + " " + Long.toString(rAvg));
+        /*BetterLog.d("qqq", Long.toString(lAvg) + " " + Long.toString(rAvg));
 
 
 
@@ -205,7 +205,7 @@ public class DavidClass {
         lAvg = roundUp(lSum, ((midX-startX)*(endY-startY)));
         rAvg = roundUp(rSum, ((endX-midX)*(endY-startY)));
 
-        Log.d("qqq", Long.toString(lAvg) + " " + Long.toString(rAvg));
+        BetterLog.d("qqq", Long.toString(lAvg) + " " + Long.toString(rAvg));
 
         Command.ROBOT.addToProgress("LAVG, RAVG, LAVG+RAVG/2: " + Long.toString(lAvg) + " " + Long.toString(rAvg) + " " + Long.toString((rAvg+lAvg)/2));
 
@@ -229,7 +229,7 @@ public class DavidClass {
 
 
     /*public static boolean analyzePic(Bitmap bmp) {
-        Log.d("zzz", Long.toString(RED));
+        BetterLog.d("zzz", Long.toString(RED));
         Bitmap image= bmp;
         image= Bitmap.createScaledBitmap(bmp, image.getWidth() / 2, image.getHeight() / 2, true);
         Matrix matrix = new Matrix();
@@ -283,7 +283,7 @@ public class DavidClass {
         }
         lAvg = roundUp(lSum, lNum);
         rAvg = roundUp(rSum, rNum);
-        Log.d("qqq", Long.toString(lAvg) + " " + Long.toString(rAvg));
+        BetterLog.d("qqq", Long.toString(lAvg) + " " + Long.toString(rAvg));
         return (lAvg-RED > rAvg-RED);
 
 

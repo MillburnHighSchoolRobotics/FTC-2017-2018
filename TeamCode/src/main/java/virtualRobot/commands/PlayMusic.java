@@ -7,6 +7,8 @@ import android.media.MediaPlayer;
 
 import java.io.IOException;
 
+import virtualRobot.utils.GlobalUtils;
+
 /**
  * Created by shant on 1/29/2016.
  * Plays a Music file
@@ -31,8 +33,8 @@ public class PlayMusic extends Command {
         try {
             mp.reset();
             AssetFileDescriptor afd;
-           //afd = FtcRobotControllerActivity.context.getAssets().openFd(fileName);
-            //mp.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+           afd = GlobalUtils.getCurrentActivity().getAssets().openFd(fileName);
+            mp.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
             mp.prepare();
             mp.start();
         } catch (IllegalStateException e) {

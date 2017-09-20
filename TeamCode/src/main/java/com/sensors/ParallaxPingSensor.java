@@ -1,6 +1,6 @@
 package com.sensors;
 
-import android.util.Log;
+import virtualRobot.utils.BetterLog;
 
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DigitalChannelController;
@@ -33,7 +33,7 @@ public class ParallaxPingSensor {
         long start = System.nanoTime();
         channel.setMode(DigitalChannelController.Mode.INPUT);
         while (!channel.getState()) {
-            Log.d("ChannelLoop", "In Loop Channel");
+            BetterLog.d("ChannelLoop", "In Loop Channel");
         }
         return (System.nanoTime() - start)/1000;
     }

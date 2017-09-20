@@ -81,7 +81,7 @@ public class TakePicture extends Command {
         Bitmap mBitmap = BitmapFactory.decodeByteArray(byteArrayOutputStream.toByteArray(), 0, byteArrayOutputStream.size(), options);
 
         boolean analyzed = DavidClass.analyzePic2(mBitmap);
-        Log.d("cameraReturn", analyzed + " ");
+        BetterLog.d("cameraReturn", analyzed + " ");
         redisLeft.set(analyzed);
 
         OutputStream fos = null;

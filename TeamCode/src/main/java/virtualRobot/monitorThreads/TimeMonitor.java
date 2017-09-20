@@ -1,6 +1,6 @@
 package virtualRobot.monitorThreads;
 
-import android.util.Log;
+import virtualRobot.utils.BetterLog;
 
 import virtualRobot.SallyJoeBot;
 import virtualRobot.MonitorThread;
@@ -21,7 +21,7 @@ public class TimeMonitor extends MonitorThread {
     @Override
     public boolean setStatus() {
         double curTime = System.currentTimeMillis() - startingTime;
-        Log.d("roboTime", Double.toString(curTime));
+        BetterLog.d("roboTime", Double.toString(curTime));
         if (curTime < endTime) {
             return true;
         }

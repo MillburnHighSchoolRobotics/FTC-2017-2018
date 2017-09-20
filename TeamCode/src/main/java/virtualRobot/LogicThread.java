@@ -1,7 +1,8 @@
 package virtualRobot;
 
 
-import android.util.Log;
+import android.app.Activity;
+import virtualRobot.utils.BetterLog;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -94,7 +95,7 @@ public abstract class LogicThread extends Thread {
         try {
             realRun();
         } catch (InterruptedException e) {
-            Log.d("INTERRUPTS", this.getClass().getName() + " was interrupted");
+            BetterLog.d("INTERRUPTS", this.getClass().getName() + " was interrupted");
         }finally {
             killChildren();
             killMonitorThreads();

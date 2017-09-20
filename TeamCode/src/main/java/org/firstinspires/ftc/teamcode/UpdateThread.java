@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.app.Activity;
+
 import com.kauailabs.navx.ftc.MPU9250;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.exception.RobotCoreException;
@@ -7,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 import java.util.ArrayList;
@@ -22,6 +25,7 @@ import virtualRobot.commands.Translate;
 import virtualRobot.hardware.Motor;
 import virtualRobot.hardware.Sensor;
 import virtualRobot.logicThreads.testing.TestBackendLogic;
+import virtualRobot.utils.GlobalUtils;
 
 
 /*
@@ -108,12 +112,14 @@ public abstract class UpdateThread extends OpMode {
 	}
 
 	public void start() {
-		//set encoders e.g. vDriveRightMotorEncoder.setRawValue(-rightFront.getCurrentPosition())
+		//set constants
+		robot.initialBattery = vVoltageSensor.getRawValue();
+		GlobalUtils.setCurrentActivity((Activity) hardwareMap.appContext);
+        Rotate.setCurrentAngle(0);
+
+		//set sensors e.g. vDriveRightMotorEncoder.setRawValue(-rightFront.getCurrentPosition())
         vVoltageSensor.setRawValue(getBatteryVoltage());
-        robot.initialBattery = vVoltageSensor.getRawValue();
 
-
-		Rotate.setCurrentAngle(0);
 //		telemetry.addData("Before thread", "");
 		try {
 			t = logicThread.newInstance();

@@ -2,7 +2,7 @@ package virtualRobot.commands;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.util.Log;
+import virtualRobot.utils.BetterLog;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -75,7 +75,7 @@ public class fastRedIsLeft extends Command {
 
         Bitmap bm = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
         int coF = 12;
-        Log.d("width/height", width + " " + height);
+        BetterLog.d("width/height", width + " " + height);
         start2 = new Vector2i((int) (startXPercent * width), (int) (startYPercent * height));
         end1 = new Vector2i((int) (endXPercent * width), (int) (endYPercent * height));
         end2 = new Vector2i((start2.x + end1.x) / 2, end1.y);
@@ -110,7 +110,7 @@ public class fastRedIsLeft extends Command {
                 red = Color.red(bm.getPixel(currentPos.x, currentPos.y));
                 blue = Color.blue(bm.getPixel(currentPos.x, currentPos.y));
                 if (blue != 0) {
-                    Log.d("Debug", red + " " + blue + " " + currentPos.toString());
+                    BetterLog.d("Debug", red + " " + blue + " " + currentPos.toString());
 
                     currLeft += red / blue;
                     leftCovered++;
@@ -120,7 +120,7 @@ public class fastRedIsLeft extends Command {
                 red = Color.red(bm.getPixel(currentPos2.x, currentPos2.y));
                 blue = Color.blue(bm.getPixel(currentPos2.x, currentPos2.y));
                 if (blue != 0) {
-                    Log.d("Debug", red + " " + blue + " " + currentPos2.toString());
+                    BetterLog.d("Debug", red + " " + blue + " " + currentPos2.toString());
 
                     currLeft += red / blue;
                     leftCovered++;
@@ -130,7 +130,7 @@ public class fastRedIsLeft extends Command {
             currentPos.y += slope1.y;
             currentPos2.x += slope1.x;
             currentPos2.y -= slope1.y;
-            Log.d("CURRPOS","LEFT: " + currentPos.toString() + " " + currentPos2.toString() + " " + currLeft);
+            BetterLog.d("CURRPOS","LEFT: " + currentPos.toString() + " " + currentPos2.toString() + " " + currLeft);
         }
         if (leftCovered == 0)
             throw new CameraException("Failed to get appropriate data from left side"); //TODO: Implement
@@ -143,7 +143,7 @@ public class fastRedIsLeft extends Command {
                 red = Color.red(bm.getPixel(currentPos.x, currentPos.y));
                 blue = Color.blue(bm.getPixel(currentPos.x, currentPos.y));
                 if (blue != 0) {
-                    Log.d("Debug", red + " " + blue + " " + currentPos.toString());
+                    BetterLog.d("Debug", red + " " + blue + " " + currentPos.toString());
 
                     currRight += red / blue;
                     rightCovered++;
@@ -153,7 +153,7 @@ public class fastRedIsLeft extends Command {
                 red = Color.red(bm.getPixel(currentPos2.x, currentPos2.y));
                 blue = Color.blue(bm.getPixel(currentPos2.x, currentPos2.y));
                 if (blue != 0) {
-                    Log.d("Debug", red + " " + blue + " " + currentPos2.toString());
+                    BetterLog.d("Debug", red + " " + blue + " " + currentPos2.toString());
 
                     currRight += red / blue;
                     rightCovered++;
@@ -163,13 +163,13 @@ public class fastRedIsLeft extends Command {
             currentPos.y += slope2.y;
             currentPos2.x += slope2.x;
             currentPos2.y -= slope2.y;
-            Log.d("CURRPOS","RIGHT: " + currentPos.toString() + " " + currentPos2.toString());
+            BetterLog.d("CURRPOS","RIGHT: " + currentPos.toString() + " " + currentPos2.toString());
         }
         if (rightCovered == 0)
             throw new CameraException("Failed to get appropriate data from right side"); //TODO: Implement
         currRight /= rightCovered;
         robot.addToTelemetry("currRIGHT: ", currRight);
-        //  Log.d("currRIGHT", String.valueOf(currRight));
+        //  BetterLog.d("currRIGHT", String.valueOf(currRight));
         robot.addToProgress("currLEFT, currRIGHT: " + currLeft + " " + currRight);
         if (currLeft > currRight) {
             redIsLeft.set(true);

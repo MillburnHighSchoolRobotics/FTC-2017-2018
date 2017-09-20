@@ -29,7 +29,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.ConceptOpModes;
 
 import com.kauailabs.navx.ftc.AHRS;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -39,31 +39,43 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.text.DecimalFormat;
 
 /**
- *  navX-Micro Processed Data Mode Op
+ * SensorNavXRawOp
  * <p>
- * Acquires motion-in-progress indicator from navX-Micro
- * and displays it in the Robot DriveStation
- * as telemetry data.
+ * This sample demonstrates how to acquire the raw
+ * Gyroscope, Accelerometer and Magnetometer data.  This raw
+ * data is typically not as useful as the "processed" data
+ * (see the navXProcessedOp for details), however is provided
+ * for those interested in accessing the raw data.
+ *
+ * Gyroscope data is units of Degrees/second.
+ * Accelerometer data is in units of G.
+ * Magnetometer data is in units if microTorr (uT)
+ *
+ * Magnetometer data is not valid unless magnetometer calibration
+ * has been performed.  Without calibration, the magnetometer
+ * data will be all zeros.  For details on how to calibrate the
+ * magnetometer, please see the Magnetometer Calibration documentation:
+ * http://navx-micro.kauailabs.com/guidance/magnetometer-calibration/
+ *
+ * Note that due to limitations imposed by the Core Device
+ * Interface Module's I2C interface mechanisms, the acquisition
+ * of both processed data and raw data requires two separate
+ * I2C bus transfers, and thus takes longer than acquiring
+ * only the raw or only the processed data.
  */
-@TeleOp(name = "Concept: navX Motion Detection", group = "Concept")
+@TeleOp(name = "Sensor: navX Raw Data", group = "Sensor")
 // @Disabled Comment this in to remove this from the Driver Station OpMode List
-public class ConceptNavXMotionDetectionOp extends OpMode {
+public class SensorNavXRawOp extends OpMode {
 
-  /* This is the port on the Core Device Interace Module */
-  /* in which the navX-Micro is connected.  Modify this  */
-  /* depending upon which I2C port you are using.        */
   private final int NAVX_DIM_I2C_PORT = 0;
-
   private String startDate;
   private ElapsedTime runtime = new ElapsedTime();
   private AHRS navx_device;
-
   @Override
   public void init() {
-    navx_device = AHRS.getInstance(hardwareMap.deviceInterfaceModule.get("dim"),
-            NAVX_DIM_I2C_PORT,
-            AHRS.DeviceDataType.kProcessedData);
-  }
+      navx_device = AHRS.getInstance(hardwareMap.deviceInterfaceModule.get("dim"),
+              NAVX_DIM_I2C_PORT,
+              AHRS.DeviceDataType.kQuatAndRawData);  }
 
   @Override
   public void stop() {
@@ -86,24 +98,33 @@ public class ConceptNavXMotionDetectionOp extends OpMode {
   public void loop() {
 
       boolean connected = navx_device.isConnected();
-      telemetry.addData("1 navX-Device", connected ?
-              "Connected" : "Disconnected" );
-      String gyrocal, motion;
-      DecimalFormat df = new DecimalFormat("#.##");
-
+      telemetry.addData("1 navX-Device", connected ? "Connected" : "Disconnected" );
+      String gyrocal, gyro_raw, accel_raw, mag_raw;
+      boolean magnetometer_calibrated;
       if ( connected ) {
-          gyrocal = (navx_device.isCalibrating() ?
-                  "CALIBRATING" : "Calibration Complete");
-          motion = (navx_device.isMoving() ? "Moving" : "Not Moving");
-          if ( navx_device.isRotating() ) {
-              motion += ", Rotating";
+          DecimalFormat df = new DecimalFormat("#.##");
+          magnetometer_calibrated = navx_device.isMagnetometerCalibrated();
+          gyro_raw = df.format(navx_device.getRawGyroX()) + ", " +
+                      df.format(navx_device.getRawGyroY()) + ", " +
+                      df.format(navx_device.getRawGyroZ());
+          accel_raw = df.format(navx_device.getRawAccelX()) + ", " +
+                      df.format(navx_device.getRawAccelY()) + ", " +
+                      df.format(navx_device.getRawAccelZ());
+          if ( magnetometer_calibrated ) {
+              mag_raw = df.format(navx_device.getRawMagX()) + ", " +
+                      df.format(navx_device.getRawMagY()) + ", " +
+                      df.format(navx_device.getRawMagZ());
+          } else {
+              mag_raw = "Uncalibrated";
           }
       } else {
-          gyrocal =
-            motion = "-------";
+        gyro_raw =
+            accel_raw =
+            mag_raw = "-------";
       }
-      telemetry.addData("2 GyroAccel", gyrocal );
-      telemetry.addData("3 Motion", motion);
+      telemetry.addData("2 Gyros (Degrees/Sec):", gyro_raw);
+      telemetry.addData("3 Accelerometers  (G):", accel_raw );
+      telemetry.addData("4 Magnetometers  (uT):", mag_raw );
   }
 
 }

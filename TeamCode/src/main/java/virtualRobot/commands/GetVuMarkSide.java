@@ -28,7 +28,7 @@ public class GetVuMarkSide extends Command {
     @Override
     public boolean changeRobotState() throws InterruptedException {
         relicTrackables.activate();
-        RelicRecoveryVuMark mark = RelicRecoveryVuMark.UNKNOWN;
+        RelicRecoveryVuMark mark;
         do {
             mark = RelicRecoveryVuMark.from(relicTemplate);
             if (mark != RelicRecoveryVuMark.UNKNOWN) {

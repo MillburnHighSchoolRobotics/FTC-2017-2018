@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import android.graphics.Bitmap;
-import android.util.Log;
+import virtualRobot.utils.BetterLog;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -93,7 +93,7 @@ public class TakePictureTest extends LinearOpMode {
             boolean analyzed = DavidClass.analyzePic2(bm);
             telemetry.addData("cameraReturn", analyzed + " ");
             telemetry.update();
-            Log.d("cameraReturn ", analyzed + " ");
+            BetterLog.d("cameraReturn ", analyzed + " ");
             redisLeft.set(analyzed);
         }
     }

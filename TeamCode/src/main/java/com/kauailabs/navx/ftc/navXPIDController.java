@@ -23,7 +23,7 @@
  */
 package com.kauailabs.navx.ftc;
 
-import android.util.Log;
+import virtualRobot.utils.BetterLog;
 
 import java.security.Timestamp;
 

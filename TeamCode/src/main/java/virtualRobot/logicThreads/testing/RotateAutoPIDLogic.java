@@ -1,6 +1,6 @@
 package virtualRobot.logicThreads.testing;
 
-import android.util.Log;
+import virtualRobot.utils.BetterLog;
 
 import virtualRobot.Condition;
 import virtualRobot.LogicThread;
@@ -36,19 +36,19 @@ public class RotateAutoPIDLogic extends LogicThread {
             }, "BREAK"));
             endTime = System.currentTimeMillis();
             currentKPTooBig = (endTime - startTime >= 35000);
-            Log.d("AutoPID", "Iteration: " + iteration + " KU: " + kP + " Increment: " + increment);
+            BetterLog.d("AutoPID", "Iteration: " + iteration + " KU: " + kP + " Increment: " + increment);
             robot.addToTelemetry("KU: ", kP + " Increment: " + increment);
             robot.addToTelemetry("Iteration #", iteration);
 
             if (iteration != 1) {
                 if (lastKPTooSmall && currentKPTooBig) {
-                    Log.d("AutoPID", "\n----------------------------------------------------------------------------\n");
+                    BetterLog.d("AutoPID", "\n----------------------------------------------------------------------------\n");
                     kP -= increment;
                     increment /= 10;
                     kP += increment;
                 }
                 if (!lastKPTooSmall && !currentKPTooBig) {
-                    Log.d("AutoPID", "\n-----------------------------------------------------------------------\n");
+                    BetterLog.d("AutoPID", "\n-----------------------------------------------------------------------\n");
                     increment /= 10;
                     kP += increment;
                 }

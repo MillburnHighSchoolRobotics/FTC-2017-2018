@@ -28,6 +28,8 @@ import android.os.Process;
 import android.os.SystemClock;
 import android.util.Log;
 
+import virtualRobot.utils.BetterLog;
+
 import com.kauailabs.navx.AHRSProtocol;
 import com.kauailabs.navx.IMUProtocol;
 import com.kauailabs.navx.IMURegisters;
