@@ -1,8 +1,10 @@
 package com.kauailabs.navx.ftc;
 
-import android.util.Log;
+
 
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
+
+import virtualRobot.utils.BetterLog;
 
 /**
  * Created by Yanjun on 11/24/2015.
@@ -40,7 +42,7 @@ public class MPU9250 extends AHRS {
 //        catch (NullPointerException ex){
             instance = new MPU9250(dim, port, DeviceDataType.kProcessedData, NAVX_DEFAULT_UPDATE_RATE_HZ);
         } else {
-            Log.d("IMUTesting", "Instance is " + instance + "MPU? " + (instance instanceof MPU9250));
+            BetterLog.d("IMUTesting", "Instance is " + instance + "MPU? " + (instance instanceof MPU9250));
         }
 //        return imu;
         return (MPU9250) instance;

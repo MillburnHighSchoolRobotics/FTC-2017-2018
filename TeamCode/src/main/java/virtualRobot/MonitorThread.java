@@ -1,6 +1,6 @@
 package virtualRobot;
 
-import android.util.Log;
+import virtualRobot.utils.BetterLog;
 
 import virtualRobot.commands.Command;
 
@@ -37,7 +37,7 @@ public abstract class MonitorThread extends Thread {
             if (setStatus() != NORMAL) {
                 status = !NORMAL;
             }
-            //Log.d("Monitor", Boolean.toString(status));
+            //BetterLog.d("Monitor", Boolean.toString(status));
         }
 
     }

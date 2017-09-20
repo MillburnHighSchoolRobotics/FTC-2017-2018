@@ -1,7 +1,7 @@
 package virtualRobot.commands;
 
 
-import android.util.Log;
+import virtualRobot.utils.BetterLog;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -325,7 +325,7 @@ public class Translate extends Command {
                     RF = (power * POWER_MATRIX[4][1] * scale);
                     LB = (power * POWER_MATRIX[4][2] * scale);
                     RB = (power * POWER_MATRIX[4][3]);
-                    Log.d("aaa", robot.getLFMotor().getPower() + " " + robot.getRFMotor().getPower() + " " + robot.getLBMotor().getPower() + " " + robot.getRBMotor().getPower());
+                    BetterLog.d("aaa", robot.getLFMotor().getPower() + " " + robot.getRFMotor().getPower() + " " + robot.getLBMotor().getPower() + " " + robot.getRBMotor().getPower());
                 } else if (movementAngle > 270 && movementAngle < 360) { //quadrant 4
                     power *= -1;
                     scale = MathUtils.sinDegrees(movementAngle - 315) / MathUtils.cosDegrees(movementAngle - 315);
@@ -349,7 +349,7 @@ public class Translate extends Command {
                         case END:
                             return isInterrupted;
                     }
-                    Log.d("bbb", robot.getLFMotor().getPower() + " " + robot.getRFMotor().getPower() + " " + robot.getLBMotor().getPower() + " " + robot.getRBMotor().getPower());
+                    BetterLog.d("bbb", robot.getLFMotor().getPower() + " " + robot.getRFMotor().getPower() + " " + robot.getLBMotor().getPower() + " " + robot.getRBMotor().getPower());
                     if (Thread.currentThread().isInterrupted()) {
                         isInterrupted = true;
                         break;
@@ -452,10 +452,10 @@ public class Translate extends Command {
                         RFpidOutput = MathUtils.clamp(RFpidOutput, -1, 1);
                         LBpidOutput = MathUtils.clamp(LBpidOutput, -1, 1);
                         RBpidOutput = MathUtils.clamp(RBpidOutput, -1, 1);
-                        Log.d("PIDOUTLF", "" + LFpidOutput);
-                        Log.d("PIDOUTRF", "" + RFpidOutput);
-                        Log.d("PIDOUTLB", "" + LBpidOutput);
-                        Log.d("PIDOUTRB", "" + RBpidOutput);
+                        BetterLog.d("PIDOUTLF", "" + LFpidOutput);
+                        BetterLog.d("PIDOUTRF", "" + RFpidOutput);
+                        BetterLog.d("PIDOUTLB", "" + LBpidOutput);
+                        BetterLog.d("PIDOUTRB", "" + RBpidOutput);
                         LFpidOutput *= maxPower;
                         RFpidOutput *= maxPower;
                         LBpidOutput *= maxPower;
@@ -541,13 +541,13 @@ public class Translate extends Command {
                         LBvalue = robot.getLBMotor().getPosition();
                         RBvalue = robot.getRBMotor().getPosition();
                         double pidOutput;
-                        Log.d("direction", "" + direction.getCode() % 2);
+                        BetterLog.d("direction", "" + direction.getCode() % 2);
                         if (direction.getCode() % 2 == 0)
                             pidOutput = translateController.getPIDOutput((((Math.abs(LFvalue) + Math.abs(RFvalue) + Math.abs(LBvalue) + Math.abs(RBvalue)) / 4)));
                         else
                             pidOutput = translateController.getPIDOutput(((Math.abs(LFvalue) + Math.abs(RFvalue) + Math.abs(LBvalue) + Math.abs(RBvalue)) / 2));
                         pidOutput = MathUtils.clamp(pidOutput, -1, 1);
-                        Log.d("PIDOUT", "" + pidOutput + " Controller: " + translateController.toString() + " Encoder Values" + Math.abs(LFvalue) + " " + Math.abs(RFvalue) + " " + Math.abs(LBvalue) + " " + Math.abs(RBvalue) + "Passing IN: " + Double.toString((Math.abs(LFvalue) + Math.abs(RFvalue) + Math.abs(LBvalue) + Math.abs(RBvalue)) / 4));
+                        BetterLog.d("PIDOUT", "" + pidOutput + " Controller: " + translateController.toString() + " Encoder Values" + Math.abs(LFvalue) + " " + Math.abs(RFvalue) + " " + Math.abs(LBvalue) + " " + Math.abs(RBvalue) + "Passing IN: " + Double.toString((Math.abs(LFvalue) + Math.abs(RFvalue) + Math.abs(LBvalue) + Math.abs(RBvalue)) / 4));
                         pidOutput *= maxPower;
 
                         double headingOutput = headingController.getPIDOutput(robot.getHeadingSensor().getValue());
@@ -683,9 +683,9 @@ public class Translate extends Command {
                                 }
                                 break;
                         }
-                        Log.d("TRANSLATE DIAGNOSTICS", "" + "Pid Output" + pidOutput + " Encoder Values" + Math.abs(LFvalue) + " " + Math.abs(RFvalue) + " " + Math.abs(LBvalue) + " " + Math.abs(RBvalue) + "HEADING CORRECTED POWERS" + LFPower + " " + RFPower + " " + LBPower + " " + RBPower + "HEADINGOUTPUT: " + headingOutput + " ANGLE: " + robot.getHeadingSensor().getValue());
+                        BetterLog.d("TRANSLATE DIAGNOSTICS", "" + "Pid Output" + pidOutput + " Encoder Values" + Math.abs(LFvalue) + " " + Math.abs(RFvalue) + " " + Math.abs(LBvalue) + " " + Math.abs(RBvalue) + "HEADING CORRECTED POWERS" + LFPower + " " + RFPower + " " + LBPower + " " + RBPower + "HEADINGOUTPUT: " + headingOutput + " ANGLE: " + robot.getHeadingSensor().getValue());
 
-                        Log.d("MULTIPLIED POWERS", LFPower * multiplier[0] + " " + RFPower * multiplier[1] + LBPower * multiplier[2] + RBPower * multiplier[3]);
+                        BetterLog.d("MULTIPLIED POWERS", LFPower * multiplier[0] + " " + RFPower * multiplier[1] + LBPower * multiplier[2] + RBPower * multiplier[3]);
                         robot.getLFMotor().setPower(LFPower * multiplier[0]);
                         robot.getRFMotor().setPower(RFPower * multiplier[1]);
                         robot.getLBMotor().setPower(LBPower * multiplier[2]);
@@ -827,7 +827,7 @@ public class Translate extends Command {
                                 break;
                         }
 
-                        Log.d("MULTIPLIED POWERS", LFPower * multiplier[0] + " " + RFPower * multiplier[1] + LBPower * multiplier[2] + RBPower * multiplier[3]);
+                        BetterLog.d("MULTIPLIED POWERS", LFPower * multiplier[0] + " " + RFPower * multiplier[1] + LBPower * multiplier[2] + RBPower * multiplier[3]);
                         double multipliedLF = LFPower * multiplier[0];
                         double multipliedRF = RFPower * multiplier[1];
                         double multipliedLB = RFPower * multiplier[2];

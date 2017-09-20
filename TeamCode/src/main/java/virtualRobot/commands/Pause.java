@@ -1,6 +1,6 @@
 package virtualRobot.commands;
 
-import android.util.Log;
+import virtualRobot.utils.BetterLog;
 
 import virtualRobot.commands.Command;
 

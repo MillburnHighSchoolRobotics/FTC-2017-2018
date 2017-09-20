@@ -29,7 +29,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.ConceptOpModes;
 
 import com.kauailabs.navx.ftc.AHRS;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -39,22 +39,18 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.text.DecimalFormat;
 
 /**
- *  navX-Micro Zero Yaw Op
+ *  navX-Micro Processed Data Mode Op
  * <p>
  * Acquires processed data from navX-Micro
  * and displays it in the Robot DriveStation
- * as telemetry data.  This opmode demonstrates how to "zero"
- * (reset to zero degrees) the yaw.  This causes whatever
- * direction the navX-Model device is currently pointing to
- * now be zero degrees, and is an effective method for dealing
- * with accumulating Yaw Drift.
- *
- * For more information on Yaw drift, please see the online help at:
- * http://navx-micro.kauailabs.com/guidance/yaw-drift/
+ * as telemetry data.  This processed data includes
+ * Yaw, Pitch, Roll, Compass Heading, Fused (9-axis) Heading,
+ * Sensor Status and Timestamp, and World-Frame Linear
+ * Acceleration data.
  */
-@TeleOp(name = "Concept: navX Zero Yaw", group = "Concept")
+@TeleOp(name = "Sensor: navX Motion-processed Data", group = "Sensor")
 // @Disabled Comment this in to remove this from the Driver Station OpMode List
-public class ConceptNavXZeroYawOp extends OpMode {
+public class SensorNavXProcessedOp extends OpMode {
 
   /* This is the port on the Core Device Interace Module */
   /* in which the navX-Micro is connected.  Modify this  */
@@ -133,16 +129,6 @@ public class ConceptNavXZeroYawOp extends OpMode {
       telemetry.addData("4 Magnetometer", magcal );
       telemetry.addData("5 Compass,9Axis", cf );
       telemetry.addData("6 Motion", motion);
-
-      /* If the left 'bumper' button pressed,
-         reset (zero) the current yaw angle.  This causes whatever
-         direction the navX-Model device is currently pointing to
-         now be zero degrees.
-       */
-      //if ( gamepad1.left_bumper ) {
-      if ( ( navx_device.getUpdateCount() % 500 ) == 0 ) {
-        navx_device.zeroYaw();
-      }
   }
 
 }

@@ -1,6 +1,6 @@
 package virtualRobot.logicThreads.testing;
 
-import android.util.Log;
+import virtualRobot.utils.BetterLog;
 
 import virtualRobot.Condition;
 import virtualRobot.LogicThread;

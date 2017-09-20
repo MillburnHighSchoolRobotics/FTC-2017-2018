@@ -1,6 +1,6 @@
 package virtualRobot.commands;
 
-import android.util.Log;
+import virtualRobot.utils.BetterLog;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -198,14 +198,14 @@ public class Rotate extends Command {
                     robot.getLFMotor().setPower(adjustedPower);
                     robot.getRFMotor().setPower(-adjustedPower);
                     robot.getRBMotor().setPower(-adjustedPower);
-                    Log.d("PIDOUTROTATE", "" + adjustedPower + " " + robot.getHeadingSensor().getValue());
+                    BetterLog.d("PIDOUTROTATE", "" + adjustedPower + " " + robot.getHeadingSensor().getValue());
 
                     if (Thread.currentThread().isInterrupted()) {
                         isInterrupted = true;
                         break;
                     }
 
-                    Log.e("PIDOUTPUT", "PID OUTPUT: " + Double.toString(adjustedPower) + "HEADING: " + Double.toString(robot.getHeadingSensor().getValue()));
+                    BetterLog.d("PIDOUTPUT", "PID OUTPUT: " + Double.toString(adjustedPower) + "HEADING: " + Double.toString(robot.getHeadingSensor().getValue()));
 
                     try {
                         Thread.currentThread().sleep(10);

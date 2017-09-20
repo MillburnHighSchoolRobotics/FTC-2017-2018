@@ -27,8 +27,6 @@ public class SallyJoeBot {
     private ArrayList<String> robotProgress;
     private ConcurrentHashMap<String, Object> telemetry;
     private Motor LFMotor, LBMotor, RFMotor, RBMotor;
-    private Servo ButtonServo;
-    private Servo FlywheelStopper;
     public double initialBattery;
     public final double wheelDiameter = 5;
     public final double botWidth = 5;
@@ -51,8 +49,6 @@ public class SallyJoeBot {
         LBMotor = new Motor();
         RFMotor = new Motor();
         RBMotor = new Motor();
-        ButtonServo = new Servo();
-        FlywheelStopper = new Servo();
         //capLift = new SyncedMotors(LiftLeftMotor, LiftRightMotor, LiftLeftEncoder, LiftRightEncoder, KP, KI, KD, SyncedMotors.SyncAlgo.POSITION);
         //capLift.setRatio(1);
 
@@ -84,10 +80,6 @@ public class SallyJoeBot {
     public synchronized Motor getRFMotor() { return RFMotor; }
 
     public synchronized Motor getRBMotor() { return RBMotor; }
-
-    public synchronized Servo getButtonServo() { return ButtonServo; }
-
-    public Servo getFlywheelStopper() { return FlywheelStopper; }
 
     public synchronized StateSensor getStateSensor() { return stateSensor; }
 
