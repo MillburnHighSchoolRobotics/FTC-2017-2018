@@ -18,6 +18,8 @@ public class TeleOpCustomLogic extends LogicThread {
         controller2 = robot.getJoystickController2();
         Translate.Direction direction = null;
         Translate.Direction lastDirection = null;
+        int translateAngle = 0;
+        int lastTranslateAngle = 0;
         final int POWER_MATRIX[][] = { //for each of the directions
 
                 {1, 1, 1, 1},
@@ -30,12 +32,16 @@ public class TeleOpCustomLogic extends LogicThread {
                 {0, 1, 1, 0}
         };
 //        Translate headingMovement = null;
+//        int lastAction = 0; //0 for stopped, 1 for translating, 2 for rotating
         while (true) {
             controller1.logicalRefresh();
             controller2.logicalRefresh();
-            double movementTheta = Math.toDegrees(controller1.getValue(JoystickController.THETA_1)); //movement angle
-            if (movementTheta < 0) movementTheta += 360;
-            double movementMag = Math.toDegrees(controller1.getValue(JoystickController.R_1)); //movement magnitude
+            double translateTheta = Math.toDegrees(controller1.getValue(JoystickController.THETA_1)); //movement angle
+            double rotateTheta = Math.toDegrees(controller1.getValue(JoystickController.THETA_2)); //rotation angle
+            if (translateTheta < 0) translateTheta += 360;
+            if (rotateTheta < 0) rotateTheta += 360;
+            double translateMag = Math.toDegrees(controller1.getValue(JoystickController.R_1)); //movement magnitude
+            double rotateMag = Math.toDegrees(controller1.getValue(JoystickController.R_2)); //rotation magnitude
             //calc direction
 //            if (movementMag < 0.1) {
 //                direction = null;
@@ -66,44 +72,44 @@ public class TeleOpCustomLogic extends LogicThread {
             LB = 0;
             RB = 0;
 //            int movementAngle = direction.getAngle();
-            int movementAngle = (int)movementTheta;
-            movementAngle = 180 - movementAngle; // transform to standard angle
-            if (movementAngle < 0) movementAngle += 360;
+            translateAngle = (int)translateTheta;
+            translateAngle = 180 - translateAngle; // transform to standard angle
+            if (translateAngle < 0) translateAngle += 360;
             double power = 1; //set power later? Use magnitude?
-            if (movementAngle >= 0 && movementAngle <= 90) { //quadrant 1
-                scale = MathUtils.sinDegrees(movementAngle - 45) / MathUtils.cosDegrees(movementAngle - 45);
-                LF = power * POWER_MATRIX[0][0];
-                RF = power * POWER_MATRIX[0][1] * scale;
-                LB = power * POWER_MATRIX[0][2] * scale;
-                RB = power * POWER_MATRIX[0][3];
-            } else if (movementAngle > 90 && movementAngle <= 180) { //quadrant 2
-                power *= -1;
-                scale = MathUtils.sinDegrees(movementAngle - 135) / MathUtils.cosDegrees(movementAngle - 135);
-                LF = (power * POWER_MATRIX[2][0] * scale);
-                RF = (power * POWER_MATRIX[2][1]);
-                LB = (power * POWER_MATRIX[2][2]);
-                RB = (power * POWER_MATRIX[2][3] * scale);
-            } else if (movementAngle > 180 && movementAngle <= 270) { //quadrant 3
-                scale = MathUtils.sinDegrees(movementAngle - 225) / MathUtils.cosDegrees(movementAngle - 225);
-                LF = (power * POWER_MATRIX[4][0]);
-                RF = (power * POWER_MATRIX[4][1] * scale);
-                LB = (power * POWER_MATRIX[4][2] * scale);
-                RB = (power * POWER_MATRIX[4][3]);
+            if (!MathUtils.equals(translateMag, 0, 0.1)) {
+                if (translateAngle >= 0 && translateAngle <= 90) { //quadrant 1
+                    scale = MathUtils.sinDegrees(translateAngle - 45) / MathUtils.cosDegrees(translateAngle - 45);
+                    LF = power * POWER_MATRIX[0][0];
+                    RF = power * POWER_MATRIX[0][1] * scale;
+                    LB = power * POWER_MATRIX[0][2] * scale;
+                    RB = power * POWER_MATRIX[0][3];
+                } else if (translateAngle > 90 && translateAngle <= 180) { //quadrant 2
+                    power *= -1;
+                    scale = MathUtils.sinDegrees(translateAngle - 135) / MathUtils.cosDegrees(translateAngle - 135);
+                    LF = (power * POWER_MATRIX[2][0] * scale);
+                    RF = (power * POWER_MATRIX[2][1]);
+                    LB = (power * POWER_MATRIX[2][2]);
+                    RB = (power * POWER_MATRIX[2][3] * scale);
+                } else if (translateAngle > 180 && translateAngle <= 270) { //quadrant 3
+                    scale = MathUtils.sinDegrees(translateAngle - 225) / MathUtils.cosDegrees(translateAngle - 225);
+                    LF = (power * POWER_MATRIX[4][0]);
+                    RF = (power * POWER_MATRIX[4][1] * scale);
+                    LB = (power * POWER_MATRIX[4][2] * scale);
+                    RB = (power * POWER_MATRIX[4][3]);
 //                Log.d("aaa", robot.getLFMotor().getPower() + " " + robot.getRFMotor().getPower() + " " + robot.getLBMotor().getPower() + " " + robot.getRBMotor().getPower());
-            } else if (movementAngle > 270 && movementAngle < 360) { //quadrant 4
-                power *= -1;
-                scale = MathUtils.sinDegrees(movementAngle - 315) / MathUtils.cosDegrees(movementAngle - 315);
-                LF = (power * POWER_MATRIX[6][0] * scale);
-                RF = (power * POWER_MATRIX[6][1]);
-                LB = (power * POWER_MATRIX[6][2]);
-                RB = (power * POWER_MATRIX[6][3] * scale);
-            }
+                } else if (translateAngle > 270 && translateAngle < 360) { //quadrant 4
+                    power *= -1;
+                    scale = MathUtils.sinDegrees(translateAngle - 315) / MathUtils.cosDegrees(translateAngle - 315);
+                    LF = (power * POWER_MATRIX[6][0] * scale);
+                    RF = (power * POWER_MATRIX[6][1]);
+                    LB = (power * POWER_MATRIX[6][2]);
+                    RB = (power * POWER_MATRIX[6][3] * scale);
+                }
 
-            robot.getLFMotor().setPower(LF);
-            robot.getLBMotor().setPower(LB);
-            robot.getRBMotor().setPower(RB);
-            robot.getRFMotor().setPower(RF);
-
+                robot.getLFMotor().setPower(LF);
+                robot.getLBMotor().setPower(LB);
+                robot.getRBMotor().setPower(RB);
+                robot.getRFMotor().setPower(RF);
 
 
 //            if (direction != null && headingMovement == null) {
@@ -115,8 +121,13 @@ public class TeleOpCustomLogic extends LogicThread {
 //            } else if (direction != null && lastDirection != null && direction != lastDirection) {
 //                headingMovement.setDirection(direction);
 //            }
-            lastDirection = direction;
-            //TODO: Use THETA_2 to rotate
+                lastTranslateAngle = translateAngle;
+                lastDirection = direction;
+            } else if (!MathUtils.equals(rotateMag, 0, 0.1)) {
+                //rotate
+            } else {
+                robot.stopMotors();
+            }
             if (Thread.currentThread().isInterrupted())
                 throw new InterruptedException();
             Thread.sleep(10);
