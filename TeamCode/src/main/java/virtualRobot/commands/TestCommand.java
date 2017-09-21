@@ -4,7 +4,12 @@ package virtualRobot.commands;
  * Created by ethachu19 on 3/31/2017.
  */
 
-public abstract class TestCommand extends Command {
+public final class TestCommand extends Command {
+
+    private TestCommand() {
+        throw new UnsupportedOperationException("Cannot instantiate this class");
+    }
+
     double tp = 1;
     @Override
     protected int activate(String s) {

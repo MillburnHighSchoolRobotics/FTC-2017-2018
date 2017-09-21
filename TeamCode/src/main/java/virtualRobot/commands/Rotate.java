@@ -166,12 +166,12 @@ public class Rotate extends Command {
     public boolean changeRobotState() throws InterruptedException {
         boolean isInterrupted = false;
         time = System.currentTimeMillis();
-        initAngle = robot.getHeadingSensor().getValue();
+        initAngle = robot.getImu().getHeading();
         double adjustedPower;
         switch (runMode) {
             case WITH_ANGLE_SENSOR:
 
-                MainLoop: while ((Math.abs(angleInDegrees - robot.getHeadingSensor().getValue()) > TOLERANCE || isTesting) && (timeLimit == -1 || (System.currentTimeMillis() - time) < timeLimit)) {
+                MainLoop: while ((Math.abs(angleInDegrees - robot.getImu().getHeading()) > TOLERANCE || isTesting) && (timeLimit == -1 || (System.currentTimeMillis() - time) < timeLimit)) {
                     switch (checkConditionals()) {
                         case BREAK:
                             break MainLoop;
@@ -183,10 +183,10 @@ public class Rotate extends Command {
                         robot.stopMotors();
                         return isInterrupted;
                     }
-                    adjustedPower = pidController.getPIDOutput(robot.getHeadingSensor().getValue());
+                    adjustedPower = pidController.getPIDOutput(robot.getImu().getHeading());
                     adjustedPower = MathUtils.clamp(adjustedPower, -1, 1);
 
-                    /*double ratio = Math.abs(angleInDegrees - robot.getHeadingSensor().getValue()) / (Math.abs(angleInDegrees - initAngle));
+                    /*double ratio = Math.abs(angleInDegrees - robot.getImu().getHeading()) / (Math.abs(angleInDegrees - initAngle));
                     double powerScaler = power;
                     if (power > MIN_MAX_POWER) {
                         powerScaler = (power-MIN_MAX_POWER)*ratio + MIN_MAX_POWER;
@@ -198,14 +198,14 @@ public class Rotate extends Command {
                     robot.getLFMotor().setPower(adjustedPower);
                     robot.getRFMotor().setPower(-adjustedPower);
                     robot.getRBMotor().setPower(-adjustedPower);
-                    BetterLog.d("PIDOUTROTATE", "" + adjustedPower + " " + robot.getHeadingSensor().getValue());
+                    BetterLog.d("PIDOUTROTATE", "" + adjustedPower + " " + robot.getImu().getHeading());
 
                     if (Thread.currentThread().isInterrupted()) {
                         isInterrupted = true;
                         break;
                     }
 
-                    BetterLog.d("PIDOUTPUT", "PID OUTPUT: " + Double.toString(adjustedPower) + "HEADING: " + Double.toString(robot.getHeadingSensor().getValue()));
+                    BetterLog.d("PIDOUTPUT", "PID OUTPUT: " + Double.toString(adjustedPower) + "HEADING: " + Double.toString(robot.getImu().getHeading()));
 
                     try {
                         Thread.currentThread().sleep(10);

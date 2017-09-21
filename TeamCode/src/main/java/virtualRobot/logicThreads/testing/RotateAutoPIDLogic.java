@@ -29,8 +29,8 @@ public class RotateAutoPIDLogic extends LogicThread {
 
                 @Override
                 public boolean isConditionMet() {
-                    boolean temp = MathUtils.equals(robot.getHeadingSensor().getValue(), lastYaw);
-                    lastYaw = robot.getHeadingSensor().getValue();
+                    boolean temp = MathUtils.equals(robot.getImu().getHeading(), lastYaw);
+                    lastYaw = robot.getImu().getHeading();
                     return temp;
                 }
             }, "BREAK"));

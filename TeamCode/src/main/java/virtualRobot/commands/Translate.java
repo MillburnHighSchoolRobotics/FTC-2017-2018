@@ -461,7 +461,7 @@ public class Translate extends Command {
                         LBpidOutput *= maxPower;
                         RBpidOutput *= maxPower;
 
-                        double headingOutput = headingController.getPIDOutput(robot.getHeadingSensor().getValue());
+                        double headingOutput = headingController.getPIDOutput(robot.getImu().getHeading());
                         headingOutput = MathUtils.clamp(headingOutput, -1, 1);
 
 
@@ -550,7 +550,7 @@ public class Translate extends Command {
                         BetterLog.d("PIDOUT", "" + pidOutput + " Controller: " + translateController.toString() + " Encoder Values" + Math.abs(LFvalue) + " " + Math.abs(RFvalue) + " " + Math.abs(LBvalue) + " " + Math.abs(RBvalue) + "Passing IN: " + Double.toString((Math.abs(LFvalue) + Math.abs(RFvalue) + Math.abs(LBvalue) + Math.abs(RBvalue)) / 4));
                         pidOutput *= maxPower;
 
-                        double headingOutput = headingController.getPIDOutput(robot.getHeadingSensor().getValue());
+                        double headingOutput = headingController.getPIDOutput(robot.getImu().getHeading());
                         headingOutput *= maxPower;
                         headingOutput = MathUtils.clamp(headingOutput, -1, 1);
 
@@ -683,7 +683,7 @@ public class Translate extends Command {
                                 }
                                 break;
                         }
-                        BetterLog.d("TRANSLATE DIAGNOSTICS", "" + "Pid Output" + pidOutput + " Encoder Values" + Math.abs(LFvalue) + " " + Math.abs(RFvalue) + " " + Math.abs(LBvalue) + " " + Math.abs(RBvalue) + "HEADING CORRECTED POWERS" + LFPower + " " + RFPower + " " + LBPower + " " + RBPower + "HEADINGOUTPUT: " + headingOutput + " ANGLE: " + robot.getHeadingSensor().getValue());
+                        BetterLog.d("TRANSLATE DIAGNOSTICS", "" + "Pid Output" + pidOutput + " Encoder Values" + Math.abs(LFvalue) + " " + Math.abs(RFvalue) + " " + Math.abs(LBvalue) + " " + Math.abs(RBvalue) + "HEADING CORRECTED POWERS" + LFPower + " " + RFPower + " " + LBPower + " " + RBPower + "HEADINGOUTPUT: " + headingOutput + " ANGLE: " + robot.getImu().getHeading());
 
                         BetterLog.d("MULTIPLIED POWERS", LFPower * multiplier[0] + " " + RFPower * multiplier[1] + LBPower * multiplier[2] + RBPower * multiplier[3]);
                         robot.getLFMotor().setPower(LFPower * multiplier[0]);
@@ -718,7 +718,7 @@ public class Translate extends Command {
                                 return isInterrupted;
                         }
 
-                        double headingOutput = headingOnlyController.getPIDOutput(robot.getHeadingSensor().getValue());
+                        double headingOutput = headingOnlyController.getPIDOutput(robot.getImu().getHeading());
                         headingOutput = MathUtils.clamp(headingOutput, -1, 1);
 
 

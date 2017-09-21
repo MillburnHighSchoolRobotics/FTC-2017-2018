@@ -3,13 +3,24 @@ package org.firstinspires.ftc.teamcode;
 import android.app.Activity;
 
 import com.kauailabs.navx.ftc.MPU9250;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 import java.util.ArrayList;
@@ -22,10 +33,14 @@ import virtualRobot.VuforiaLocalizerImplSubclass;
 import virtualRobot.commands.Command;
 import virtualRobot.commands.Rotate;
 import virtualRobot.commands.Translate;
+import virtualRobot.hardware.AxisSensor;
+import virtualRobot.hardware.IMU;
 import virtualRobot.hardware.Motor;
 import virtualRobot.hardware.Sensor;
+import virtualRobot.hardware.StateSensor;
 import virtualRobot.logicThreads.testing.TestBackendLogic;
 import virtualRobot.utils.GlobalUtils;
+import virtualRobot.utils.Vector3f;
 
 
 /*
@@ -36,7 +51,7 @@ public abstract class UpdateThread extends OpMode {
 	private SallyJoeBot robot;
 	protected Class<? extends LogicThread> logicThread;
 	private LogicThread t;
-	private CreateVuforia cv;
+//	private CreateVuforia cv;
 	boolean tInstantiated= false;
 	public static boolean allDone = false;
 	public static VuforiaLocalizerImplSubclass vuforiaInstance = null;
@@ -51,13 +66,18 @@ public abstract class UpdateThread extends OpMode {
 	//here we will initiate all of our PHYSICAL hardware. E.g: private DcMotor leftBack...
 	//also initiate sensors. E.g. private AnalogInput sonar, private ColorSensor colorSensor, private DigitalChannel ...
 
-	private MPU9250 imu;
+//	private MPU9250 imu;
 	private DcMotor leftFront;
+	private Servo servo;
+
+    private BNO055IMU imu;
 
 
 //Now initiate the VIRTUAL componenents (from VirtualRobot!!), e.g. private Motor vDriveRightMotor, private virtualRobot.hardware.Servo ..., private Sensor vDriveRightMotorEncoder, private LocationSensor vLocationSensor
 
     private Sensor vVoltageSensor;
+    private IMU vIMU;
+    private StateSensor vStateSensor;
 
 	private Motor vLeftFront;
 
@@ -70,6 +90,18 @@ public abstract class UpdateThread extends OpMode {
 	@Override
 	public void init() {
 		allDone = false;
+        //IMU SETUP (Do not touch)
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = false;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+
         //MOTOR SETUP (with physical componenents, e.g. leftBack = hardwareMap.dcMotor.get("leftBack")
 		leftFront = hardwareMap.dcMotor.get("leftFront");
 
@@ -89,6 +121,9 @@ public abstract class UpdateThread extends OpMode {
 		vJoystickController2 = robot.getJoystickController2();
         vVoltageSensor = robot.getVoltageSensor();
 
+        vIMU = robot.getImu();
+        vStateSensor = robot.getStateSensor();
+
 		//Setup Physical Components
 
 		addPresets();
@@ -107,8 +142,9 @@ public abstract class UpdateThread extends OpMode {
 		telemetry.addData("Is Running Version: ", Translate.KPt + " 2.0");
         telemetry.addData("Init Loop Time", runtime.toString());
 		telemetry.addData("Battery Voltage: ", getBatteryVoltage());
+        telemetry.addData("IMU Status", imu.getSystemStatus().toShortString());
+        telemetry.addData("IMU Calibration", imu.getCalibrationStatus().toString());
 		telemetry.addData("Is Good for Testing: ", getBatteryVoltage() < 13.5 ? "NO, BATTERY IS TOO LOW" : "YES");
-
 	}
 
 	public void start() {
@@ -143,6 +179,29 @@ public abstract class UpdateThread extends OpMode {
 		//TODO: Calculate values for prev and newEncoderValues (Not top priority, locationSensor may not be used)
 
 		// Update Sensor Values E.g. vPitchSensor.setRawValue(imu.getIntegratedPitch()); vHeadingSensor, vRollSensor, vColorSensor...
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        Acceleration accel = imu.getLinearAcceleration();
+        Acceleration total = imu.getOverallAcceleration();
+        AngularVelocity angularVelocity = imu.getAngularVelocity();
+
+        vIMU.setLinearAccel(new Vector3f(accel.xAccel, accel.yAccel, accel.zAccel));
+        vIMU.setTotalAccel(new Vector3f(total.xAccel, total.yAccel, total.zAccel));
+        vIMU.linearAcquisition = accel.acquisitionTime;
+        vIMU.totalAcquisition = total.acquisitionTime;
+
+        vIMU.setYaw(angles.firstAngle);
+        vIMU.setRoll(angles.secondAngle);
+        vIMU.setPitch(angles.thirdAngle);
+        vIMU.angleAcquisition = angles.acquisitionTime;
+
+        vIMU.setAngularVelocity(new Vector3f(angularVelocity.xRotationRate, angularVelocity.yRotationRate, angularVelocity.zRotationRate));
+
+        Position position = imu.getPosition();
+        Velocity velocity = imu.getVelocity();
+
+        vStateSensor.setPosition(new Vector3f(position.x, position.y, position.z));
+        vStateSensor.setVelocity(new Vector3f(velocity.xVeloc, velocity.yVeloc, velocity.zVeloc));
+
         vVoltageSensor.setRawValue(getBatteryVoltage());
 
         vLeftFront.setPosition(leftFront.getCurrentPosition());
@@ -175,7 +234,7 @@ public abstract class UpdateThread extends OpMode {
     }
 	
 	public void stop() {
-//		imu.close();
+		imu.close();
 		vuforiaInstance = null;
 		allDone = true;
 		if (tInstantiated)

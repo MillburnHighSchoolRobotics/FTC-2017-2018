@@ -1,6 +1,4 @@
 package virtualRobot.hardware;
-//com.qualcomm.robotcore.hardware.Servo;import com.qualcomm.robotcore.hardware.Servo;
-
 
 /**
  * Created by Alex on 9/30/2015.
@@ -22,7 +20,6 @@ public class Servo {
     public synchronized void setPosition(double position) {
     	position = Math.max (Math.min(position, 1), 0);
         synchronized (this) {
-
             this.position = position;
     	}
     }

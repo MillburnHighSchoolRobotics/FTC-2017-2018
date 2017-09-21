@@ -9,6 +9,9 @@ import virtualRobot.hardware.Servo;
  * Created by shant on 10/9/2015.
  * Moves a Servo
  */
+
+//Just directly use the robot object in LogicThread, there is no need for this command
+@Deprecated
 public class MoveServo extends Command {
     private Condition condition;
     private ArrayList<Object[]> servos = new ArrayList<Object[]>();
