@@ -1,5 +1,7 @@
 package virtualRobot.monitorThreads;
 
+import java.util.Vector;
+
 import virtualRobot.MonitorThread;
 import virtualRobot.utils.Vector3f;
 
@@ -12,15 +14,16 @@ public class CollisionMonitor extends MonitorThread {
     private final double COLLISION_THRESHOLD_DELTA_G = 0.5;
 
     public CollisionMonitor() {
-        lastAccel = new Vector3f(robot.getWorldAccel().getValueX(), robot.getWorldAccel().getValueY(), robot.getWorldAccel().getValueZ());
+        lastAccel = robot.getImu().getLinearAccel();
     }
 
     @Override
     public boolean setStatus() {
-        double curr_world_linear_accel_x = robot.getWorldAccel().getValueX();
+        Vector3f accel = robot.getImu().getLinearAccel();
+        double curr_world_linear_accel_x = accel.x;
         double currentJerkX = curr_world_linear_accel_x - lastAccel.x;
         lastAccel.x = curr_world_linear_accel_x;
-        double curr_world_linear_accel_y = robot.getWorldAccel().getValueY();
+        double curr_world_linear_accel_y = accel.y;
         double currentJerkY = curr_world_linear_accel_y - lastAccel.y;
         lastAccel.y = curr_world_linear_accel_y;
 

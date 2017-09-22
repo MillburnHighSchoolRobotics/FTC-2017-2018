@@ -192,7 +192,7 @@ public abstract class UpdateThread extends OpMode {
         vIMU.setYaw(angles.firstAngle);
         vIMU.setRoll(angles.secondAngle);
         vIMU.setPitch(angles.thirdAngle);
-        vIMU.angleAcquisition = angles.acquisitionTime;
+//        vIMU.angleAcquisition = angles.acquisitionTime;
 
         vIMU.setAngularVelocity(new Vector3f(angularVelocity.xRotationRate, angularVelocity.yRotationRate, angularVelocity.zRotationRate));
 
