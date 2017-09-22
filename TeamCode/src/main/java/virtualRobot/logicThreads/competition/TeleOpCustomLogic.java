@@ -37,9 +37,9 @@ public class TeleOpCustomLogic extends LogicThread {
             controller1.logicalRefresh();
             controller2.logicalRefresh();
             double translateTheta = Math.toDegrees(controller1.getValue(JoystickController.THETA_1)); //movement angle
-            double rotateTheta = Math.toDegrees(controller1.getValue(JoystickController.THETA_2)); //rotation angle
+            double rotateX = Math.toDegrees(controller1.getValue(JoystickController.X_2)); //rotation angle
             if (translateTheta < 0) translateTheta += 360;
-            if (rotateTheta < 0) rotateTheta += 360;
+//            if (rotateTheta < 0) rotateTheta += 360;
             double translateMag = Math.toDegrees(controller1.getValue(JoystickController.R_1)); //movement magnitude
             double rotateMag = Math.toDegrees(controller1.getValue(JoystickController.R_2)); //rotation magnitude
             //calc direction
@@ -62,7 +62,7 @@ public class TeleOpCustomLogic extends LogicThread {
 //            } else if (movementTheta >= 22.5 && movementTheta < 67.5) {
 //                direction = Translate.Direction.FORWARD_LEFT;
 //            }
-            double scale = 0;
+            double scale;
             double LF;
             double RF;
             double LB;
@@ -124,7 +124,13 @@ public class TeleOpCustomLogic extends LogicThread {
                 lastTranslateAngle = translateAngle;
                 lastDirection = direction;
             } else if (!MathUtils.equals(rotateMag, 0, 0.1)) {
-                //rotate
+                int rotationDirection = (int)Math.signum(rotateX);
+                int rotationPower = 1; //set using rotationMag
+                //Double check that these turn in the right direction
+                robot.getLFMotor().setPower(rotationDirection * rotationPower);
+                robot.getLBMotor().setPower(rotationDirection * rotationPower);
+                robot.getRFMotor().setPower(-rotationDirection * rotationPower);
+                robot.getRBMotor().setPower(-rotationDirection * rotationPower);
             } else {
                 robot.stopMotors();
             }
