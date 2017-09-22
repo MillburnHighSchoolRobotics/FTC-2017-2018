@@ -119,6 +119,4 @@ public class SallyJoeBot {
     public synchronized void addToTelemetry(String s, Object arg) { telemetry.put(s,arg); }
 
     public synchronized ConcurrentHashMap<String, Object> getTelemetry () { return telemetry; }
-
-
 }

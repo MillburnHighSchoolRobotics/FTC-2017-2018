@@ -3,13 +3,13 @@ package virtualRobot.logicThreads.competition;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import virtualRobot.LogicThread;
-import virtualRobot.logicThreads.AutonomousLogicThread;
 
 /**
- * Created by Ethan Mak on 8/29/2017.
+ * Created by ethan on 9/22/17.
  */
 
-public class RedAutoLogic extends AutonomousLogicThread {
+@Autonomous(name = "Autonomous: Blue 2", group = "Competition")
+public class Blue2AutoLogic extends LogicThread {
     @Override
     protected void realRun() throws InterruptedException {
 

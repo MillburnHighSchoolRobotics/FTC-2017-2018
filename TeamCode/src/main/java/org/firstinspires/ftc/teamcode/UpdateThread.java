@@ -34,6 +34,7 @@ import virtualRobot.commands.Command;
 import virtualRobot.commands.Rotate;
 import virtualRobot.commands.Translate;
 import virtualRobot.hardware.AxisSensor;
+import virtualRobot.hardware.ContinuousRotationServo;
 import virtualRobot.hardware.IMU;
 import virtualRobot.hardware.Motor;
 import virtualRobot.hardware.Sensor;
@@ -53,7 +54,6 @@ public abstract class UpdateThread extends OpMode {
 	private LogicThread t;
 //	private CreateVuforia cv;
 	boolean tInstantiated= false;
-	public static boolean allDone = false;
 	public static VuforiaLocalizerImplSubclass vuforiaInstance = null;
 	private static ArrayList<Class<? extends LogicThread>> exceptions = new ArrayList<>();
 
@@ -67,9 +67,6 @@ public abstract class UpdateThread extends OpMode {
 	//also initiate sensors. E.g. private AnalogInput sonar, private ColorSensor colorSensor, private DigitalChannel ...
 
 //	private MPU9250 imu;
-	private DcMotor leftFront;
-	private Servo servo;
-
     private BNO055IMU imu;
 
 
@@ -79,7 +76,12 @@ public abstract class UpdateThread extends OpMode {
     private IMU vIMU;
     private StateSensor vStateSensor;
 
-	private Motor vLeftFront;
+	private Motor vLeftFront, vLeftBack, vRightFront, vRightBack;
+	private virtualRobot.hardware.Servo vRollerLeft, vRollerRight;
+	private Motor vGlyphLiftLeft, vGlyphLiftRight;
+	private Motor vRelicArm;
+	private ContinuousRotationServo vRelicArmWinch;
+	private virtualRobot.hardware.Servo vJewelServo;
 
 
 	private JoystickController vJoystickController1;
@@ -89,7 +91,6 @@ public abstract class UpdateThread extends OpMode {
 
 	@Override
 	public void init() {
-		allDone = false;
         //IMU SETUP (Do not touch)
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
@@ -101,9 +102,9 @@ public abstract class UpdateThread extends OpMode {
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
+        imu.startAccelerationIntegration(new Position(), new Velocity(),1);
 
         //MOTOR SETUP (with physical componenents, e.g. leftBack = hardwareMap.dcMotor.get("leftBack")
-		leftFront = hardwareMap.dcMotor.get("leftFront");
 
         //SERVO SETUP (with physical hardware, e.g. servo = hardwareMap....)
 
@@ -115,14 +116,25 @@ public abstract class UpdateThread extends OpMode {
 		robot = Command.ROBOT;
 		robot.initialBattery = getBatteryVoltage();
 
-        //FETCH VIRTUAL COMPONENTS OF VIRTUAL ROBOT from robot. E.g. vDriveLeftMotor = robot.getDriveLeftMotor();
-		vLeftFront = robot.getLFMotor();
-		vJoystickController1 = robot.getJoystickController1();
-		vJoystickController2 = robot.getJoystickController2();
+        //FETCH CONSTANT COMPONENTS OF VIRTUAL ROBOT (Do not touch)
+        vJoystickController1 = robot.getJoystickController1();
+        vJoystickController2 = robot.getJoystickController2();
         vVoltageSensor = robot.getVoltageSensor();
-
         vIMU = robot.getImu();
         vStateSensor = robot.getStateSensor();
+
+        //FETCH VIRTUAL COMPONENTS OF VIRTUAL ROBOT from robot. E.g. vDriveLeftMotor = robot.getDriveLeftMotor();
+		vLeftFront = robot.getLFMotor();
+		vLeftBack = robot.getLBMotor();
+		vRightFront = robot.getRFMotor();
+		vRightBack = robot.getRBMotor();
+		vGlyphLiftLeft = robot.getGlyphLiftLeft();
+		vGlyphLiftRight = robot.getGlyphLiftRight();
+		vJewelServo = robot.getJewelServo();
+		vRelicArm = robot.getRelicArm();
+		vRelicArmWinch = robot.getRelicArmWinch();
+		vRollerLeft = robot.getRollerLeft();
+		vRollerRight = robot.getRollerRight();
 
 		//Setup Physical Components
 
@@ -178,7 +190,7 @@ public abstract class UpdateThread extends OpMode {
 		// Update Location. E.g.: double prevEcnoderValue=?, newEncoderValue=?,
 		//TODO: Calculate values for prev and newEncoderValues (Not top priority, locationSensor may not be used)
 
-		// Update Sensor Values E.g. vPitchSensor.setRawValue(imu.getIntegratedPitch()); vHeadingSensor, vRollSensor, vColorSensor...
+        //Update the sensors that stay constant (Do not touch)
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         Acceleration accel = imu.getLinearAcceleration();
         Acceleration total = imu.getOverallAcceleration();
@@ -204,20 +216,28 @@ public abstract class UpdateThread extends OpMode {
 
         vVoltageSensor.setRawValue(getBatteryVoltage());
 
-        vLeftFront.setPosition(leftFront.getCurrentPosition());
+        try {
+            vJoystickController1.copyStates(gamepad1);
+            vJoystickController2.copyStates(gamepad2);
+        } catch (RobotCoreException e) {
+            e.printStackTrace();
+        }
 
-		try {
-			vJoystickController1.copyStates(gamepad1);
-			vJoystickController2.copyStates(gamepad2);
-		} catch (RobotCoreException e) {
-			e.printStackTrace();
-		}
+        // Update Sensor Values E.g. vPitchSensor.setRawValue(imu.getIntegratedPitch()); vHeadingSensor, vRollSensor, vColorSensor...
+
+
 
 		// Capture Motor Powers,E.g. double leftPower = vDriveLeftMotore.getPower();
-		double leftPower = vLeftFront.getPower();
+		double leftFrontPower = vLeftFront.getPower();
+        double leftBackPower = vLeftBack.getPower();
+        double rightFrontPower = vRightFront.getPower();
+        double rightBackPower = vRightBack.getPower();
+        double glyphLiftLeftPower = vGlyphLiftLeft.getPower();
+        double glyphLiftRightPower = vGlyphLiftRight.getPower();
+        double relicArmPower = vRelicArm.getPower();
 
 		// Copy State of Motors and Servos E.g. leftFront.setPower(leftPower), Servo.setPosition(vServo.getPosition());
-		leftFront.setPower(leftPower);
+
 
 		for (Map.Entry<String,Object> e: robot.getTelemetry().entrySet()) {
 			telemetry.addData(e.getKey(),e.getValue());
@@ -226,17 +246,17 @@ public abstract class UpdateThread extends OpMode {
 		for (int i = 0; i < robot.getProgress().size(); i++) {
 			telemetry.addData("robot progress " + i, robot.getProgress().get(i));
 		}
+
 		telemetry.addData("Logic is Alive: ", t.isAlive());
 		telemetry.addData("All is Alive", t.allIsAlive());
-		telemetry.addData("Motor Power: ", leftPower);
 		//telemetry.addData("Motor: ", robot.getLFMotor().toString());
 		telemetry.addData("Loop Time: ", runtime.toString());
     }
 	
 	public void stop() {
+        imu.stopAccelerationIntegration();
 		imu.close();
 		vuforiaInstance = null;
-		allDone = true;
 		if (tInstantiated)
 			t.interrupt();
 		System.gc();
