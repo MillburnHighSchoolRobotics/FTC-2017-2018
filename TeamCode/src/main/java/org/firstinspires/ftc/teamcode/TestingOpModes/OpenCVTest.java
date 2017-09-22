@@ -87,23 +87,37 @@ public class OpenCVTest extends OpMode {
         /*
         Mat blur = new Mat();
         Imgproc.GaussianBlur(img, blur, new Size(7,7), 0);
+
         Mat red = new Mat();
+        // inRange - Checks if array elements lie between the elements of two other arrays
+        // -- in this case the two other arrays are redLower and redUpper which will be determined experimentally
         Core.inRange(img, redLower, redUpper, red);
+
         List<MatOfPoint> contours = new LinkedList<>();
+        // findContours - Finds contours (essentially edges) of every physical object in 'red'
+        // 'contours' List stores all detected contours as a vector of points
+        // The new Mat object is an output vector
+        // RETR_EXTERNAL is a mode which retrieves only the most extreme contours
+        // CHAIN_APPROX_SIMPLE compresses horizontal, vertical, and diagonal segments and leaves only their end points ???
         Imgproc.findContours(red.clone(), contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+
+        // Sorts based on the signs (- or +) of the contourAreas of consecutive matOfPoint objects in the contours List
         Collections.sort(contours, new Comparator<MatOfPoint>() {
             @Override
             public int compare(MatOfPoint matOfPoint, MatOfPoint t1) {
                 return (int) Math.signum(Imgproc.contourArea(matOfPoint) - Imgproc.contourArea(t1));
             }
         });
+
         if (contours.size() <= 0) {
             telemetry.addData("redIsLeft: ", "Not seen");
             return;
         }
         Point centerRed = new Point();
         float[] radiusRed = new float[1];
+        // minEnclosingCircle finds a circle of minimum area enclosing a 2D point set, in this case;
         Imgproc.minEnclosingCircle(new MatOfPoint2f(contours.get(contours.size() - 1).toArray()),centerRed,radiusRed);
+
         Mat blue = new Mat();
         Core.inRange(img, blueLower, blueUpper, blue);
         contours = new LinkedList<>();
