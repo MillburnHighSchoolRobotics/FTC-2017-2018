@@ -47,8 +47,7 @@ public class Red1BasicAutoLogic extends AutonomousLogicThread {
 
         runCommand(new Translate(100, Translate.Direction.FORWARD, 0, .5));
 
-        robot.getClawLeft().setPosition(0);
-        robot.getClawRight().setPosition(1);
+        robot.moveClaw(true);
 
     }
 }
