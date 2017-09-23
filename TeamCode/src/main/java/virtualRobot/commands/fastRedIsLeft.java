@@ -13,9 +13,12 @@ import virtualRobot.VuforiaLocalizerImplSubclass;
 import virtualRobot.utils.Vector2i;
 
 /**
- * Created by 17osullivand on 2/17/17.
+ * Created by ethachu19 on 2/17/17.
+ *
+ * Do not use, use EthanClass instead
  */
 
+@Deprecated
 public class fastRedIsLeft extends Command {
     public enum Mode {
         MIDSPLIT, TWORECTANGLES

@@ -45,6 +45,8 @@ public class Motor {
 		return motorType;
 	}
 
+	public synchronized Motor setMotorType(MotorConfigurationType type) { motorType = type; return this; }
+
 	public synchronized void setPosition(int position) {
 		this.position.setRawValue(position);
 	}

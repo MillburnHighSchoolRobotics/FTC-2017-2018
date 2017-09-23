@@ -31,9 +31,10 @@ public class SallyJoeBot {
 
     //Motors and Servos
     private Motor LFMotor, LBMotor, RFMotor, RBMotor;
-    private Servo rollerLeft, rollerRight;
-    private Motor glyphLiftLeft, glyphLiftRight;
+    private Motor rollerLeft, rollerRight;
+    private Motor glyphLift;
     private Motor relicArm;
+    private Servo clawLeft, clawRight;
     private ContinuousRotationServo relicArmWinch;
     private Servo jewelServo;
 
@@ -57,11 +58,12 @@ public class SallyJoeBot {
         LBMotor = new Motor();
         RFMotor = new Motor();
         RBMotor = new Motor();
-        rollerLeft = new Servo();
-        rollerRight = new Servo();
-        glyphLiftLeft = new Motor();
-        glyphLiftRight = new Motor();
+        rollerLeft = new Motor();
+        rollerRight = new Motor();
+        glyphLift = new Motor();
         relicArm = new Motor();
+        clawLeft = new Servo();
+        clawRight = new Servo();
         relicArmWinch = new ContinuousRotationServo();
         jewelServo = new Servo();
         //capLift = new SyncedMotors(LiftLeftMotor, LiftRightMotor, LiftLeftEncoder, LiftRightEncoder, KP, KI, KD, SyncedMotors.SyncAlgo.POSITION);
@@ -82,17 +84,19 @@ public class SallyJoeBot {
 
     public synchronized Motor getRBMotor() { return RBMotor; }
 
-    public synchronized Motor getGlyphLiftLeft() { return glyphLiftLeft; }
-
-    public synchronized Motor getGlyphLiftRight() { return glyphLiftRight; }
+    public synchronized Motor getGlyphLift() { return glyphLift; }
 
     public synchronized Motor getRelicArm() { return relicArm; }
 
     public synchronized ContinuousRotationServo getRelicArmWinch() { return relicArmWinch; }
 
-    public synchronized Servo getRollerLeft() { return rollerLeft; }
+    public synchronized Motor getRollerLeft() { return rollerLeft; }
 
-    public synchronized Servo getRollerRight() { return rollerRight; }
+    public synchronized Motor getRollerRight() { return rollerRight; }
+
+    public synchronized Servo getClawLeft() { return clawLeft; }
+
+    public synchronized Servo getClawRight() { return clawRight; }
 
     public synchronized Servo getJewelServo() { return jewelServo; }
 

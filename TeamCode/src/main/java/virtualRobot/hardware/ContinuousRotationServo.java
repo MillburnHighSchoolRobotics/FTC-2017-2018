@@ -4,7 +4,7 @@ package virtualRobot.hardware;
  * Created by Alex on 10/1/2015.
  * Virtual ContinousRotationServo. Set Position
  */
-public class ContinuousRotationServo extends Servo {
+public class ContinuousRotationServo {
 
     double speed = 0;
 
@@ -17,16 +17,9 @@ public class ContinuousRotationServo extends Servo {
     }
 
     public synchronized void setSpeed (double speed) {
+        speed = Math.max (Math.min(speed, 1), 0);
     	synchronized (this) {
     		this.speed = speed;
     	}
-    }
-
-    public synchronized void setPositionDegrees(double degrees) {
-        setPosition(degrees/360);
-    }
-
-    public synchronized double getPositionDegrees() {
-        return getPosition() * 360;
     }
 }

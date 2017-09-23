@@ -1,9 +1,6 @@
 package virtualRobot;
 
 
-import android.app.Activity;
-import virtualRobot.utils.BetterLog;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,11 +9,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import virtualRobot.commands.Command;
-import virtualRobot.commands.Rotate;
 import virtualRobot.commands.SpawnNewThread;
 import virtualRobot.commands.Translate;
-
-import static android.R.attr.name;
+import virtualRobot.utils.BetterLog;
 
 /**
  * Created by ethachu19 on 3/31/17
