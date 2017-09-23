@@ -10,7 +10,7 @@ import virtualRobot.logicThreads.competition.Blue1AutoLogic;
  * Created by Ethan Mak on 8/29/2017.
  */
 
-@Autonomous(name = "Autonomous: Blue 1", group = "Competition")
+@Autonomous(name = "Autonomous: Blue 1 Full", group = "Competition")
 public class Blue1AutoUpdate extends UpdateThread {
     @Override
     public void setLogicThread() {

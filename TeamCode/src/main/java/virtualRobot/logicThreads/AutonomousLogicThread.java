@@ -2,6 +2,8 @@ package virtualRobot.logicThreads;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import virtualRobot.LogicThread;
 
 /**
@@ -10,4 +12,5 @@ import virtualRobot.LogicThread;
 
 public abstract class AutonomousLogicThread extends LogicThread {
     public RelicRecoveryVuMark currentVuMark = RelicRecoveryVuMark.UNKNOWN;
+    public AtomicBoolean redIsLeft = new AtomicBoolean(false);
 }

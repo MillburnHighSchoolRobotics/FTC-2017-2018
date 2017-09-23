@@ -1,8 +1,5 @@
 package virtualRobot.logicThreads.competition;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
-import virtualRobot.LogicThread;
 import virtualRobot.logicThreads.AutonomousLogicThread;
 
 /**

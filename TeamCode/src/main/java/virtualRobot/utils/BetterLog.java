@@ -10,14 +10,14 @@ import java.util.List;
  */
 
 public class BetterLog {
-    private static List<String> tags = new ArrayList<>();
+    private static List<String> exceptions = new ArrayList<>();
 
     static {
 
     }
 
     public static void d(String tag, String msg){
-        if (tags.contains(tag))
+        if (!exceptions.contains(tag))
             BetterLog.d(tag, msg);
     }
 }
