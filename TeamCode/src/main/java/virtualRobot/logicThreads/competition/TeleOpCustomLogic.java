@@ -31,6 +31,9 @@ public class TeleOpCustomLogic extends LogicThread {
                 {-1, 1, 1, -1},
                 {0, 1, 1, 0}
         };
+        double intakeDirectionSensitivity = 1; //TODO: tune speed
+        double intakeElevationSensitivity = 1; //TODO: tune speed
+        double relicArmSpeed = 1; //TODO: tune speed
 //        Translate headingMovement = null;
 //        int lastAction = 0; //0 for stopped, 1 for translating, 2 for rotating
         while (true) {
@@ -134,6 +137,44 @@ public class TeleOpCustomLogic extends LogicThread {
             } else {
                 robot.stopMotors();
             }
+
+
+            if (controller1.isDpadUp()) {
+                robot.getRelicArm().setPower(relicArmSpeed);
+            } else if (controller1.isDpadDown()) {
+                robot.getRelicArm().setPower(-relicArmSpeed);
+            } else {
+                robot.getRelicArm().setPower(0);
+            }
+
+            if (controller1.isPressed(JoystickController.BUTTON_LB)) {
+                //Grasp Relic
+            } else if (controller1.isPressed(JoystickController.BUTTON_RB)) {
+                //Release Relic
+            }
+
+            if (controller2.isPressed(JoystickController.BUTTON_A)) robot.moveClaw(false);
+            else if (controller2.isPressed(JoystickController.BUTTON_B)) robot.moveClaw(true);
+
+            double intakeDirectionY = controller2.getValue(JoystickController.Y_1);
+            double intakeElevationY = controller2.getValue(JoystickController.Y_2);
+
+            if (!MathUtils.equals(intakeDirectionY, 0, 0.1)) {
+                robot.getRollerLeft().setPower(intakeDirectionY * intakeDirectionSensitivity);
+                robot.getRollerRight().setPower(-intakeDirectionY * intakeDirectionSensitivity);
+            } else {
+                robot.getRollerLeft().setPower(0);
+                robot.getRollerRight().setPower(0);
+            }
+
+            if (!MathUtils.equals(intakeElevationY, 0, 0.1)) {
+                robot.getGlyphLift().setPower(intakeElevationY * intakeElevationSensitivity);
+            } else {
+                robot.getGlyphLift().setPower(0);
+            }
+
+
+
             if (Thread.currentThread().isInterrupted())
                 throw new InterruptedException();
             Thread.sleep(10);
