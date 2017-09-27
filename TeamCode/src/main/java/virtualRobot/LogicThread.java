@@ -31,7 +31,7 @@ public abstract class LogicThread extends Thread {
     private List<MonitorThread> monitorThreads = Collections.synchronizedList(new ArrayList<MonitorThread>());
     private volatile long startTime, elapsedTime = 0;
 
-    private AtomicBoolean isPaused = new AtomicBoolean(false);
+    protected AtomicBoolean isPaused = new AtomicBoolean(false);
 
     //The thread to check all monitorThreads and put data in HashMap and check for interrupts
     private Thread interruptHandler = new Thread() {

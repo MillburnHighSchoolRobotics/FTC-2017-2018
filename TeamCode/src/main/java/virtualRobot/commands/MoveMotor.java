@@ -10,7 +10,6 @@ import virtualRobot.hardware.Sensor;
  */
 public class MoveMotor extends Command {
 	private Motor motor;
-	private Sensor encoder;
 	private boolean clearEncoders;
 	private double power;
 	private PIDController pidController;
@@ -21,11 +20,10 @@ public class MoveMotor extends Command {
 	public MoveMotor() {
 
 		motor = null;
-		encoder = null;
 		power = 1;
 		runMode = Translate.RunMode.CUSTOM;
 		tolerance = 20;
-		clearEncoders = true;
+		clearEncoders = false;
 
 		pidController = new PIDController();
 	}
@@ -45,18 +43,17 @@ public class MoveMotor extends Command {
 		this.timeLimit = timeLimit;
 	}
 
-	public MoveMotor(Motor motor, double power, Sensor encoder, double target, Translate.RunMode runMode, boolean clearEncoders) {
+	public MoveMotor(Motor motor, double power, double target, Translate.RunMode runMode, boolean clearEncoders) {
 		this(motor, power);
 
 		this.runMode = runMode;
-		this.encoder = encoder;
 		this.clearEncoders = clearEncoders;
 
 		this.pidController.setTarget(target);
 	}
 
-	public MoveMotor(Motor motor, double power, Sensor encoder, double target, Translate.RunMode runMode, boolean clearEncoders, double kP, double kI, double kD, double threshold, double tolerance) {
-		this(motor, power, encoder, target, runMode, clearEncoders);
+	public MoveMotor(Motor motor, double power, double target, Translate.RunMode runMode, boolean clearEncoders, double kP, double kI, double kD, double threshold, double tolerance) {
+		this(motor, power, target, runMode, clearEncoders);
 
 		this.pidController.setKP(kP);
 		this.pidController.setKI(kI);
@@ -72,10 +69,6 @@ public class MoveMotor extends Command {
 
 	public void setMotor(Motor motor) {
 		this.motor = motor;
-	}
-
-	public void setEncoder(Sensor encoder) {
-		this.encoder = encoder;
 	}
 
 	public void setTarget(double target) {
@@ -128,11 +121,11 @@ public class MoveMotor extends Command {
 
 			break;
 		case WITH_ENCODERS:
-			if (clearEncoders) encoder.clearValue();
+			if (clearEncoders) motor.clearEncoder();
 			motor.setPower(power);
 
 			if (power > 0) {
-				MainLoop: while (!isInterrupted && encoder.getValue() < pidController.getTarget()) {
+				MainLoop: while (!isInterrupted && motor.getPosition() < pidController.getTarget()) {
 					switch (checkConditionals()) {
 						case BREAK:
 							break MainLoop;
@@ -153,7 +146,7 @@ public class MoveMotor extends Command {
 					}
 				}
 			} else {
-				MainLoop: while (!isInterrupted && encoder.getValue() > pidController.getTarget()) {
+				MainLoop: while (!isInterrupted && motor.getPosition() > pidController.getTarget()) {
 					switch (checkConditionals()) {
 						case BREAK:
 							break MainLoop;
@@ -178,9 +171,9 @@ public class MoveMotor extends Command {
 			break;
 
 		case WITH_PID:
-			if (clearEncoders) encoder.clearValue();
+			if (clearEncoders) motor.clearEncoder();
 
-			MainLoop: while (!isInterrupted && Math.abs(encoder.getValue() - pidController.getTarget()) > tolerance) {
+			MainLoop: while (!isInterrupted && Math.abs(motor.getPosition() - pidController.getTarget()) > tolerance) {
 				switch (checkConditionals()) {
 					case BREAK:
 						break MainLoop;
@@ -188,7 +181,7 @@ public class MoveMotor extends Command {
 						return isInterrupted;
 				}
 
-				double pidOutput = pidController.getPIDOutput(Math.abs(encoder.getValue()));
+				double pidOutput = pidController.getPIDOutput(Math.abs(motor.getPosition()));
 
 				motor.setPower(pidOutput * power);
 

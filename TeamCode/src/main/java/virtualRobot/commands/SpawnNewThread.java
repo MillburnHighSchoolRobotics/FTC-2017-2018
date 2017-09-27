@@ -1,6 +1,7 @@
 package virtualRobot.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import virtualRobot.Condition;
@@ -25,6 +26,11 @@ public class SpawnNewThread extends Command {
     			return false;
     		}
     	};
+    }
+
+    public SpawnNewThread(LogicThread... threads){
+        this();
+        logic.addAll(Arrays.asList(threads));
     }
     
     public SpawnNewThread(List<LogicThread> l) {
