@@ -67,12 +67,6 @@ public abstract class UpdateThread extends OpMode {
 //	private MPU9250 imu;
     private BNO055IMU imu;
 	private DcMotor leftFront, leftBack, rightFront, rightBack;
-	private DcMotor rollerLeft, rollerRight;
-	private DcMotor glyphLift;
-	private DcMotor relicArm;
-	private Servo relicArmWinch; //Its actually a CRServo but this is a better implementation of it
-	private Servo jewelServo;
-	private Servo clawLeft, clawRight;
 
 
 //Now initiate the VIRTUAL componenents (from VirtualRobot!!), e.g. private Motor vDriveRightMotor, private virtualRobot.hardware.Servo ..., private Sensor vDriveRightMotorEncoder, private LocationSensor vLocationSensor
@@ -109,20 +103,20 @@ public abstract class UpdateThread extends OpMode {
         imu.startAccelerationIntegration(new Position(), new Velocity(),1);
 
         //MOTOR SETUP (with physical componenents, e.g. leftBack = hardwareMap.dcMotor.get("leftBack")
-		leftFront = hardwareMap.dcMotor.get("leftFront");
-		leftBack = hardwareMap.dcMotor.get("leftBack");
-		rightFront = hardwareMap.dcMotor.get("rightFront");
-		rightBack = hardwareMap.dcMotor.get("rightBack");
-		rollerLeft = hardwareMap.dcMotor.get("rollerLeft");
-		rollerRight = hardwareMap.dcMotor.get("rollerRight");
-		glyphLift = hardwareMap.dcMotor.get("glyphLift");
-		relicArm = hardwareMap.dcMotor.get("relicArm");
-
-        //SERVO SETUP (with physical hardware, e.g. servo = hardwareMap....)
-		relicArmWinch = hardwareMap.servo.get("relicArmWinch");
-		jewelServo = hardwareMap.servo.get("jewelServo");
-		clawLeft = hardwareMap.servo.get("clawLeft");
-		clawRight = hardwareMap.servo.get("clawRight");
+		leftFront = hardwareMap.dcMotor.get("LF");
+		leftBack = hardwareMap.dcMotor.get("LB");
+		rightFront = hardwareMap.dcMotor.get("RF");
+		rightBack = hardwareMap.dcMotor.get("RB");
+//		rollerLeft = hardwareMap.dcMotor.get("rollerLeft");
+//		rollerRight = hardwareMap.dcMotor.get("rollerRight");
+//		glyphLift = hardwareMap.dcMotor.get("glyphLift");
+//		relicArm = hardwareMap.dcMotor.get("relicArm");
+//
+//        //SERVO SETUP (with physical hardware, e.g. servo = hardwareMap....)
+//		relicArmWinch = hardwareMap.servo.get("relicArmWinch");
+//		jewelServo = hardwareMap.servo.get("jewelServo");
+//		clawLeft = hardwareMap.servo.get("clawLeft");
+//		clawRight = hardwareMap.servo.get("clawRight");
 
         //REVERSE ONE SIDE (If needed, e.g. rightFront.setDirection(DcMotor.Direction.REVERSE)
 		rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -160,10 +154,10 @@ public abstract class UpdateThread extends OpMode {
 		vLeftBack.setMotorType(leftBack.getMotorType());
 		vRightFront.setMotorType(rightFront.getMotorType());
 		vRightBack.setMotorType(rightBack.getMotorType());
-		vRollerLeft.setMotorType(rollerLeft.getMotorType());
-		vRollerRight.setMotorType(rollerRight.getMotorType());
-		vGlyphLift.setMotorType(glyphLift.getMotorType());
-		vRelicArm.setMotorType(relicArm.getMotorType());
+//		vRollerLeft.setMotorType(rollerLeft.getMotorType());
+//		vRollerRight.setMotorType(rollerRight.getMotorType());
+//		vGlyphLift.setMotorType(glyphLift.getMotorType());
+//		vRelicArm.setMotorType(relicArm.getMotorType());
 
         //Setup constant components (Do not touch)
 		addPresets();
@@ -194,16 +188,16 @@ public abstract class UpdateThread extends OpMode {
         Rotate.setCurrentAngle(0);
 
 		//Set initial servo positions
-		relicArmWinch.setPosition(0.5);
-		clawLeft.setPosition(0);
-		clawRight.setPosition(0);
-		jewelServo.setPosition(0);
+//		relicArmWinch.setPosition(0.5);
+//		clawLeft.setPosition(0);
+//		clawRight.setPosition(0);
+//		jewelServo.setPosition(0);
 
 		//Copy positions to virtualRobot
-		vRelicArmWinch.setSpeed(relicArmWinch.getPosition());
-		vClawLeft.setPosition(clawLeft.getPosition());
-		vClawRight.setPosition(clawRight.getPosition());
-		vJewelServo.setPosition(jewelServo.getPosition());
+//		vRelicArmWinch.setSpeed(relicArmWinch.getPosition());
+//		vClawLeft.setPosition(clawLeft.getPosition());
+//		vClawRight.setPosition(clawRight.getPosition());
+//		vJewelServo.setPosition(jewelServo.getPosition());
 
 		//set sensors e.g. vDriveRightMotorEncoder.setRawValue(-rightFront.getCurrentPosition())
         vVoltageSensor.setRawValue(getBatteryVoltage());
@@ -212,10 +206,10 @@ public abstract class UpdateThread extends OpMode {
 		vLeftBack.setPosition(leftBack.getCurrentPosition());
 		vRightFront.setPosition(rightFront.getCurrentPosition());
 		vRightBack.setPosition(rightBack.getCurrentPosition());
-		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
-		vRollerRight.setPosition(rollerRight.getCurrentPosition());
-		vGlyphLift.setPosition(glyphLift.getCurrentPosition());
-		vRelicArm.setPosition(relicArm.getCurrentPosition());
+//		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
+//		vRollerRight.setPosition(rollerRight.getCurrentPosition());
+//		vGlyphLift.setPosition(glyphLift.getCurrentPosition());
+//		vRelicArm.setPosition(relicArm.getCurrentPosition());
 
 		try {
 			t = logicThread.newInstance();
@@ -274,16 +268,16 @@ public abstract class UpdateThread extends OpMode {
 		vLeftBack.setPosition(leftBack.getCurrentPosition());
 		vRightFront.setPosition(rightFront.getCurrentPosition());
 		vRightBack.setPosition(rightBack.getCurrentPosition());
-		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
-		vRollerRight.setPosition(rollerRight.getCurrentPosition());
-		vGlyphLift.setPosition(glyphLift.getCurrentPosition());
-		vRelicArm.setPosition(relicArm.getCurrentPosition());
-
-		//Copy Servo Positions
-		relicArmWinch.setPosition(vRelicArmWinch.getSpeed());
-		clawLeft.setPosition(vClawLeft.getPosition());
-		clawRight.setPosition(vClawRight.getPosition());
-		jewelServo.setPosition(vJewelServo.getPosition());
+//		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
+//		vRollerRight.setPosition(rollerRight.getCurrentPosition());
+//		vGlyphLift.setPosition(glyphLift.getCurrentPosition());
+//		vRelicArm.setPosition(relicArm.getCurrentPosition());
+//
+//		//Copy Servo Positions
+//		relicArmWinch.setPosition(vRelicArmWinch.getSpeed());
+//		clawLeft.setPosition(vClawLeft.getPosition());
+//		clawRight.setPosition(vClawRight.getPosition());
+//		jewelServo.setPosition(vJewelServo.getPosition());
 
 		// Capture Motor Powers,E.g. double leftPower = vDriveLeftMotore.getPower();
 		double leftFrontPower = vLeftFront.getPower();
@@ -300,10 +294,10 @@ public abstract class UpdateThread extends OpMode {
 		leftBack.setPower(leftBackPower);
 		rightFront.setPower(rightFrontPower);
 		rightBack.setPower(rightBackPower);
-		glyphLift.setPower(glyphLiftPower);
-		relicArm.setPower(relicArmPower);
-		rollerLeft.setPower(rollerLeftPower);
-		rollerRight.setPower(rollerRightPower);
+//		glyphLift.setPower(glyphLiftPower);
+//		relicArm.setPower(relicArmPower);
+//		rollerLeft.setPower(rollerLeftPower);
+//		rollerRight.setPower(rollerRightPower);
 
 		for (Map.Entry<String,Object> e: robot.getTelemetry().entrySet()) {
 			telemetry.addData(e.getKey(),e.getValue());
