@@ -1,5 +1,7 @@
 package virtualRobot.utils;
 
+import android.util.Log;
+
 import virtualRobot.utils.BetterLog;
 
 import java.util.ArrayList;
@@ -18,6 +20,6 @@ public class BetterLog {
 
     public static void d(String tag, String msg){
         if (!exceptions.contains(tag))
-            BetterLog.d(tag, msg);
+            Log.d(tag, msg);
     }
 }
