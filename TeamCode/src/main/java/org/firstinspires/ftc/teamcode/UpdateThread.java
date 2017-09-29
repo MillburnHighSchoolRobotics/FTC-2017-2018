@@ -38,6 +38,7 @@ import virtualRobot.hardware.Motor;
 import virtualRobot.hardware.Sensor;
 import virtualRobot.hardware.StateSensor;
 import virtualRobot.logicThreads.testing.TestBackendLogic;
+import virtualRobot.utils.BetterLog;
 import virtualRobot.utils.GlobalUtils;
 import virtualRobot.utils.Vector3f;
 
@@ -64,7 +65,7 @@ public abstract class UpdateThread extends OpMode {
 	//here we will initiate all of our PHYSICAL hardware. E.g: private DcMotor leftBack...
 	//also initiate sensors. E.g. private AnalogInput sonar, private ColorSensor colorSensor, private DigitalChannel ...
 
-//	private MPU9250 imu;
+//	private BNO055 imu;
     private BNO055IMU imu;
 	private DcMotor leftFront, leftBack, rightFront, rightBack;
 
@@ -90,23 +91,24 @@ public abstract class UpdateThread extends OpMode {
 	@Override
 	public void init() {
         //IMU SETUP (Do not touch)
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = false;
-        parameters.loggingTag          = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-        imu.startAccelerationIntegration(new Position(), new Velocity(),1);
+//        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+//        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+//        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+//        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+//        parameters.loggingEnabled      = false;
+//        parameters.loggingTag          = "IMU";
+//        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+//
+//        imu = hardwareMap.get(BNO055IMU.class, "imu");
+//        imu.initialize(parameters);
+//        imu.startAccelerationIntegration(new Position(), new Velocity(),1);
 
         //MOTOR SETUP (with physical componenents, e.g. leftBack = hardwareMap.dcMotor.get("leftBack")
 		leftFront = hardwareMap.dcMotor.get("LF");
 		leftBack = hardwareMap.dcMotor.get("LB");
 		rightFront = hardwareMap.dcMotor.get("RF");
 		rightBack = hardwareMap.dcMotor.get("RB");
+		telemetry.addData("Components ", "Motors Initialized");
 //		rollerLeft = hardwareMap.dcMotor.get("rollerLeft");
 //		rollerRight = hardwareMap.dcMotor.get("rollerRight");
 //		glyphLift = hardwareMap.dcMotor.get("glyphLift");
@@ -164,20 +166,20 @@ public abstract class UpdateThread extends OpMode {
         setLogicThread();
 //		cv = new CreateVuforia(LogicThread, vuforiaEverywhere, t);
 //		new Thread (cv).start();
-		if (!exceptions.contains(logicThread)){
-			VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
-			params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-			params.vuforiaLicenseKey = "AdVGalv/////AAAAGYhiDIdk+UI+ivt0Y7WGvUJnm5cKX/lWesW2pH7gnK3eOLTKThLekYSO1q65ttw7X1FvNhxxhdQl3McS+mzYjO+HkaFNJlHxltsI5+b4giqNQKWhyKjzbYbNw8aWarI5YCYUFnyiPPjH39/CbBzzFk3G2RWIzNB7cy4AYhjwYRKRiL3k33YvXv0ZHRzJRkMpnytgvdv5jEQyWa20DIkriC+ZBaj8dph8/akyYfyD1/U19vowknmzxef3ncefgOZoI9yrK82T4GBWazgWvZkIz7bPy/ApGiwnkVzp44gVGsCJCUFERiPVwfFa0SBLeCrQMrQaMDy3kOIVcWTotFn4m1ridgE5ZP/lvRzEC4/vcuV0";
-			UpdateThread.vuforiaInstance = new VuforiaLocalizerImplSubclass(params);
-		}
+//		if (!exceptions.contains(logicThread)){
+//			VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
+//			params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+//			params.vuforiaLicenseKey = "AdVGalv/////AAAAGYhiDIdk+UI+ivt0Y7WGvUJnm5cKX/lWesW2pH7gnK3eOLTKThLekYSO1q65ttw7X1FvNhxxhdQl3McS+mzYjO+HkaFNJlHxltsI5+b4giqNQKWhyKjzbYbNw8aWarI5YCYUFnyiPPjH39/CbBzzFk3G2RWIzNB7cy4AYhjwYRKRiL3k33YvXv0ZHRzJRkMpnytgvdv5jEQyWa20DIkriC+ZBaj8dph8/akyYfyD1/U19vowknmzxef3ncefgOZoI9yrK82T4GBWazgWvZkIz7bPy/ApGiwnkVzp44gVGsCJCUFERiPVwfFa0SBLeCrQMrQaMDy3kOIVcWTotFn4m1ridgE5ZP/lvRzEC4/vcuV0";
+//			UpdateThread.vuforiaInstance = new VuforiaLocalizerImplSubclass(params);
+//		}
 	}
 
 	public void init_loop () {
 		telemetry.addData("Is Running Version: ", Translate.KPt + " 2.0");
         telemetry.addData("Init Loop Time", runtime.toString());
 		telemetry.addData("Battery Voltage: ", getBatteryVoltage());
-        telemetry.addData("IMU Status", imu.getSystemStatus().toShortString());
-        telemetry.addData("IMU Calibration", imu.getCalibrationStatus().toString());
+//        telemetry.addData("IMU Status", imu.getSystemStatus().toShortString());
+//        telemetry.addData("IMU Calibration", imu.getCalibrationStatus().toString());
 		telemetry.addData("Is Good for Testing: ", getBatteryVoltage() < 13.5 ? "NO, BATTERY IS TOO LOW" : "YES");
 	}
 
@@ -230,29 +232,29 @@ public abstract class UpdateThread extends OpMode {
 	public void loop() {
 		// Update Location. E.g.: double prevEcnoderValue=?, newEncoderValue=?,
 		//TODO: Calculate values for prev and newEncoderValues (Not top priority, locationSensor may not be used)
-		Position position = imu.getPosition();
-		Velocity velocity = imu.getVelocity();
+//		Position position = imu.getPosition();
+//		Velocity velocity = imu.getVelocity();
 
-		vStateSensor.setPosition(new Vector3f(position.x, position.y, position.z));
-		vStateSensor.setVelocity(new Vector3f(velocity.xVeloc, velocity.yVeloc, velocity.zVeloc));
+//		vStateSensor.setPosition(new Vector3f(position.x, position.y, position.z));
+//		vStateSensor.setVelocity(new Vector3f(velocity.xVeloc, velocity.yVeloc, velocity.zVeloc));
 
         //Update the sensors that stay constant (Do not touch)
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        Acceleration accel = imu.getLinearAcceleration();
-        Acceleration total = imu.getOverallAcceleration();
-        AngularVelocity angularVelocity = imu.getAngularVelocity();
+//        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+//        Acceleration accel = imu.getLinearAcceleration();
+//        Acceleration total = imu.getOverallAcceleration();
+//        AngularVelocity angularVelocity = imu.getAngularVelocity();
 
-        vIMU.setLinearAccel(new Vector3f(accel.xAccel, accel.yAccel, accel.zAccel));
-        vIMU.setTotalAccel(new Vector3f(total.xAccel, total.yAccel, total.zAccel));
-        vIMU.linearAcquisition = accel.acquisitionTime;
-        vIMU.totalAcquisition = total.acquisitionTime;
+//        vIMU.setLinearAccel(new Vector3f(accel.xAccel, accel.yAccel, accel.zAccel));
+//        vIMU.setTotalAccel(new Vector3f(total.xAccel, total.yAccel, total.zAccel));
+//        vIMU.linearAcquisition = accel.acquisitionTime;
+//        vIMU.totalAcquisition = total.acquisitionTime;
 
-        vIMU.setYaw(angles.firstAngle);
-        vIMU.setRoll(angles.secondAngle);
-        vIMU.setPitch(angles.thirdAngle);
+//        vIMU.setYaw(angles.firstAngle);
+//        vIMU.setRoll(angles.secondAngle);
+//        vIMU.setPitch(angles.thirdAngle);
 //        vIMU.angleAcquisition = angles.acquisitionTime;
 
-        vIMU.setAngularVelocity(new Vector3f(angularVelocity.xRotationRate, angularVelocity.yRotationRate, angularVelocity.zRotationRate));
+//        vIMU.setAngularVelocity(new Vector3f(angularVelocity.xRotationRate, angularVelocity.yRotationRate, angularVelocity.zRotationRate));
 
         vVoltageSensor.setRawValue(getBatteryVoltage());
 
@@ -314,8 +316,8 @@ public abstract class UpdateThread extends OpMode {
     }
 	
 	public void stop() {
-        imu.stopAccelerationIntegration();
-		imu.close();
+//        imu.stopAccelerationIntegration();
+//		imu.close();
 		vuforiaInstance = null;
 		if (tInstantiated)
 			t.interrupt();
