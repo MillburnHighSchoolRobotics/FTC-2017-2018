@@ -197,7 +197,6 @@ public class Red1AutoLogic extends AutonomousLogicThread {
     }
 
     private Pair<Integer, Integer> getIndex(StackingLogic.GlyphColor top, StackingLogic.GlyphColor bottom) {
-        //TODO: Implement Method
         for (int i = 0; i < 3; i++){
             for (int j = 0; j < 3; j++) {
                 if (pattern[i][j] == UNKNOWN) {
