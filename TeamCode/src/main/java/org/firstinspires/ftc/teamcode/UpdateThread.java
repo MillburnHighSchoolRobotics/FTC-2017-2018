@@ -68,6 +68,7 @@ public abstract class UpdateThread extends OpMode {
 //	private BNO055 imu;
     private BNO055IMU imu;
 	private DcMotor leftFront, leftBack, rightFront, rightBack;
+	private DcMotor glyphLift;
 
 
 //Now initiate the VIRTUAL componenents (from VirtualRobot!!), e.g. private Motor vDriveRightMotor, private virtualRobot.hardware.Servo ..., private Sensor vDriveRightMotorEncoder, private LocationSensor vLocationSensor
@@ -111,7 +112,7 @@ public abstract class UpdateThread extends OpMode {
 		telemetry.addData("Components ", "Motors Initialized");
 //		rollerLeft = hardwareMap.dcMotor.get("rollerLeft");
 //		rollerRight = hardwareMap.dcMotor.get("rollerRight");
-//		glyphLift = hardwareMap.dcMotor.get("glyphLift");
+		glyphLift = hardwareMap.dcMotor.get("glyphLift");
 //		relicArm = hardwareMap.dcMotor.get("relicArm");
 //
 //        //SERVO SETUP (with physical hardware, e.g. servo = hardwareMap....)
@@ -158,7 +159,7 @@ public abstract class UpdateThread extends OpMode {
 		vRightBack.setMotorType(rightBack.getMotorType());
 //		vRollerLeft.setMotorType(rollerLeft.getMotorType());
 //		vRollerRight.setMotorType(rollerRight.getMotorType());
-//		vGlyphLift.setMotorType(glyphLift.getMotorType());
+		vGlyphLift.setMotorType(glyphLift.getMotorType());
 //		vRelicArm.setMotorType(relicArm.getMotorType());
 
         //Setup constant components (Do not touch)
@@ -210,7 +211,7 @@ public abstract class UpdateThread extends OpMode {
 		vRightBack.setPosition(rightBack.getCurrentPosition());
 //		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
 //		vRollerRight.setPosition(rollerRight.getCurrentPosition());
-//		vGlyphLift.setPosition(glyphLift.getCurrentPosition());
+		vGlyphLift.setPosition(glyphLift.getCurrentPosition());
 //		vRelicArm.setPosition(relicArm.getCurrentPosition());
 
 		try {
@@ -272,7 +273,7 @@ public abstract class UpdateThread extends OpMode {
 		vRightBack.setPosition(rightBack.getCurrentPosition());
 //		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
 //		vRollerRight.setPosition(rollerRight.getCurrentPosition());
-//		vGlyphLift.setPosition(glyphLift.getCurrentPosition());
+		vGlyphLift.setPosition(glyphLift.getCurrentPosition());
 //		vRelicArm.setPosition(relicArm.getCurrentPosition());
 //
 //		//Copy Servo Positions
@@ -296,7 +297,7 @@ public abstract class UpdateThread extends OpMode {
 		leftBack.setPower(leftBackPower);
 		rightFront.setPower(rightFrontPower);
 		rightBack.setPower(rightBackPower);
-//		glyphLift.setPower(glyphLiftPower);
+		glyphLift.setPower(glyphLiftPower);
 //		relicArm.setPower(relicArmPower);
 //		rollerLeft.setPower(rollerLeftPower);
 //		rollerRight.setPower(rollerRightPower);

@@ -77,6 +77,14 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
             } else {
                 robot.stopMotors();
             }
+
+            if (controller2.isDpadUp()) {
+                robot.getGlyphLift().setPower(0.5);
+            } else if (controller2.isDpadDown()) {
+                robot.getGlyphLift().setPower(-0.5);
+            } else {
+                robot.getGlyphLift().setPower(0);
+            }
             if (Thread.currentThread().isInterrupted())
                 throw new InterruptedException();
             Thread.sleep(10);
