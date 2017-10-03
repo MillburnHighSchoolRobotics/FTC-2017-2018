@@ -53,8 +53,8 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
                     //Left
                     RF = translatePower * POWER_MATRIX[2][0];
                     RB = translatePower * POWER_MATRIX[2][1];
-                    LF = -translatePower * POWER_MATRIX[2][2];
-                    LB = -translatePower * POWER_MATRIX[2][3];
+                    LF = translatePower * POWER_MATRIX[2][2];
+                    LB = translatePower * POWER_MATRIX[2][3];
                 } else if (MathUtils.equals(translateTheta, 270)) {
                     //Backward
                     RF = translatePower * POWER_MATRIX[4][0];
@@ -65,8 +65,8 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
                     //Right
                     RF = translatePower * POWER_MATRIX[6][0];
                     RB = translatePower * POWER_MATRIX[6][1];
-                    LF = -translatePower * POWER_MATRIX[6][2];
-                    LB = -translatePower * POWER_MATRIX[6][3];
+                    LF = translatePower * POWER_MATRIX[6][2];
+                    LB = translatePower * POWER_MATRIX[6][3];
                 }
                 robot.addToTelemetry("0", LF + " " + RF);
                 robot.addToTelemetry("1", LB + " " + RB);
@@ -79,9 +79,9 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
             }
 
             if (controller1.isPressed(JoystickController.BUTTON_LT)) {
-                robot.getGlyphLift().setPower(-0.5);
+                robot.getGlyphLift().setPower(-1);
             } else if (controller1.isPressed(JoystickController.BUTTON_RT)) {
-                robot.getGlyphLift().setPower(0.5);
+                robot.getGlyphLift().setPower(1);
             } else {
                 robot.getGlyphLift().setPower(0);
             }
