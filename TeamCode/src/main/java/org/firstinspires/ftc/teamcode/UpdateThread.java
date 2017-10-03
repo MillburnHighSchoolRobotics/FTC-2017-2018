@@ -69,6 +69,7 @@ public abstract class UpdateThread extends OpMode {
     private BNO055IMU imu;
 	private DcMotor leftFront, leftBack, rightFront, rightBack;
 	private DcMotor glyphLift;
+	private Servo clawLeft, clawRight;
 
 
 //Now initiate the VIRTUAL componenents (from VirtualRobot!!), e.g. private Motor vDriveRightMotor, private virtualRobot.hardware.Servo ..., private Sensor vDriveRightMotorEncoder, private LocationSensor vLocationSensor
@@ -118,8 +119,8 @@ public abstract class UpdateThread extends OpMode {
 //        //SERVO SETUP (with physical hardware, e.g. servo = hardwareMap....)
 //		relicArmWinch = hardwareMap.servo.get("relicArmWinch");
 //		jewelServo = hardwareMap.servo.get("jewelServo");
-//		clawLeft = hardwareMap.servo.get("clawLeft");
-//		clawRight = hardwareMap.servo.get("clawRight");
+		clawLeft = hardwareMap.servo.get("clawLeft");
+		clawRight = hardwareMap.servo.get("clawRight");
 
         //REVERSE ONE SIDE (If needed, e.g. rightFront.setDirection(DcMotor.Direction.REVERSE)
 		rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -278,8 +279,8 @@ public abstract class UpdateThread extends OpMode {
 //
 //		//Copy Servo Positions
 //		relicArmWinch.setPosition(vRelicArmWinch.getSpeed());
-//		clawLeft.setPosition(vClawLeft.getPosition());
-//		clawRight.setPosition(vClawRight.getPosition());
+		clawLeft.setPosition(vClawLeft.getPosition());
+		clawRight.setPosition(vClawRight.getPosition());
 //		jewelServo.setPosition(vJewelServo.getPosition());
 
 		// Capture Motor Powers,E.g. double leftPower = vDriveLeftMotore.getPower();
