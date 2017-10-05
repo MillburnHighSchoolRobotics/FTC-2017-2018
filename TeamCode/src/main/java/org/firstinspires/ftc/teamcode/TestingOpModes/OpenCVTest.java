@@ -54,10 +54,10 @@ public class OpenCVTest extends LinearOpMode {
     VuforiaLocalizerImplSubclass vuforiaInstance;
     VideoCapture cap;
     private int width, height;
-    Scalar redUpper = new Scalar(255, 150, 150);
-    Scalar redLower = new Scalar(50, 0, 0);
-    Scalar blueUpper = new Scalar(150, 150, 255);
-    Scalar blueLower = new Scalar(0, 0, 50);
+    Scalar redUpper = new Scalar(255, 100, 100, 255);
+    Scalar redLower = new Scalar(50, 0, 0, 0);
+    Scalar blueUpper = new Scalar(50, 150, 255, 255);
+    Scalar blueLower = new Scalar(0, 0, 50, 0);
 
     static {
         if(!OpenCVLoader.initDebug()){
@@ -87,7 +87,7 @@ public class OpenCVTest extends LinearOpMode {
             //vuforiaInstance.rgb.getPixels().array().length +
             bm.copyPixelsFromBuffer(vuforiaInstance.rgb.getPixels());
             Utils.bitmapToMat(bm, img);
-//            telemetry.addData("Center: ", Arrays.toString(img.get(img.rows()/2, img.cols()/2)));
+            telemetry.addData("Center: ", Arrays.toString(img.get(img.rows()/2, img.cols()/2)));
 //            img.release();
 //            telemetry.addData("Vuforia size: ", "" + " " + height + " " + width);
 //
@@ -105,68 +105,92 @@ public class OpenCVTest extends LinearOpMode {
             Mat red = new Mat();
             // inRange - Checks if array elements lie between the elements of two other arrays
             // -- in this case the two other arrays are redLower and redUpper which will be determined experimentally
-            Core.inRange(blur, redLower, redUpper, red);
-            List<MatOfPoint> contours = new LinkedList<>();
+            Core.inRange(blur.clone(), redLower, redUpper, red);
+            List<MatOfPoint> redContours = new LinkedList<>();
             // findContours - Finds contours (essentially edges) of every physical object in 'red'
             // 'contours' List stores all detected contours as a vector of points
             // The new Mat object is an output vector
             // RETR_EXTERNAL is a mode which retrieves only the most external contours
             // CHAIN_APPROX_SIMPLE compresses horizontal, vertical, and diagonal segments and leaves only their end points ???
-            Imgproc.findContours(red.clone(), contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+            Imgproc.findContours(red.clone(), redContours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+            red.release();
 
             // Sorts based on the signs (- or +) of the contourAreas of consecutive matOfPoint objects in the contours List
-            Collections.sort(contours, new Comparator<MatOfPoint>() {
+            Collections.sort(redContours, new Comparator<MatOfPoint>() {
                 @Override
                 public int compare(MatOfPoint matOfPoint, MatOfPoint t1) {
                     return (int) Math.signum(Imgproc.contourArea(matOfPoint) - Imgproc.contourArea(t1));
                 }
             });
 
-            if (contours.size() <= 0) {
+            if (redContours.size() <= 0) {
                 logset("redIsLeft: ", "Not seen");
                 telemetry.addData("redIsLeft: ", "Not Seen Red");
                 telemetry.update();
+                blur.release();
 //                return;
                 continue;
             }
-            MatOfPoint2f cont = new MatOfPoint2f(contours.get(contours.size() - 1).toArray());
+            MatOfPoint2f cont = new MatOfPoint2f(redContours.get(redContours.size() - 1).toArray());
             Point centerRed = new Point();
             float[] radiusRed = new float[1];
             // minEnclosingCircle finds a circle of minimum area enclosing a 2D point set, in this case;
             Imgproc.minEnclosingCircle(cont,centerRed,radiusRed);
             cont.release();
-            red.release();
-            for (MatOfPoint mat : contours) {
+            for (MatOfPoint mat : redContours) {
                 mat.release();
             }
 
+            if (radiusRed[0] < 150) {
+                logset("redIsLeft: ", "Not seen");
+                telemetry.addData("redIsLeft: ", "Red Too Small");
+                telemetry.update();
+                blur.release();
+//                return;
+                continue;
+            }
+
+            telemetry.addData("Circle Red ", centerRed.toString() + " " + radiusRed[0]);
+            logset("Circle Red ", centerRed.toString() + " " + radiusRed[0]);
+
             Mat blue = new Mat();
-            Core.inRange(img, blueLower, blueUpper, blue);
-            contours = new LinkedList<>();
-            Imgproc.findContours(blue.clone(), contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+            Core.inRange(blur.clone(), blueLower, blueUpper, blue);
+            LinkedList<MatOfPoint> blueContours = new LinkedList<>();
+            Imgproc.findContours(blue.clone(), blueContours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
             blue.release();
             blur.release();
-            Collections.sort(contours, new Comparator<MatOfPoint>() {
+            Collections.sort(blueContours, new Comparator<MatOfPoint>() {
                 @Override
                 public int compare(MatOfPoint matOfPoint, MatOfPoint t1) {
                     return (int) Math.signum(Imgproc.contourArea(matOfPoint) - Imgproc.contourArea(t1));
                 }
             });
-            if (contours.size() <= 0) {
+            if (blueContours.size() <= 0) {
                 logset("redIsLeft: ", "Not seen");
                 telemetry.addData("redIsLeft: ", "Not Seen Blue");
                 telemetry.update();
 //                return;
                 continue;
             }
-            cont = new MatOfPoint2f(contours.get(contours.size() - 1).toArray());
+            cont = new MatOfPoint2f(blueContours.get(blueContours.size() - 1).toArray());
             Point centerBlue = new Point();
             float[] radiusBlue = new float[1];
             Imgproc.minEnclosingCircle(cont,centerBlue,radiusBlue);
             cont.release();
-            for (MatOfPoint mat : contours) {
+            for (MatOfPoint mat : blueContours) {
                 mat.release();
             }
+
+            if (radiusBlue[0] < 150) {
+                logset("redIsLeft: ", "Not seen");
+                telemetry.addData("redIsLeft: ", "Blue Too Small");
+                telemetry.update();
+//                blur.release();
+//                return;
+                continue;
+            }
+
+            telemetry.addData("Circle Blue ", centerBlue.toString() + " " + radiusBlue[0]);
 
             logset("redIsLeft: ", "" + (centerRed.x < centerBlue.x));
             telemetry.addData("redIsLeft: ", "" + (centerRed.x < centerBlue.x));

@@ -32,6 +32,7 @@ public abstract class LogicThread extends Thread {
     private volatile long startTime, elapsedTime = 0;
 
     protected AtomicBoolean isPaused = new AtomicBoolean(false);
+    protected boolean shouldStartISR = true;
 
     //The thread to check all monitorThreads and put data in HashMap and check for interrupts
     private Thread interruptHandler = new Thread() {
@@ -86,7 +87,9 @@ public abstract class LogicThread extends Thread {
     public void run(){
         isPaused.set(false);
         addPresets();
-        interruptHandler.start();
+        if(shouldStartISR) {
+            interruptHandler.start();
+        }
         try {
             realRun();
         } catch (InterruptedException e) {
@@ -94,7 +97,8 @@ public abstract class LogicThread extends Thread {
         }finally {
             killChildren();
             killMonitorThreads();
-            interruptHandler.interrupt();
+            if (shouldStartISR)
+                interruptHandler.interrupt();
             isPaused.set(false);
         }
     }
