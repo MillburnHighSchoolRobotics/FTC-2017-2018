@@ -32,7 +32,7 @@ public class SallyJoeBot {
     //Motors and Servos
     private Motor LFMotor, LBMotor, RFMotor, RBMotor;
     private Motor rollerLeft, rollerRight;
-    private Motor glyphLift;
+    private Motor glyphLiftLeft, glyphLiftRight;
     private Motor relicArm;
     private Servo clawLeft, clawRight;
     private ContinuousRotationServo relicArmWinch;
@@ -60,7 +60,8 @@ public class SallyJoeBot {
         RBMotor = new Motor();
         rollerLeft = new Motor();
         rollerRight = new Motor();
-        glyphLift = new Motor();
+        glyphLiftLeft = new Motor();
+        glyphLiftRight = new Motor();
         relicArm = new Motor();
         clawLeft = new Servo();
         clawRight = new Servo();
@@ -84,7 +85,9 @@ public class SallyJoeBot {
 
     public synchronized Motor getRBMotor() { return RBMotor; }
 
-    public synchronized Motor getGlyphLift() { return glyphLift; }
+    public synchronized Motor getGlyphLiftLeft() { return glyphLiftLeft; }
+
+    public synchronized Motor getGlyphLiftRight() { return glyphLiftRight; }
 
     public synchronized Motor getRelicArm() { return relicArm; }
 

@@ -68,7 +68,7 @@ public abstract class UpdateThread extends OpMode {
 //	private BNO055 imu;
     private BNO055IMU imu;
 	private DcMotor leftFront, leftBack, rightFront, rightBack;
-	private DcMotor glyphLift;
+	private DcMotor glyphLiftRight, glyphLiftLeft;
 	private Servo clawLeft, clawRight;
 
 
@@ -82,7 +82,7 @@ public abstract class UpdateThread extends OpMode {
 
 	private Motor vLeftFront, vLeftBack, vRightFront, vRightBack;
 	private Motor vRollerLeft, vRollerRight;
-	private Motor vGlyphLift;
+	private Motor vGlyphLiftLeft,vGlyphLiftRight;
 	private Motor vRelicArm;
 	private ContinuousRotationServo vRelicArmWinch;
 	private virtualRobot.hardware.Servo vJewelServo;
@@ -113,7 +113,8 @@ public abstract class UpdateThread extends OpMode {
 		telemetry.addData("Components ", "Motors Initialized");
 //		rollerLeft = hardwareMap.dcMotor.get("rollerLeft");
 //		rollerRight = hardwareMap.dcMotor.get("rollerRight");
-		glyphLift = hardwareMap.dcMotor.get("glyphLift");
+		glyphLiftRight = hardwareMap.dcMotor.get("glyphLiftRight");
+		glyphLiftLeft = hardwareMap.dcMotor.get("glyphLiftLeft");
 //		relicArm = hardwareMap.dcMotor.get("relicArm");
 //
 //        //SERVO SETUP (with physical hardware, e.g. servo = hardwareMap....)
@@ -144,7 +145,8 @@ public abstract class UpdateThread extends OpMode {
 		vLeftBack = robot.getLBMotor();
 		vRightFront = robot.getRFMotor();
 		vRightBack = robot.getRBMotor();
-		vGlyphLift = robot.getGlyphLift();
+		vGlyphLiftLeft = robot.getGlyphLiftLeft();
+		vGlyphLiftRight = robot.getGlyphLiftRight();
 		vJewelServo = robot.getJewelServo();
 		vRelicArm = robot.getRelicArm();
 		vRelicArmWinch = robot.getRelicArmWinch();
@@ -160,7 +162,8 @@ public abstract class UpdateThread extends OpMode {
 		vRightBack.setMotorType(rightBack.getMotorType());
 //		vRollerLeft.setMotorType(rollerLeft.getMotorType());
 //		vRollerRight.setMotorType(rollerRight.getMotorType());
-		vGlyphLift.setMotorType(glyphLift.getMotorType());
+		vGlyphLiftRight.setMotorType(glyphLiftRight.getMotorType());
+		vGlyphLiftLeft.setMotorType(glyphLiftLeft.getMotorType());
 //		vRelicArm.setMotorType(relicArm.getMotorType());
 
         //Setup constant components (Do not touch)
@@ -212,7 +215,8 @@ public abstract class UpdateThread extends OpMode {
 		vRightBack.setPosition(rightBack.getCurrentPosition());
 //		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
 //		vRollerRight.setPosition(rollerRight.getCurrentPosition());
-		vGlyphLift.setPosition(glyphLift.getCurrentPosition());
+		vGlyphLiftLeft.setPosition(glyphLiftLeft.getCurrentPosition());
+		vGlyphLiftRight.setPosition(glyphLiftRight.getCurrentPosition());
 //		vRelicArm.setPosition(relicArm.getCurrentPosition());
 
 		try {
@@ -274,7 +278,8 @@ public abstract class UpdateThread extends OpMode {
 		vRightBack.setPosition(rightBack.getCurrentPosition());
 //		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
 //		vRollerRight.setPosition(rollerRight.getCurrentPosition());
-		vGlyphLift.setPosition(glyphLift.getCurrentPosition());
+		vGlyphLiftLeft.setPosition(glyphLiftLeft.getCurrentPosition());
+		vGlyphLiftRight.setPosition(glyphLiftRight.getCurrentPosition());
 //		vRelicArm.setPosition(relicArm.getCurrentPosition());
 //
 //		//Copy Servo Positions
@@ -288,7 +293,7 @@ public abstract class UpdateThread extends OpMode {
         double leftBackPower = vLeftBack.getPower();
         double rightFrontPower = vRightFront.getPower();
         double rightBackPower = vRightBack.getPower();
-        double glyphLiftPower = vGlyphLift.getPower();
+        double glyphLiftPower = vGlyphLiftRight.getPower();
         double relicArmPower = vRelicArm.getPower();
 		double rollerLeftPower = vRollerLeft.getPower();
 		double rollerRightPower = vRollerRight.getPower();
@@ -298,7 +303,8 @@ public abstract class UpdateThread extends OpMode {
 		leftBack.setPower(leftBackPower);
 		rightFront.setPower(rightFrontPower);
 		rightBack.setPower(rightBackPower);
-		glyphLift.setPower(glyphLiftPower);
+		glyphLiftLeft.setPower(glyphLiftPower);
+		glyphLiftRight.setPower(glyphLiftPower);
 //		relicArm.setPower(relicArmPower);
 //		rollerLeft.setPower(rollerLeftPower);
 //		rollerRight.setPower(rollerRightPower);
