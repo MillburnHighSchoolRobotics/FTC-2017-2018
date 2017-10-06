@@ -11,6 +11,11 @@ import virtualRobot.utils.MathUtils;
 
 public class TeleOpCustomLogic extends LogicThread {
     @Override
+    protected void addPresets() {
+        shouldStartISR = false;
+    }
+
+    @Override
     protected void realRun() throws InterruptedException {
         JoystickController controller1;
         JoystickController controller2;
