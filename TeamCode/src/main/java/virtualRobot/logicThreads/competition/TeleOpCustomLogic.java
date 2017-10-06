@@ -41,7 +41,8 @@ public class TeleOpCustomLogic extends LogicThread {
         double relicArmSpeed = 1; //TODO: tune speed
 //        Translate headingMovement = null;
 //        int lastAction = 0; //0 for stopped, 1 for translating, 2 for rotating
-        while (true) {
+        boolean isInterrupted = false;
+        while (!isInterrupted) {
             controller1.logicalRefresh();
             controller2.logicalRefresh();
             double translateTheta = Math.toDegrees(controller1.getValue(JoystickController.THETA_1)); //movement angle
@@ -173,9 +174,11 @@ public class TeleOpCustomLogic extends LogicThread {
             }
 
             if (!MathUtils.equals(intakeElevationY, 0, 0.1)) {
-                robot.getGlyphLift().setPower(intakeElevationY * intakeElevationSensitivity);
+                robot.getGlyphLiftLeft().setPower(intakeElevationY * intakeElevationSensitivity);
+                robot.getGlyphLiftRight().setPower(intakeElevationY * intakeElevationSensitivity);
             } else {
-                robot.getGlyphLift().setPower(0);
+                robot.getGlyphLiftLeft().setPower(0);
+                robot.getGlyphLiftRight().setPower(0);
             }
 
 
