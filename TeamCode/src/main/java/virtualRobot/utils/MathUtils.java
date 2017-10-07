@@ -14,6 +14,7 @@ public class MathUtils {
     public static double cosDegrees(double  d) {
         return Math.cos(Math.toRadians(d));
     }
+    public static double tanDegrees(double d) { return Math.tan(Math.toRadians(d)); }
     public static double clamp(double number, double lowerBound, double upperBound) {
     	return Math.max(lowerBound, Math.min(upperBound, number));
     }

@@ -26,7 +26,7 @@ public class TeleOpCustomLogic extends LogicThread {
         int translateAngle = 0;
         int lastTranslateAngle = 0;
         final int POWER_MATRIX[][] = { //for each of the directions
-
+                //RF, RB, LF, LB
                 {1, 1, 1, 1},
                 {1, 0, 0, 1},
                 {1, -1, -1, 1},
@@ -173,9 +173,11 @@ public class TeleOpCustomLogic extends LogicThread {
             }
 
             if (!MathUtils.equals(intakeElevationY, 0, 0.1)) {
-                robot.getGlyphLift().setPower(intakeElevationY * intakeElevationSensitivity);
+                robot.getGlyphLiftLeft().setPower(intakeElevationY * intakeElevationSensitivity);
+                robot.getGlyphLiftRight().setPower(intakeElevationY * intakeElevationSensitivity);
             } else {
-                robot.getGlyphLift().setPower(0);
+                robot.getGlyphLiftLeft().setPower(0);
+                robot.getGlyphLiftRight().setPower(0);
             }
 
 
