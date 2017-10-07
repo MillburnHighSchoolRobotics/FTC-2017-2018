@@ -23,6 +23,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 import virtualRobot.JoystickController;
@@ -106,10 +107,10 @@ public abstract class UpdateThread extends OpMode {
 //        imu.startAccelerationIntegration(new Position(), new Velocity(),1);
 
         //MOTOR SETUP (with physical componenents, e.g. leftBack = hardwareMap.dcMotor.get("leftBack")
-		leftFront = hardwareMap.dcMotor.get("LF");
-		leftBack = hardwareMap.dcMotor.get("LB");
-		rightFront = hardwareMap.dcMotor.get("RF");
-		rightBack = hardwareMap.dcMotor.get("RB");
+		leftFront = hardwareMap.dcMotor.get("leftFront");
+		leftBack = hardwareMap.dcMotor.get("leftBack");
+		rightFront = hardwareMap.dcMotor.get("rightFront");
+		rightBack = hardwareMap.dcMotor.get("rightBack");
 		telemetry.addData("Components ", "Motors Initialized");
 //		rollerLeft = hardwareMap.dcMotor.get("rollerLeft");
 //		rollerRight = hardwareMap.dcMotor.get("rollerRight");
@@ -236,6 +237,7 @@ public abstract class UpdateThread extends OpMode {
 	}
 	
 	public void loop() {
+		telemetry.addData("Update timestamp: ", System.currentTimeMillis());
 		// Update Location. E.g.: double prevEcnoderValue=?, newEncoderValue=?,
 		//TODO: Calculate values for prev and newEncoderValues (Not top priority, locationSensor may not be used)
 //		Position position = imu.getPosition();
@@ -265,6 +267,7 @@ public abstract class UpdateThread extends OpMode {
         vVoltageSensor.setRawValue(getBatteryVoltage());
 
         try {
+			telemetry.addData("Meme: ", gamepad1.left_stick_x + " " + gamepad1.left_stick_y);
             vJoystickController1.copyStates(gamepad1);
             vJoystickController2.copyStates(gamepad2);
         } catch (RobotCoreException e) {
@@ -305,6 +308,9 @@ public abstract class UpdateThread extends OpMode {
 		rightBack.setPower(rightBackPower);
 		glyphLiftLeft.setPower(glyphLiftPower);
 		glyphLiftRight.setPower(glyphLiftPower);
+		if (robot != null) {
+			robot.addToTelemetry("Motor Time: ", System.currentTimeMillis());
+		}
 //		relicArm.setPower(relicArmPower);
 //		rollerLeft.setPower(rollerLeftPower);
 //		rollerRight.setPower(rollerRightPower);
@@ -317,6 +323,7 @@ public abstract class UpdateThread extends OpMode {
 			telemetry.addData("robot progress " + i, robot.getProgress().get(i));
 		}
 
+//		telemetry.addData("Gamepad"gamepad1.atRest());
 		telemetry.addData("Logic is Alive: ", t.isAlive());
 		telemetry.addData("All is Alive", t.allIsAlive());
 		//telemetry.addData("Motor: ", robot.getLFMotor().toString());

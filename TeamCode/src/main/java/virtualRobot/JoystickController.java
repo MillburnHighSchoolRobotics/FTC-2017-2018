@@ -1,5 +1,7 @@
 package virtualRobot;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
@@ -8,6 +10,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReferenceArray;
+
+import virtualRobot.commands.Command;
 
 /**
  * Created by Yanjun on 11/12/2015.
@@ -56,15 +60,33 @@ public class JoystickController {
 
     public synchronized void copyStates(Gamepad gamepad) throws RobotCoreException {
         JoystickEvent newEvent = new JoystickEvent(gamepad);
-        if (eventQueue.size() != 0 && newEvent.equals(eventQueue.get(eventQueue.size()-1))) {
-            return;
-        }
+//        if (eventQueue.size() != 0 && newEvent.equals(eventQueue.get(eventQueue.size()-1))) {
+//            return;
+//        }
+
+        Command.ROBOT.addToTelemetry("FUCKMEINTHEASS", gamepad.left_stick_x + " " + gamepad.left_stick_y);
+        Command.ROBOT.addToTelemetry("FUCKMEINTHEASS2", newEvent.stickValues[JoystickEvent.X_1] + " " + newEvent.stickValues[JoystickEvent.Y_1]);
         
-        synchronized (this) {
-        	eventQueue.add(newEvent);
+//        synchronized (this) {
+//        	eventQueue.add(newEvent);
+//        }
+        for (int i = 0; i < 12; i++) {
+            pressed.set(i, !down.get(i) && newEvent.buttonStates[i]);
+            released.set(i, down.get(i) && !newEvent.buttonStates[i]);
+            down.set(i, newEvent.buttonStates[i]);
         }
+
+        for (int i = 0; i < stickValues.length(); i++) {
+            stickValues.set(i, newEvent.stickValues[i]);
+        }
+
+        dpad_up.set(newEvent.dpad_up);
+        dpad_down.set(newEvent.dpad_down);
+        dpad_left.set(newEvent.dpad_left);
+        dpad_right.set(newEvent.dpad_right);
     }
 
+    @Deprecated
     public synchronized void logicalRefresh() {
     	
     	synchronized (this) {
@@ -78,7 +100,7 @@ public class JoystickController {
 	        }
 	
 	        if (prevEvent != null && curEvent != null) {
-	
+//                Log.d("JoystickController", "refreshed");
 	            for (int i = 0; i < 12; i++) {
 	                pressed.set(i, !prevEvent.buttonStates[i] && curEvent.buttonStates[i]);
 	                released.set(i, prevEvent.buttonStates[i] && !curEvent.buttonStates[i]);

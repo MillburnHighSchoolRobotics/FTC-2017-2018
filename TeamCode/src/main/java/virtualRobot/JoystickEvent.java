@@ -1,5 +1,7 @@
 package virtualRobot;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 /**
@@ -50,6 +52,7 @@ public class JoystickEvent {
 
         double SQRT_2 = Math.sqrt(2);
         double radius1 = Math.sqrt(x1*x1+y1*y1);
+        Log.d("gamepad", radius1 + " " + x1 + " " + y1);
         double angle1 = Math.atan2(y1, x1);
 
         double radius2 = Math.sqrt(x2 * x2 + y2 * y2);
