@@ -29,11 +29,11 @@ public class StackingLogic extends LogicThread {
                 robot.getRollerLeft().setPower(0);
                 robot.getRollerRight().setPower(0);
                 robot.moveClaw(false);
-                //runCommand(new MoveMotor(robot.getGlyphLiftLeft(), 1, 2000, Translate.RunMode.WITH_PID, false));
+//                runCommand(new MoveMotor(robot.getGlyphLift(), 1, 2000, Translate.RunMode.WITH_PID, false));
                 robot.getRollerLeft().setPower(1);
                 robot.getRollerRight().setPower(1);
                 robot.moveClaw(true);
-                //runCommand(new MoveMotor(robot.getGlyphLift(), 1, 0, Translate.RunMode.WITH_PID, false));
+//                runCommand(new MoveMotor(robot.getGlyphLift(), 1, 0, Translate.RunMode.WITH_PID, false));
                 glyphsHeld[currentIndex] = color;
                 robot.moveClaw(false);
             }

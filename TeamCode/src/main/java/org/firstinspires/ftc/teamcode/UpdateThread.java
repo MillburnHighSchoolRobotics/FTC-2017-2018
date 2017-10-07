@@ -5,6 +5,7 @@ import android.app.Activity;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -38,6 +39,8 @@ import virtualRobot.hardware.IMU;
 import virtualRobot.hardware.Motor;
 import virtualRobot.hardware.Sensor;
 import virtualRobot.hardware.StateSensor;
+import virtualRobot.logicThreads.competition.TeleOpCustomLogic;
+import virtualRobot.logicThreads.competition.TeleOpLogic;
 import virtualRobot.logicThreads.testing.TestBackendLogic;
 import virtualRobot.utils.BetterLog;
 import virtualRobot.utils.GlobalUtils;
@@ -61,6 +64,8 @@ public abstract class UpdateThread extends OpMode {
 	//This just helps to lessen the time needed to test
 	static {
 		exceptions.add(TestBackendLogic.class);
+		exceptions.add(TeleOpCustomLogic.class);
+		exceptions.add(TeleOpLogic.class);
 	}
 
 	//here we will initiate all of our PHYSICAL hardware. E.g: private DcMotor leftBack...
@@ -83,7 +88,7 @@ public abstract class UpdateThread extends OpMode {
 
 	private Motor vLeftFront, vLeftBack, vRightFront, vRightBack;
 	private Motor vRollerLeft, vRollerRight;
-	private Motor vGlyphLiftLeft,vGlyphLiftRight;
+	private Motor vGlyphLiftLeft, vGlyphLiftRight;
 	private Motor vRelicArm;
 	private ContinuousRotationServo vRelicArmWinch;
 	private virtualRobot.hardware.Servo vJewelServo;
@@ -181,7 +186,7 @@ public abstract class UpdateThread extends OpMode {
 	}
 
 	public void init_loop () {
-		telemetry.addData("Is Running Version: ", Translate.KPt + " 2.0");
+		telemetry.addData("Is Running Version: ", Translate.KPt + " 3.0");
         telemetry.addData("Init Loop Time", runtime.toString());
 		telemetry.addData("Battery Voltage: ", getBatteryVoltage());
 //        telemetry.addData("IMU Status", imu.getSystemStatus().toShortString());
@@ -203,8 +208,8 @@ public abstract class UpdateThread extends OpMode {
 
 		//Copy positions to virtualRobot
 //		vRelicArmWinch.setSpeed(relicArmWinch.getPosition());
-//		vClawLeft.setPosition(clawLeft.getPosition());
-//		vClawRight.setPosition(clawRight.getPosition());
+		vClawLeft.setPosition(clawLeft.getPosition());
+		vClawRight.setPosition(clawRight.getPosition());
 //		vJewelServo.setPosition(jewelServo.getPosition());
 
 		//set sensors e.g. vDriveRightMotorEncoder.setRawValue(-rightFront.getCurrentPosition())
@@ -235,7 +240,7 @@ public abstract class UpdateThread extends OpMode {
 		Thread.currentThread().setPriority(10);
 		runtime.reset();
 	}
-	
+
 	public void loop() {
 		telemetry.addData("Update timestamp: ", System.currentTimeMillis());
 		// Update Location. E.g.: double prevEcnoderValue=?, newEncoderValue=?,
@@ -284,8 +289,8 @@ public abstract class UpdateThread extends OpMode {
 		vGlyphLiftLeft.setPosition(glyphLiftLeft.getCurrentPosition());
 		vGlyphLiftRight.setPosition(glyphLiftRight.getCurrentPosition());
 //		vRelicArm.setPosition(relicArm.getCurrentPosition());
-//
-//		//Copy Servo Positions
+
+		//Copy Servo Positions
 //		relicArmWinch.setPosition(vRelicArmWinch.getSpeed());
 		clawLeft.setPosition(vClawLeft.getPosition());
 		clawRight.setPosition(vClawRight.getPosition());
@@ -296,7 +301,8 @@ public abstract class UpdateThread extends OpMode {
         double leftBackPower = vLeftBack.getPower();
         double rightFrontPower = vRightFront.getPower();
         double rightBackPower = vRightBack.getPower();
-        double glyphLiftPower = vGlyphLiftRight.getPower();
+        double glyphLiftLeftPower = vGlyphLiftLeft.getPower();
+		double glyphLiftRightPower = vGlyphLiftRight.getPower();
         double relicArmPower = vRelicArm.getPower();
 		double rollerLeftPower = vRollerLeft.getPower();
 		double rollerRightPower = vRollerRight.getPower();
@@ -306,11 +312,8 @@ public abstract class UpdateThread extends OpMode {
 		leftBack.setPower(leftBackPower);
 		rightFront.setPower(rightFrontPower);
 		rightBack.setPower(rightBackPower);
-		glyphLiftLeft.setPower(glyphLiftPower);
-		glyphLiftRight.setPower(glyphLiftPower);
-		if (robot != null) {
-			robot.addToTelemetry("Motor Time: ", System.currentTimeMillis());
-		}
+		glyphLiftLeft.setPower(glyphLiftLeftPower);
+		glyphLiftRight.setPower(glyphLiftRightPower);
 //		relicArm.setPower(relicArmPower);
 //		rollerLeft.setPower(rollerLeftPower);
 //		rollerRight.setPower(rollerRightPower);
@@ -329,7 +332,7 @@ public abstract class UpdateThread extends OpMode {
 		//telemetry.addData("Motor: ", robot.getLFMotor().toString());
 		telemetry.addData("Loop Time: ", runtime.toString());
     }
-	
+
 	public void stop() {
 //        imu.stopAccelerationIntegration();
 //		imu.close();
@@ -354,4 +357,3 @@ public abstract class UpdateThread extends OpMode {
 		return result;
 	}
 }
-
