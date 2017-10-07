@@ -64,8 +64,8 @@ public class JoystickController {
 //            return;
 //        }
 
-        Command.ROBOT.addToTelemetry("FUCKMEINTHEASS", gamepad.left_stick_x + " " + gamepad.left_stick_y);
-        Command.ROBOT.addToTelemetry("FUCKMEINTHEASS2", newEvent.stickValues[JoystickEvent.X_1] + " " + newEvent.stickValues[JoystickEvent.Y_1]);
+        Command.ROBOT.addToTelemetry("Gamepad Direct Values", gamepad.left_stick_x + " " + gamepad.left_stick_y);
+        Command.ROBOT.addToTelemetry("Joystick Event Values", newEvent.stickValues[JoystickEvent.X_1] + " " + newEvent.stickValues[JoystickEvent.Y_1]);
         
 //        synchronized (this) {
 //        	eventQueue.add(newEvent);

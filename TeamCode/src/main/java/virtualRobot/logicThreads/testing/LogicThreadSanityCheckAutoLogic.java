@@ -7,9 +7,12 @@ import virtualRobot.utils.MathUtils;
 
 /**
  * Created by david on 10/6/17.
+ *
+ * This class was created because we weren't sure whether LogicThreads or the JoystickControllers
+ * were causing our code to be jittery.
  */
 
-public class CancerAutoLogic extends LogicThread {
+public class LogicThreadSanityCheckAutoLogic extends LogicThread {
     @Override
     protected void addPresets() {
         shouldStartISR = false;
@@ -21,7 +24,7 @@ public class CancerAutoLogic extends LogicThread {
         int n = 0;
         while (!Thread.currentThread().isInterrupted()) {
             runCommand(new MoveMotor(robot.getLBMotor(), pow, 1000));
-            robot.addToTelemetry("Cancer Level: ", n++);
+            robot.addToTelemetry("Iteration: ", n++);
             if (MathUtils.equals(pow % 1, 0)) {
                 pow *= 0.5;
             } else {
