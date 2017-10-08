@@ -284,7 +284,7 @@ public abstract class UpdateThread extends OpMode {
         vVoltageSensor.setRawValue(getBatteryVoltage());
 
         try {
-			telemetry.addData("Meme: ", gamepad1.left_stick_x + " " + gamepad1.left_stick_y);
+			telemetry.addData("Gamepad Leftstick vals: ", gamepad1.left_stick_x + " " + gamepad1.left_stick_y);
             vJoystickController1.copyStates(gamepad1);
             vJoystickController2.copyStates(gamepad2);
         } catch (RobotCoreException e) {

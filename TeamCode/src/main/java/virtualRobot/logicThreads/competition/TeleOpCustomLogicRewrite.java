@@ -52,7 +52,7 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
                 robot.getRBMotor().setPower(-rotateX);
                 robot.getLFMotor().setPower(rotateX);
                 robot.getLBMotor().setPower(rotateX);
-                robot.addToTelemetry("mememememem", 0);
+                robot.addToTelemetry("TeleOp if statement lvl", 0);
             } else if (!MathUtils.equals(translateMag, 0, 0.05)) {
                 double translatePower = translateMag * 0.666; //set later
                 if (MathUtils.equals(translateTheta, 90)) {
@@ -83,13 +83,13 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
                 robot.addToTelemetry("0", LF + " " + RF);
                 robot.addToTelemetry("1", LB + " " + RB);
                 robot.addToTelemetry("translatePower: ", translatePower);
-                robot.addToTelemetry("mememememem", 1);
+                robot.addToTelemetry("TeleOp if statement lvl", 1);
                 robot.getRFMotor().setPower(RF);
                 robot.getRBMotor().setPower(RB);
                 robot.getLFMotor().setPower(LF);
                 robot.getLBMotor().setPower(LB);
             } else {
-                robot.addToTelemetry("mememememem", 2);
+                robot.addToTelemetry("TeleOp if statement lvl", 2);
                 robot.stopMotors();
             }
 
