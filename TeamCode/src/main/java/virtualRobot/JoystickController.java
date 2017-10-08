@@ -23,7 +23,7 @@ public class JoystickController {
     AtomicBoolean dpad_up, dpad_down, dpad_left, dpad_right;
     List<JoystickEvent> eventQueue;
 
-    JoystickEvent curEvent, prevEvent;
+    JoystickEvent buffer;
 
     public JoystickController() {
         down = new AtomicReferenceArray<Boolean>(12);
@@ -54,100 +54,99 @@ public class JoystickController {
 
         eventQueue = Collections.synchronizedList(new ArrayList<JoystickEvent>());
 
-        curEvent = null;
-        prevEvent = null;
+        buffer = null;
     }
 
     public synchronized void copyStates(Gamepad gamepad) throws RobotCoreException {
-        JoystickEvent newEvent = new JoystickEvent(gamepad);
+        buffer = new JoystickEvent(gamepad);
 //        if (eventQueue.size() != 0 && newEvent.equals(eventQueue.get(eventQueue.size()-1))) {
 //            return;
 //        }
 
-        Command.ROBOT.addToTelemetry("FUCKMEINTHEASS", gamepad.left_stick_x + " " + gamepad.left_stick_y);
-        Command.ROBOT.addToTelemetry("FUCKMEINTHEASS2", newEvent.stickValues[JoystickEvent.X_1] + " " + newEvent.stickValues[JoystickEvent.Y_1]);
+//        Command.ROBOT.addToTelemetry("Gamepad Direct Values", gamepad.left_stick_x + " " + gamepad.left_stick_y);
+//        Command.ROBOT.addToTelemetry("Joystick Event Values", newEvent.stickValues[JoystickEvent.X_1] + " " + newEvent.stickValues[JoystickEvent.Y_1]);
+
         
 //        synchronized (this) {
 //        	eventQueue.add(newEvent);
 //        }
+
+    }
+
+    public synchronized void logicalRefresh() {
         for (int i = 0; i < 12; i++) {
-            pressed.set(i, !down.get(i) && newEvent.buttonStates[i]);
-            released.set(i, down.get(i) && !newEvent.buttonStates[i]);
-            down.set(i, newEvent.buttonStates[i]);
+            pressed.set(i, !down.get(i) && buffer.buttonStates[i]);
+            released.set(i, down.get(i) && !buffer.buttonStates[i]);
+            down.set(i, buffer.buttonStates[i]);
         }
 
         for (int i = 0; i < stickValues.length(); i++) {
-            stickValues.set(i, newEvent.stickValues[i]);
+            stickValues.set(i, buffer.stickValues[i]);
         }
 
-        dpad_up.set(newEvent.dpad_up);
-        dpad_down.set(newEvent.dpad_down);
-        dpad_left.set(newEvent.dpad_left);
-        dpad_right.set(newEvent.dpad_right);
+        dpad_up.set(buffer.dpad_up);
+        dpad_down.set(buffer.dpad_down);
+        dpad_left.set(buffer.dpad_left);
+        dpad_right.set(buffer.dpad_right);
+//    	synchronized (this) {
+//
+//	        if (eventQueue.size() == 0) {
+//	            curEvent = prevEvent;
+//	        } else {
+//
+//	            prevEvent = curEvent;
+//	            curEvent = eventQueue.remove(0);
+//	        }
+//
+//	        if (prevEvent != null && curEvent != null) {
+////                Log.d("JoystickController", "refreshed");
+//	            for (int i = 0; i < 12; i++) {
+//	                pressed.set(i, !prevEvent.buttonStates[i] && curEvent.buttonStates[i]);
+//	                released.set(i, prevEvent.buttonStates[i] && !curEvent.buttonStates[i]);
+//	                down.set(i, curEvent.buttonStates[i]);
+//	            }
+//
+//	            for (int i = 0; i < stickValues.length(); i++) {
+//	                stickValues.set(i, curEvent.stickValues[i]);
+//	            }
+//
+//	            dpad_up.set(curEvent.dpad_up);
+//	            dpad_down.set(curEvent.dpad_down);
+//	            dpad_left.set(curEvent.dpad_left);
+//	            dpad_right.set(curEvent.dpad_right);
+//	        }
+//    	}
     }
 
-    @Deprecated
-    public synchronized void logicalRefresh() {
-    	
-    	synchronized (this) {
-    	
-	        if (eventQueue.size() == 0) {
-	            curEvent = prevEvent;
-	        } else {
-	
-	            prevEvent = curEvent;
-	            curEvent = eventQueue.remove(0);
-	        }
-	
-	        if (prevEvent != null && curEvent != null) {
-//                Log.d("JoystickController", "refreshed");
-	            for (int i = 0; i < 12; i++) {
-	                pressed.set(i, !prevEvent.buttonStates[i] && curEvent.buttonStates[i]);
-	                released.set(i, prevEvent.buttonStates[i] && !curEvent.buttonStates[i]);
-	                down.set(i, curEvent.buttonStates[i]);
-	            }
-	
-	            for (int i = 0; i < stickValues.length(); i++) {
-	                stickValues.set(i, curEvent.stickValues[i]);
-	            }
-	
-	            dpad_up.set(curEvent.dpad_up);
-	            dpad_down.set(curEvent.dpad_down);
-	            dpad_left.set(curEvent.dpad_left);
-	            dpad_right.set(curEvent.dpad_right);
-	        }
-    	}
-    }
-
-    public synchronized boolean isDown(int buttonID) {
+    public boolean isDown(int buttonID) {
         return down.get(buttonID);
     }
 
-    public synchronized boolean isPressed(int buttonID) {
+    public boolean isPressed(int buttonID) {
         return pressed.get(buttonID);
     }
 
-    public synchronized boolean isReleased(int buttonID) {
+    public boolean isReleased(int buttonID) {
         return released.get(buttonID);
     }
 
-    public synchronized double getValue(int ID) {
+    public double getValue(int ID) {
         return stickValues.get(ID);
     }
 
-    public synchronized boolean isDpadUp() {
+    public boolean isDpadUp() {
         return dpad_up.get();
     }
 
-    public synchronized boolean isDpadDown() {
+    public boolean isDpadDown() {
         return dpad_down.get();
     }
 
-    public synchronized boolean isDpadLeft() {
+    public boolean isDpadLeft() {
         return dpad_left.get();
     }
 
-    public synchronized boolean isDpadRight() {
+    public boolean isDpadRight() {
         return dpad_right.get();
     }
 

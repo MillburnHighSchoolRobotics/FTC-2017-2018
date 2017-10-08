@@ -38,8 +38,8 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
 
         while (true) {
             robot.addToTelemetry("TeleOp timestamp: ", System.currentTimeMillis());
-//            controller1.logicalRefresh();
-//            controller2.logicalRefresh();
+            controller1.logicalRefresh();
+            controller2.logicalRefresh();
             double translateTheta = Math.toDegrees(controller1.getValue(JoystickController.THETA_1));
             double translateMag = controller1.getValue(JoystickController.R_1);
             double rotateX = controller1.getValue(JoystickController.X_2);
