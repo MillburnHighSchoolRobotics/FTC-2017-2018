@@ -37,29 +37,41 @@ public class TestLiftOpMode extends OpMode {
 
     @Override
     public void loop() {
-        if (gamepad2.a)
+        if (gamepad2.y)
             motor1.setPower(1);
-        else if (gamepad2.b)
+        else if (gamepad2.x)
             motor1.setPower(-1);
         else
             motor1.setPower(0);
 
-        if (gamepad2.dpad_up)
+        if (gamepad2.b)
             motor2.setPower(1);
-        else if (gamepad2.dpad_down)
+        else if (gamepad2.a)
             motor2.setPower(-1);
         else
             motor2.setPower(0);
 
-        if (gamepad2.x) {
+        if (gamepad2.right_bumper) {
             servo1.setPosition(0);
             servo2.setPosition(1);
         }
 
-        if (gamepad2.y) {
+        if (gamepad2.left_bumper) {
             servo1.setPosition(0.3);
             servo2.setPosition(0.7);
         }
+
+        if (gamepad2.dpad_down) {
+            motor1.setPower(-1);
+            motor2.setPower(-1);
+        } else if (gamepad2.dpad_up) {
+            motor1.setPower(1);
+            motor2.setPower(1);
+        } else {
+            motor1.setPower(0);
+            motor2.setPower(0);
+        }
+
         if(Math.abs(gamepad1.left_stick_y) > threshold || Math.abs(gamepad1.left_stick_x) > threshold)
         {
             float jx = gamepad1.left_stick_x;
