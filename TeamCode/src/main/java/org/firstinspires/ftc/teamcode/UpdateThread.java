@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -40,6 +41,7 @@ import virtualRobot.hardware.Motor;
 import virtualRobot.hardware.Sensor;
 import virtualRobot.hardware.StateSensor;
 import virtualRobot.logicThreads.competition.TeleOpCustomLogic;
+import virtualRobot.logicThreads.competition.TeleOpCustomLogicRewrite;
 import virtualRobot.logicThreads.competition.TeleOpLogic;
 import virtualRobot.logicThreads.testing.TestBackendLogic;
 import virtualRobot.utils.BetterLog;
@@ -66,6 +68,7 @@ public abstract class UpdateThread extends OpMode {
 		exceptions.add(TestBackendLogic.class);
 		exceptions.add(TeleOpCustomLogic.class);
 		exceptions.add(TeleOpLogic.class);
+		exceptions.add(TeleOpCustomLogicRewrite.class);
 	}
 
 	//here we will initiate all of our PHYSICAL hardware. E.g: private DcMotor leftBack...
@@ -116,7 +119,7 @@ public abstract class UpdateThread extends OpMode {
 		leftBack = hardwareMap.dcMotor.get("leftBack");
 		rightFront = hardwareMap.dcMotor.get("rightFront");
 		rightBack = hardwareMap.dcMotor.get("rightBack");
-		telemetry.addData("Components ", "Motors Initialized");
+		Log.d("Components ", "Motors Initialized");
 //		rollerLeft = hardwareMap.dcMotor.get("rollerLeft");
 //		rollerRight = hardwareMap.dcMotor.get("rollerRight");
 		glyphLiftRight = hardwareMap.dcMotor.get("glyphLiftRight");
@@ -132,6 +135,15 @@ public abstract class UpdateThread extends OpMode {
         //REVERSE ONE SIDE (If needed, e.g. rightFront.setDirection(DcMotor.Direction.REVERSE)
 		rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
 		rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+
+		//SET MOTOR MODES
+		leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+		glyphLiftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		glyphLiftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //SENSOR SETUP e.g. colorSensor = hardwareMap.colorsensor.get("color"), sonar1 = hardwareMap.analogInput.get("sonar1"), liftEndStop1 = hardwareMap.digitalChannel.get("liftEndStop1")
 
@@ -177,12 +189,12 @@ public abstract class UpdateThread extends OpMode {
         setLogicThread();
 //		cv = new CreateVuforia(LogicThread, vuforiaEverywhere, t);
 //		new Thread (cv).start();
-//		if (!exceptions.contains(logicThread)){
-//			VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
-//			params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-//			params.vuforiaLicenseKey = "AdVGalv/////AAAAGYhiDIdk+UI+ivt0Y7WGvUJnm5cKX/lWesW2pH7gnK3eOLTKThLekYSO1q65ttw7X1FvNhxxhdQl3McS+mzYjO+HkaFNJlHxltsI5+b4giqNQKWhyKjzbYbNw8aWarI5YCYUFnyiPPjH39/CbBzzFk3G2RWIzNB7cy4AYhjwYRKRiL3k33YvXv0ZHRzJRkMpnytgvdv5jEQyWa20DIkriC+ZBaj8dph8/akyYfyD1/U19vowknmzxef3ncefgOZoI9yrK82T4GBWazgWvZkIz7bPy/ApGiwnkVzp44gVGsCJCUFERiPVwfFa0SBLeCrQMrQaMDy3kOIVcWTotFn4m1ridgE5ZP/lvRzEC4/vcuV0";
-//			UpdateThread.vuforiaInstance = new VuforiaLocalizerImplSubclass(params);
-//		}
+		if (!exceptions.contains(logicThread)){
+			VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
+			params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+			params.vuforiaLicenseKey = "AdVGalv/////AAAAGYhiDIdk+UI+ivt0Y7WGvUJnm5cKX/lWesW2pH7gnK3eOLTKThLekYSO1q65ttw7X1FvNhxxhdQl3McS+mzYjO+HkaFNJlHxltsI5+b4giqNQKWhyKjzbYbNw8aWarI5YCYUFnyiPPjH39/CbBzzFk3G2RWIzNB7cy4AYhjwYRKRiL3k33YvXv0ZHRzJRkMpnytgvdv5jEQyWa20DIkriC+ZBaj8dph8/akyYfyD1/U19vowknmzxef3ncefgOZoI9yrK82T4GBWazgWvZkIz7bPy/ApGiwnkVzp44gVGsCJCUFERiPVwfFa0SBLeCrQMrQaMDy3kOIVcWTotFn4m1ridgE5ZP/lvRzEC4/vcuV0";
+			UpdateThread.vuforiaInstance = new VuforiaLocalizerImplSubclass(params);
+		}
 	}
 
 	public void init_loop () {

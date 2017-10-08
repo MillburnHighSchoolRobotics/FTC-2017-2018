@@ -3,16 +3,13 @@ package virtualRobot;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-import virtualRobot.hardware.AxisSensor;
-import virtualRobot.hardware.ColorSensor;
 import virtualRobot.hardware.ContinuousRotationServo;
 import virtualRobot.hardware.IMU;
-import virtualRobot.hardware.StateSensor;
 import virtualRobot.hardware.Motor;
 import virtualRobot.hardware.Sensor;
+//import virtualRobot.hardware.Servo;
 import virtualRobot.hardware.Servo;
-import virtualRobot.hardware.SyncedMotors;
-import virtualRobot.hardware.UltrasonicSensor;
+import virtualRobot.hardware.StateSensor;
 
 /**
  * Created by DOSullivan on 9/14/16.
