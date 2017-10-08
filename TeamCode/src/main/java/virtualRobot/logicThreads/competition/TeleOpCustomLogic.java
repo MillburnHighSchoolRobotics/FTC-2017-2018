@@ -26,7 +26,7 @@ public class TeleOpCustomLogic extends LogicThread {
         int translateAngle = 0;
         int lastTranslateAngle = 0;
         final int POWER_MATRIX[][] = { //for each of the directions
-
+                //RF, RB, LF, LB
                 {1, 1, 1, 1},
                 {1, 0, 0, 1},
                 {1, -1, -1, 1},

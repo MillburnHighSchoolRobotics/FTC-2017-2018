@@ -2,15 +2,20 @@ package virtualRobot.hardware;
 
 import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
 
+import virtualRobot.SallyJoeBot;
+import virtualRobot.commands.Command;
+
 /*
 The virtual Motor component
  */
 public class Motor {
-
+	protected SallyJoeBot robot = Command.ROBOT;
 	public static final double MAX_POWER = 1;
 	public static final double STATIONARY = 0;
 	Sensor position;
 	MotorConfigurationType motorType;
+
+
 
     private volatile double power;
 
@@ -24,6 +29,9 @@ public class Motor {
     	synchronized (this) {
     		retVal = power;
     	}
+//		if (robot != null) {
+//			robot.addToTelemetry("motorTime: ", System.currentTimeMillis());
+//		}
         return retVal;
     }
 

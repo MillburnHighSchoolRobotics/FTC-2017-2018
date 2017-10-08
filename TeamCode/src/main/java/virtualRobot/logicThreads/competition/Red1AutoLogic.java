@@ -154,7 +154,7 @@ public class Red1AutoLogic extends AutonomousLogicThread {
 
             depositGlyph();
 
-//            runCommand(new MoveMotor(robot.getGlyphLift(), 1, indexData.second * -500, Translate.RunMode.WITH_PID, true));
+            //runCommand(new MoveMotor(robot.getGlyphLift(), 1, indexData.second * -500, Translate.RunMode.WITH_PID, true));
 
             if (indexData.first != 1)
                 runCommand(new Translate(75, indexData.first == 2 ? Translate.Direction.LEFT : Translate.Direction.RIGHT, 0));

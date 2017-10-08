@@ -15,7 +15,7 @@ public class ServoCal extends OpMode {
 
     @Override
     public void init() {
-        servo = hardwareMap.servo.get("flywheelStopper");
+        servo = hardwareMap.servo.get("testServo");
         pos = 0;
     }
 

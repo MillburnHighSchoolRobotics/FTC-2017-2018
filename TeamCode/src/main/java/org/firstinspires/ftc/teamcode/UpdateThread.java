@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -24,6 +25,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 import virtualRobot.JoystickController;
@@ -39,8 +41,10 @@ import virtualRobot.hardware.Motor;
 import virtualRobot.hardware.Sensor;
 import virtualRobot.hardware.StateSensor;
 import virtualRobot.logicThreads.competition.TeleOpCustomLogic;
+import virtualRobot.logicThreads.competition.TeleOpCustomLogicRewrite;
 import virtualRobot.logicThreads.competition.TeleOpLogic;
 import virtualRobot.logicThreads.testing.TestBackendLogic;
+import virtualRobot.utils.BetterLog;
 import virtualRobot.utils.GlobalUtils;
 import virtualRobot.utils.Vector3f;
 
@@ -64,19 +68,16 @@ public abstract class UpdateThread extends OpMode {
 		exceptions.add(TestBackendLogic.class);
 		exceptions.add(TeleOpCustomLogic.class);
 		exceptions.add(TeleOpLogic.class);
+		exceptions.add(TeleOpCustomLogicRewrite.class);
 	}
 
 	//here we will initiate all of our PHYSICAL hardware. E.g: private DcMotor leftBack...
 	//also initiate sensors. E.g. private AnalogInput sonar, private ColorSensor colorSensor, private DigitalChannel ...
 
-//	private MPU9250 imu;
+//	private BNO055 imu;
     private BNO055IMU imu;
 	private DcMotor leftFront, leftBack, rightFront, rightBack;
-	private DcMotor rollerLeft, rollerRight;
-	private DcMotor glyphLiftLeft, glyphLiftRight;
-	private DcMotor relicArm;
-	private Servo relicArmWinch; //Its actually a CRServo but this is a better implementation of it
-	private Servo jewelServo;
+	private DcMotor glyphLiftRight, glyphLiftLeft;
 	private Servo clawLeft, clawRight;
 
 
@@ -114,17 +115,18 @@ public abstract class UpdateThread extends OpMode {
 //        imu.startAccelerationIntegration(new Position(), new Velocity(),1);
 
         //MOTOR SETUP (with physical componenents, e.g. leftBack = hardwareMap.dcMotor.get("leftBack")
-		leftFront = hardwareMap.dcMotor.get("LF");
-		leftBack = hardwareMap.dcMotor.get("LB");
-		rightFront = hardwareMap.dcMotor.get("RF");
-		rightBack = hardwareMap.dcMotor.get("RB");
+		leftFront = hardwareMap.dcMotor.get("leftFront");
+		leftBack = hardwareMap.dcMotor.get("leftBack");
+		rightFront = hardwareMap.dcMotor.get("rightFront");
+		rightBack = hardwareMap.dcMotor.get("rightBack");
+		Log.d("Components ", "Motors Initialized");
 //		rollerLeft = hardwareMap.dcMotor.get("rollerLeft");
 //		rollerRight = hardwareMap.dcMotor.get("rollerRight");
-		glyphLiftLeft = hardwareMap.dcMotor.get("glyphLiftLeft");
 		glyphLiftRight = hardwareMap.dcMotor.get("glyphLiftRight");
+		glyphLiftLeft = hardwareMap.dcMotor.get("glyphLiftLeft");
 //		relicArm = hardwareMap.dcMotor.get("relicArm");
-
-        //SERVO SETUP (with physical hardware, e.g. servo = hardwareMap....)
+//
+//        //SERVO SETUP (with physical hardware, e.g. servo = hardwareMap....)
 //		relicArmWinch = hardwareMap.servo.get("relicArmWinch");
 //		jewelServo = hardwareMap.servo.get("jewelServo");
 		clawLeft = hardwareMap.servo.get("clawLeft");
@@ -133,6 +135,15 @@ public abstract class UpdateThread extends OpMode {
         //REVERSE ONE SIDE (If needed, e.g. rightFront.setDirection(DcMotor.Direction.REVERSE)
 		rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
 		rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+
+		//SET MOTOR MODES
+		leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+		glyphLiftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		glyphLiftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //SENSOR SETUP e.g. colorSensor = hardwareMap.colorsensor.get("color"), sonar1 = hardwareMap.analogInput.get("sonar1"), liftEndStop1 = hardwareMap.digitalChannel.get("liftEndStop1")
 
@@ -169,6 +180,7 @@ public abstract class UpdateThread extends OpMode {
 		vRightBack.setMotorType(rightBack.getMotorType());
 //		vRollerLeft.setMotorType(rollerLeft.getMotorType());
 //		vRollerRight.setMotorType(rollerRight.getMotorType());
+		vGlyphLiftRight.setMotorType(glyphLiftRight.getMotorType());
 		vGlyphLiftLeft.setMotorType(glyphLiftLeft.getMotorType());
 //		vRelicArm.setMotorType(relicArm.getMotorType());
 
@@ -240,8 +252,9 @@ public abstract class UpdateThread extends OpMode {
 		Thread.currentThread().setPriority(10);
 		runtime.reset();
 	}
-	
+
 	public void loop() {
+		telemetry.addData("Update timestamp: ", System.currentTimeMillis());
 		// Update Location. E.g.: double prevEcnoderValue=?, newEncoderValue=?,
 		//TODO: Calculate values for prev and newEncoderValues (Not top priority, locationSensor may not be used)
 //		Position position = imu.getPosition();
@@ -255,22 +268,23 @@ public abstract class UpdateThread extends OpMode {
 //        Acceleration accel = imu.getLinearAcceleration();
 //        Acceleration total = imu.getOverallAcceleration();
 //        AngularVelocity angularVelocity = imu.getAngularVelocity();
-//
+
 //        vIMU.setLinearAccel(new Vector3f(accel.xAccel, accel.yAccel, accel.zAccel));
 //        vIMU.setTotalAccel(new Vector3f(total.xAccel, total.yAccel, total.zAccel));
 //        vIMU.linearAcquisition = accel.acquisitionTime;
 //        vIMU.totalAcquisition = total.acquisitionTime;
-//
+
 //        vIMU.setYaw(angles.firstAngle);
 //        vIMU.setRoll(angles.secondAngle);
 //        vIMU.setPitch(angles.thirdAngle);
-////        vIMU.angleAcquisition = angles.acquisitionTime;
-//
+//        vIMU.angleAcquisition = angles.acquisitionTime;
+
 //        vIMU.setAngularVelocity(new Vector3f(angularVelocity.xRotationRate, angularVelocity.yRotationRate, angularVelocity.zRotationRate));
 
         vVoltageSensor.setRawValue(getBatteryVoltage());
 
         try {
+			telemetry.addData("Meme: ", gamepad1.left_stick_x + " " + gamepad1.left_stick_y);
             vJoystickController1.copyStates(gamepad1);
             vJoystickController2.copyStates(gamepad2);
         } catch (RobotCoreException e) {
@@ -324,12 +338,13 @@ public abstract class UpdateThread extends OpMode {
 			telemetry.addData("robot progress " + i, robot.getProgress().get(i));
 		}
 
+//		telemetry.addData("Gamepad"gamepad1.atRest());
 		telemetry.addData("Logic is Alive: ", t.isAlive());
 		telemetry.addData("All is Alive", t.allIsAlive());
 		//telemetry.addData("Motor: ", robot.getLFMotor().toString());
 		telemetry.addData("Loop Time: ", runtime.toString());
     }
-	
+
 	public void stop() {
 //        imu.stopAccelerationIntegration();
 //		imu.close();
@@ -354,4 +369,3 @@ public abstract class UpdateThread extends OpMode {
 		return result;
 	}
 }
-
