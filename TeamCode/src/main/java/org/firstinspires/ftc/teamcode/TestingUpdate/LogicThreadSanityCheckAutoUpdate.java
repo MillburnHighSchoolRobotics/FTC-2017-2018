@@ -16,4 +16,3 @@ public class LogicThreadSanityCheckAutoUpdate extends UpdateThread {
         logicThread = LogicThreadSanityCheckAutoLogic.class;
     }
 }
-
