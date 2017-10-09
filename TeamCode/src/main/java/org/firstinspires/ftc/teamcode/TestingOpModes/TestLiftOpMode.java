@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -20,6 +22,7 @@ public class TestLiftOpMode extends OpMode {
     Servo servo1;
     Servo servo2;
     float threshold = 0.1f ;
+    int motor1offset, motor2offset;
 
     @Override
     public void init() {
@@ -33,10 +36,13 @@ public class TestLiftOpMode extends OpMode {
         rightBack = hardwareMap.dcMotor.get("rightBack");
         motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor1offset = 0;
+        motor2offset = 0;
     }
 
     @Override
     public void loop() {
+        telemetry.addData("Lift Encoder values (L,R)", (motor1offset - motor1.getCurrentPosition()) + "," + (motor2offset - motor2.getCurrentPosition()));
         if (gamepad2.y)
             motor1.setPower(1);
         else if (gamepad2.x)
@@ -52,8 +58,8 @@ public class TestLiftOpMode extends OpMode {
             motor2.setPower(0);
 
         if (gamepad2.right_bumper) {
-            servo1.setPosition(0);
-            servo2.setPosition(1);
+            servo1.setPosition(0.1);
+            servo2.setPosition(0.9);
         }
 
         if (gamepad2.left_bumper) {
@@ -117,6 +123,14 @@ public class TestLiftOpMode extends OpMode {
             leftBack.setPower(0);
 
         }
+        if (gamepad2.dpad_left || gamepad2.dpad_right) {
+            motor1offset = motor1.getCurrentPosition();
+            motor2offset = motor2.getCurrentPosition();
+        }
+    }
 
+    @Override
+    public void stop() {
+        Log.d("stop()", "called");
     }
 }
