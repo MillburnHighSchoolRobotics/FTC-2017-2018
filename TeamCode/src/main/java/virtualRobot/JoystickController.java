@@ -74,6 +74,7 @@ public class JoystickController {
     }
 
     public synchronized void logicalRefresh() {
+        if (buffer == null) return;
         for (int i = 0; i < 12; i++) {
             pressed.set(i, !down.get(i) && buffer.buttonStates[i]);
             released.set(i, down.get(i) && !buffer.buttonStates[i]);

@@ -55,25 +55,25 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
                 robot.addToTelemetry("TeleOp if statement lvl", 0);
             } else if (!MathUtils.equals(translateMag, 0, 0.05)) {
                 double translatePower = translateMag * 0.666; //set later
-                if (MathUtils.equals(translateTheta, 90)) {
+                if (MathUtils.equals(translateTheta, 90, 45)) {
                     //Forward
                     RF = translatePower * POWER_MATRIX[0][0];
                     RB = translatePower * POWER_MATRIX[0][1];
                     LF = translatePower * POWER_MATRIX[0][2];
                     LB = translatePower * POWER_MATRIX[0][3];
-                } else if (MathUtils.equals(translateTheta, 180)) {
+                } else if (MathUtils.equals(translateTheta, 180, 45)) {
                     //Left
                     RF = translatePower * POWER_MATRIX[2][0];
                     RB = translatePower * POWER_MATRIX[2][1];
                     LF = translatePower * POWER_MATRIX[2][2];
                     LB = translatePower * POWER_MATRIX[2][3];
-                } else if (MathUtils.equals(translateTheta, 270)) {
+                } else if (MathUtils.equals(translateTheta, 270, 45)) {
                     //Backward
                     RF = translatePower * POWER_MATRIX[4][0];
                     RB = translatePower * POWER_MATRIX[4][1];
                     LF = translatePower * POWER_MATRIX[4][2];
                     LB = translatePower * POWER_MATRIX[4][3];
-                } else if (MathUtils.equals(translateTheta, 0)) {
+                } else if (MathUtils.equals(translateTheta, 0, 45)) {
                     //Right
                     RF = translatePower * POWER_MATRIX[6][0];
                     RB = translatePower * POWER_MATRIX[6][1];
