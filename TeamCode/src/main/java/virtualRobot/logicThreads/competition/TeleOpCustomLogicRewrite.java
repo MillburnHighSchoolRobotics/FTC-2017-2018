@@ -54,40 +54,41 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
                 robot.getLBMotor().setPower(rotateX);
                 robot.addToTelemetry("TeleOp if statement lvl", 0);
             } else if (!MathUtils.equals(translateMag, 0, 0.05)) {
-                double translatePower = translateMag * 0.666; //set later
-                if (MathUtils.equals(translateTheta, 90, 45)) {
-                    //Forward
+                double translatePower = translateMag * 0.666;
+                if (translateTheta >= 0 && translateTheta <= 90) { //quadrant 1
+                    scale = MathUtils.sinDegrees(translateTheta - 45) / MathUtils.cosDegrees(translateTheta - 45);
                     RF = translatePower * POWER_MATRIX[0][0];
-                    RB = translatePower * POWER_MATRIX[0][1];
-                    LF = translatePower * POWER_MATRIX[0][2];
+                    RB = translatePower * POWER_MATRIX[0][1] * scale;
+                    LF = translatePower * POWER_MATRIX[0][2] * scale;
                     LB = translatePower * POWER_MATRIX[0][3];
-                } else if (MathUtils.equals(translateTheta, 180, 45)) {
-                    //Left
-                    RF = translatePower * POWER_MATRIX[2][0];
-                    RB = translatePower * POWER_MATRIX[2][1];
-                    LF = translatePower * POWER_MATRIX[2][2];
-                    LB = translatePower * POWER_MATRIX[2][3];
-                } else if (MathUtils.equals(translateTheta, 270, 45)) {
-                    //Backward
-                    RF = translatePower * POWER_MATRIX[4][0];
-                    RB = translatePower * POWER_MATRIX[4][1];
-                    LF = translatePower * POWER_MATRIX[4][2];
-                    LB = translatePower * POWER_MATRIX[4][3];
-                } else if (MathUtils.equals(translateTheta, 0, 45)) {
-                    //Right
-                    RF = translatePower * POWER_MATRIX[6][0];
-                    RB = translatePower * POWER_MATRIX[6][1];
-                    LF = translatePower * POWER_MATRIX[6][2];
-                    LB = translatePower * POWER_MATRIX[6][3];
+                } else if (translateTheta > 90 && translateTheta <= 180) { //quadrant 2
+                    translatePower *= -1;
+                    scale = MathUtils.sinDegrees(translateTheta - 135) / MathUtils.cosDegrees(translateTheta - 135);
+                    RF = (translatePower * POWER_MATRIX[2][0] * scale);
+                    RB = (translatePower * POWER_MATRIX[2][1]);
+                    LF = (translatePower * POWER_MATRIX[2][2]);
+                    LB = (translatePower * POWER_MATRIX[2][3] * scale);
+                } else if (translateTheta > 180 && translateTheta <= 270) { //quadrant 3
+                    scale = MathUtils.sinDegrees(translateTheta - 225) / MathUtils.cosDegrees(translateTheta - 225);
+                    RF = (translatePower * POWER_MATRIX[4][0]);
+                    RB = (translatePower * POWER_MATRIX[4][1] * scale);
+                    LF = (translatePower * POWER_MATRIX[4][2] * scale);
+                    LB = (translatePower * POWER_MATRIX[4][3]);
+//                Log.d("aaa", robot.getLFMotor().getPower() + " " + robot.getRFMotor().getPower() + " " + robot.getLBMotor().getPower() + " " + robot.getRBMotor().getPower());
+                } else if (translateTheta > 270 && translateTheta < 360) { //quadrant 4
+                    translatePower *= -1;
+                    scale = MathUtils.sinDegrees(translateTheta - 315) / MathUtils.cosDegrees(translateTheta - 315);
+                    RF = (translatePower * POWER_MATRIX[6][0] * scale);
+                    RB = (translatePower * POWER_MATRIX[6][1]);
+                    LF = (translatePower * POWER_MATRIX[6][2]);
+                    LB = (translatePower * POWER_MATRIX[6][3] * scale);
                 }
-                robot.addToTelemetry("0", LF + " " + RF);
-                robot.addToTelemetry("1", LB + " " + RB);
-                robot.addToTelemetry("translatePower: ", translatePower);
-                robot.addToTelemetry("TeleOp if statement lvl", 1);
-                robot.getRFMotor().setPower(RF);
-                robot.getRBMotor().setPower(RB);
+
                 robot.getLFMotor().setPower(LF);
                 robot.getLBMotor().setPower(LB);
+                robot.getRBMotor().setPower(RB);
+                robot.getRFMotor().setPower(RF);
+
             } else {
                 robot.addToTelemetry("TeleOp if statement lvl", 2);
                 robot.stopMotors();
