@@ -24,6 +24,7 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
         JoystickController controller2;
         controller1 = robot.getJoystickController1();
         controller2 = robot.getJoystickController2();
+        int leftMin = 800, leftMax = 8700, rightMin = 0, rightMax = 8200;
         final int POWER_MATRIX[][] = { //for each of the directions
 
                 {1, 1, 1, 1},
@@ -37,7 +38,9 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
         };
 
         while (true) {
-            robot.addToTelemetry("TeleOp timestamp: ", System.currentTimeMillis());
+//            robot.addToTelemetry("TeleOp timestamp: ", System.currentTimeMillis());
+            robot.addToTelemetry("EncoderL", robot.getGlyphLiftLeft().getPosition());
+            robot.addToTelemetry("EncoderR", robot.getGlyphLiftRight().getPosition());
             controller1.logicalRefresh();
             controller2.logicalRefresh();
             double translateTheta = Math.toDegrees(controller1.getValue(JoystickController.THETA_1));
@@ -52,7 +55,7 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
                 robot.getRBMotor().setPower(-rotateX);
                 robot.getLFMotor().setPower(rotateX);
                 robot.getLBMotor().setPower(rotateX);
-                robot.addToTelemetry("TeleOp if statement lvl", 0);
+//                robot.addToTelemetry("TeleOp if statement lvl", 0);
             } else if (!MathUtils.equals(translateMag, 0, 0.05)) {
                 double translatePower = translateMag * 0.666;
                 if (translateTheta >= 0 && translateTheta <= 90) { //quadrant 1
@@ -90,15 +93,23 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
                 robot.getRFMotor().setPower(RF);
 
             } else {
-                robot.addToTelemetry("TeleOp if statement lvl", 2);
+//                robot.addToTelemetry("TeleOp if statement lvl", 2);
                 robot.stopMotors();
             }
 
-            if (controller1.isDown(JoystickController.BUTTON_LT)) {
+            if (controller1.isDown(JoystickController.BUTTON_LT) && robot.getGlyphLiftLeft().getPosition() > leftMin && robot.getGlyphLiftRight().getPosition() > rightMin) {
                 robot.getGlyphLiftLeft().setPower(-1);
                 robot.getGlyphLiftRight().setPower(-1);
-            } else if (controller1.isDown(JoystickController.BUTTON_RT)) {
+            } else if (controller1.isDown(JoystickController.BUTTON_RT) && robot.getGlyphLiftLeft().getPosition() < leftMax && robot.getGlyphLiftRight().getPosition() < rightMax) {
                 robot.getGlyphLiftLeft().setPower(1);
+                robot.getGlyphLiftRight().setPower(1);
+            } else if (controller1.isDown(JoystickController.BUTTON_A)) {
+                robot.getGlyphLiftLeft().setPower(-1);
+            } else if (controller1.isDown(JoystickController.BUTTON_X)) {
+                robot.getGlyphLiftLeft().setPower(1);
+            } else if (controller1.isDown(JoystickController.BUTTON_B)) {
+                robot.getGlyphLiftRight().setPower(-1);
+            } else if (controller1.isDown(JoystickController.BUTTON_Y)) {
                 robot.getGlyphLiftRight().setPower(1);
             } else {
                 robot.getGlyphLiftLeft().setPower(0);
