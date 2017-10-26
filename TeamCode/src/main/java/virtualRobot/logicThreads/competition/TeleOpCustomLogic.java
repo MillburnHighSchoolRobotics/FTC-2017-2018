@@ -172,14 +172,14 @@ public class TeleOpCustomLogic extends LogicThread {
                 robot.getRollerLeft().setPower(0);
                 robot.getRollerRight().setPower(0);
             }
-
-            if (!MathUtils.equals(intakeElevationY, 0, 0.1)) {
-                robot.getGlyphLiftLeft().setPower(intakeElevationY * intakeElevationSensitivity);
-                robot.getGlyphLiftRight().setPower(intakeElevationY * intakeElevationSensitivity);
-            } else {
-                robot.getGlyphLiftLeft().setPower(0);
-                robot.getGlyphLiftRight().setPower(0);
-            }
+//
+//            if (!MathUtils.equals(intakeElevationY, 0, 0.1)) {
+//                robot.getGlyphLiftLeft().setPower(intakeElevationY * intakeElevationSensitivity);
+//                robot.getGlyphLiftRight().setPower(intakeElevationY * intakeElevationSensitivity);
+//            } else {
+//                robot.getGlyphLiftLeft().setPower(0);
+//                robot.getGlyphLiftRight().setPower(0);
+//            }
 
 
 
