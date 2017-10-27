@@ -208,8 +208,8 @@ public abstract class UpdateThread extends OpMode {
 
 		//Set initial servo positions
 //		relicArmWinch.setPosition(0.5);
-//		clawLeft.setPosition(0);
-//		clawRight.setPosition(0);
+		clawLeft.setPosition(0);
+		clawRight.setPosition(0);
 //		jewelServo.setPosition(0);
 
 		//Copy positions to virtualRobot

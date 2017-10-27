@@ -103,23 +103,22 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
             if (controller1.isPressed(JoystickController.BUTTON_LT)) {
                 leftPos = MathUtils.clamp(leftPos -= .1,0,1);
                 rightPos = MathUtils.clamp(rightPos -= .1,0,1);
-            } else if (controller1.isPressed(JoystickController.BUTTON_RT)){
-                leftPos = MathUtils.clamp(leftPos += .1,0,1);
-                rightPos = MathUtils.clamp(rightPos += .1,0,1);
-            } else if (controller1.isPressed(JoystickController.BUTTON_A)) {
+            } else if (controller1.isPressed(JoystickController.BUTTON_RT)) {
+                leftPos = MathUtils.clamp(leftPos += .1, 0, 1);
+                rightPos = MathUtils.clamp(rightPos += .1, 0, 1);
+            } else if (controller1.isPressed(JoystickController.BUTTON_A))
                 rightPos = MathUtils.clamp(rightPos -= .1,0,1);
-            } else if (controller1.isPressed(JoystickController.BUTTON_X)) {
+            else if (controller1.isPressed(JoystickController.BUTTON_X))
                 leftPos = MathUtils.clamp(leftPos -= .1,0,1);
-            } else if (controller1.isPressed(JoystickController.BUTTON_B)) {
+            else if (controller1.isPressed(JoystickController.BUTTON_B))
                 rightPos = MathUtils.clamp(rightPos += .1,0,1);
-            } else if (controller1.isPressed(JoystickController.BUTTON_Y)) {
+            else if (controller1.isPressed(JoystickController.BUTTON_Y))
                 leftPos = MathUtils.clamp(leftPos += .1,0,1);
-            }
             if(controller1.isDpadUp()) {
                 leftPos = 1;
                 rightPos = 1;
             }
-            if(controller1.isDpadLeft()) {
+            if(controller1.isDpadRight()) {
                 leftPos = 0.666;
                 rightPos = 0.666;
             }
