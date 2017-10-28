@@ -24,6 +24,7 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
 
     @Override
     protected void realRun() throws InterruptedException {
+        robot.getJewelServo().setPosition(0);
         JoystickController controller1;
         JoystickController controller2;
         controller1 = robot.getJoystickController1();

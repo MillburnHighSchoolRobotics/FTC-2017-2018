@@ -79,6 +79,7 @@ public abstract class UpdateThread extends OpMode {
 	private DcMotor leftFront, leftBack, rightFront, rightBack;
 	private Servo glyphLiftRight, glyphLiftLeft;
 	private Servo clawLeft, clawRight;
+	private Servo jewelServo;
 
 //Now initiate the VIRTUAL componenents (from VirtualRobot!!), e.g. private Motor vDriveRightMotor, private virtualRobot.hardware.Servo ..., private Sensor vDriveRightMotorEncoder, private LocationSensor vLocationSensor
 
@@ -127,7 +128,7 @@ public abstract class UpdateThread extends OpMode {
 //
 //        //SERVO SETUP (with physical hardware, e.g. servo = hardwareMap....)
 //		relicArmWinch = hardwareMap.servo.get("relicArmWinch");
-//		jewelServo = hardwareMap.servo.get("jewelServo");
+		jewelServo = hardwareMap.servo.get("jewelArm");
 		clawLeft = hardwareMap.servo.get("clawLeft");
 		clawRight = hardwareMap.servo.get("clawRight");
 
@@ -210,7 +211,7 @@ public abstract class UpdateThread extends OpMode {
 //		relicArmWinch.setPosition(0.5);
 		clawLeft.setPosition(0);
 		clawRight.setPosition(0);
-//		jewelServo.setPosition(0);
+		jewelServo.setPosition(0);
 
 		//Copy positions to virtualRobot
 //		vRelicArmWinch.setSpeed(relicArmWinch.getPosition());
@@ -218,7 +219,7 @@ public abstract class UpdateThread extends OpMode {
 		vClawRight.setPosition(clawRight.getPosition());
 		vGlyphLiftLeft.setPosition(glyphLiftLeft.getPosition());
 		vGlyphLiftRight.setPosition(glyphLiftRight.getPosition());
-//		vJewelServo.setPosition(jewelServo.getPosition());
+		vJewelServo.setPosition(jewelServo.getPosition());
 
 		//set sensors e.g. vDriveRightMotorEncoder.setRawValue(-rightFront.getCurrentPosition())
         vVoltageSensor.setRawValue(getBatteryVoltage());
@@ -300,7 +301,7 @@ public abstract class UpdateThread extends OpMode {
 		clawRight.setPosition(vClawRight.getPosition());
 		glyphLiftLeft.setPosition(vGlyphLiftLeft.getPosition());
 		glyphLiftRight.setPosition(vGlyphLiftRight.getPosition());
-//		jewelServo.setPosition(vJewelServo.getPosition());
+		jewelServo.setPosition(vJewelServo.getPosition());
 
 		// Capture Motor Powers,E.g. double leftPower = vDriveLeftMotore.getPower();
 		double leftFrontPower = vLeftFront.getPower();
