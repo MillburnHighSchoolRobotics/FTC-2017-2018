@@ -21,7 +21,7 @@ import static virtualRobot.logicThreads.competition.utilities.StackingLogic.Glyp
 /**
  * Created by Ethan Mak on 8/29/2017.
  */
-public class Red1AutoLogic extends AutonomousLogicThread {
+public class RedNearAutoLogic extends AutonomousLogicThread {
     final StackingLogic.GlyphColor[][] snake = {{GREY, GREY, BROWN, BROWN},
                                                 {GREY, BROWN, BROWN, GREY},
                                                 {BROWN, BROWN, GREY, GREY}};

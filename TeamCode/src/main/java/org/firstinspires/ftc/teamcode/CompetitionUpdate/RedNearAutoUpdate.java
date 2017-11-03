@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.UpdateThread;
 
-import virtualRobot.logicThreads.competition.Red1AutoLogic;
+import virtualRobot.logicThreads.competition.RedNearAutoLogic;
 
 /**
  * Created by Ethan Mak on 8/29/2017.
@@ -14,6 +14,6 @@ import virtualRobot.logicThreads.competition.Red1AutoLogic;
 public class RedNearAutoUpdate extends UpdateThread {
     @Override
     public void setLogicThread() {
-        logicThread = Red1AutoLogic.class;
+        logicThread = RedNearAutoLogic.class;
     }
 }

@@ -11,7 +11,7 @@ import virtualRobot.logicThreads.AutonomousLogicThread;
  * Created by ethan on 9/22/17.
  */
 
-public class Red2BasicAutoLogic extends AutonomousLogicThread {
+public class RedFarBasicAutoLogic extends AutonomousLogicThread {
     @Override
     protected void realRun() throws InterruptedException {
         runCommand(new Translate(50, Translate.Direction.FORWARD, 0));
