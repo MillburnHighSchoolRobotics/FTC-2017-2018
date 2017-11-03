@@ -91,6 +91,8 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
                     LB = (translatePower * POWER_MATRIX[6][3] * scale);
                 }
 
+                robot.addToTelemetry("1", LF + "\t" + RF);
+                robot.addToTelemetry("2", LB + "\t" + RB);
                 robot.getLFMotor().setPower(LF);
                 robot.getLBMotor().setPower(LB);
                 robot.getRBMotor().setPower(RB);
