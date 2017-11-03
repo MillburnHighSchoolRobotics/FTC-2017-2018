@@ -55,7 +55,7 @@ Updates Real hardware (e.g. motors) to correspond to the values of their virtual
  */
 public abstract class UpdateThread extends OpMode {
 	private SallyJoeBot robot;
-	protected Class<? extends LogicThread> logicThread;
+	protected Class<? extends LogicThread> logicThread = null;
 	private LogicThread t;
 //	private CreateVuforia cv;
 	boolean tInstantiated= false;
@@ -137,10 +137,10 @@ public abstract class UpdateThread extends OpMode {
 		rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
 		//SET MOTOR MODES
-		leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-		leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-		rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-		rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//		leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//		leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//		rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//		rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //SENSOR SETUP e.g. colorSensor = hardwareMap.colorsensor.get("color"), sonar1 = hardwareMap.analogInput.get("sonar1"), liftEndStop1 = hardwareMap.digitalChannel.get("liftEndStop1")
 
@@ -239,6 +239,8 @@ public abstract class UpdateThread extends OpMode {
 			tInstantiated = false;
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
+			tInstantiated = false;
+		} catch (NullPointerException e) {
 			tInstantiated = false;
 		}
 		if (tInstantiated)

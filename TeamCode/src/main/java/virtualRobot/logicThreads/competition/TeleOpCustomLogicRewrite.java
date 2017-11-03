@@ -101,44 +101,44 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
                 robot.stopMotors();
             }
 
-            if (controller1.isPressed(JoystickController.BUTTON_LT)) {
+            if (controller2.isPressed(JoystickController.BUTTON_LT)) {
                 leftPos = MathUtils.clamp(leftPos -= .1,0,1);
                 rightPos = MathUtils.clamp(rightPos -= .1,0,1);
-            } else if (controller1.isPressed(JoystickController.BUTTON_RT)) {
+            } else if (controller2.isPressed(JoystickController.BUTTON_RT)) {
                 leftPos = MathUtils.clamp(leftPos += .1, 0, 1);
                 rightPos = MathUtils.clamp(rightPos += .1, 0, 1);
-            } else if (controller1.isPressed(JoystickController.BUTTON_A))
+            } else if (controller2.isPressed(JoystickController.BUTTON_A))
                 rightPos = MathUtils.clamp(rightPos -= .1,0,1);
-            else if (controller1.isPressed(JoystickController.BUTTON_X))
+            else if (controller2.isPressed(JoystickController.BUTTON_X))
                 leftPos = MathUtils.clamp(leftPos -= .1,0,1);
-            else if (controller1.isPressed(JoystickController.BUTTON_B))
+            else if (controller2.isPressed(JoystickController.BUTTON_B))
                 rightPos = MathUtils.clamp(rightPos += .1,0,1);
-            else if (controller1.isPressed(JoystickController.BUTTON_Y))
+            else if (controller2.isPressed(JoystickController.BUTTON_Y))
                 leftPos = MathUtils.clamp(leftPos += .1,0,1);
-            if(controller1.isDpadUp()) {
+            if(controller2.isDpadUp()) {
                 leftPos = 1;
                 rightPos = 1;
             }
-            if(controller1.isDpadRight()) {
+            if(controller2.isDpadRight()) {
                 leftPos = 0.666;
                 rightPos = 0.666;
             }
-            if(controller1.isDpadDown()) {
-                leftPos = 0.333;
-                rightPos = 0.333;
-            }
-            if(controller1.isDpadLeft()) {
+            if(controller2.isDpadDown()) {
                 leftPos = 0;
                 rightPos = 0;
+            }
+            if(controller2.isDpadLeft()) {
+                leftPos = 0.333;
+                rightPos = 0.333;
             }
             robot.addToTelemetry("leftPos", leftPos);
             robot.addToTelemetry("rightPos", rightPos);
             robot.getGlyphLiftLeft().setPosition(1-leftPos);
             robot.getGlyphLiftRight().setPosition(rightPos);
 
-            if (controller1.isPressed(JoystickController.BUTTON_LB)) {
+            if (controller2.isPressed(JoystickController.BUTTON_LB)) {
                 robot.moveClaw(false);
-            } else if (controller1.isPressed(JoystickController.BUTTON_RB)) {
+            } else if (controller2.isPressed(JoystickController.BUTTON_RB)) {
                 robot.moveClaw(true);
             }
 

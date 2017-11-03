@@ -10,7 +10,7 @@ import virtualRobot.logicThreads.competition.Red1AutoLogic;
  * Created by Ethan Mak on 8/29/2017.
  */
 
-@Autonomous(name = "Autonomous: Red 1 Full", group = "Competition")
+@Autonomous(name = "Autonomous: Red Near Full", group = "Competition")
 public class RedNearAutoUpdate extends UpdateThread {
     @Override
     public void setLogicThread() {

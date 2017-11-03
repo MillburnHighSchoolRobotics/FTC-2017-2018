@@ -53,7 +53,7 @@ public class BlueFarAuton extends LinearOpMode {
             telemetry.addData("Blue ", blue);
             telemetry.addData("Updated ", true);
             if(red + blue >= 250) {
-                double rat = red/blue;
+                double rat = (double)red/blue;
                 if (rat <= 0.2) {
                     leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                     leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
