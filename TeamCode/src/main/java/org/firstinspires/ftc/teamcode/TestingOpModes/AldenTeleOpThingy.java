@@ -15,8 +15,8 @@ import virtualRobot.utils.MathUtils;
 
 @TeleOp(name="AldenTeleop", group="LALALA")
 public class AldenTeleOpThingy extends OpMode {
-    DcMotor motor1;
-    DcMotor motor2;
+//    DcMotor motor1;
+//    DcMotor motor2;
     DcMotor leftFront,rightFront,leftBack,rightBack;
 
     Servo servo1;
@@ -26,36 +26,36 @@ public class AldenTeleOpThingy extends OpMode {
 
     @Override
     public void init() {
-        motor1 = hardwareMap.dcMotor.get("glyphLiftLeft");
-        motor2 = hardwareMap.dcMotor.get("glyphLiftRight");
+//        motor1 = hardwareMap.dcMotor.get("glyphLiftLeft");
+//        motor2 = hardwareMap.dcMotor.get("glyphLiftRight");
         servo1 = hardwareMap.servo.get("clawLeft");
         servo2 = hardwareMap.servo.get("clawRight");
         leftFront = hardwareMap.dcMotor.get("leftFront");
         rightFront = hardwareMap.dcMotor.get("rightFront");
         leftBack = hardwareMap.dcMotor.get("leftBack");
         rightBack = hardwareMap.dcMotor.get("rightBack");
-        motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor1offset = 0;
         motor2offset = 0;
     }
 
     @Override
     public void loop() {
-        telemetry.addData("Lift Encoder values (L,R)", (motor1offset - motor1.getCurrentPosition()) + "," + (motor2offset - motor2.getCurrentPosition()));
-        if (gamepad1.y)
-            motor1.setPower(1);
-        else if (gamepad1.x)
-            motor1.setPower(-1);
-        else
-            motor1.setPower(0);
+//        telemetry.addData("Lift Encoder values (L,R)", (motor1offset - motor1.getCurrentPosition()) + "," + (motor2offset - motor2.getCurrentPosition()));
+//        if (gamepad1.y)
+//            motor1.setPower(1);
+//        else if (gamepad1.x)
+//            motor1.setPower(-1);
+//        else
+//            motor1.setPower(0);
 
-        if (gamepad1.b)
-            motor2.setPower(1);
-        else if (gamepad1.a)
-            motor2.setPower(-1);
-        else
-            motor2.setPower(0);
+//        if (gamepad1.b)
+//            motor2.setPower(1);
+//        else if (gamepad1.a)
+//            motor2.setPower(-1);
+//        else
+//            motor2.setPower(0);
 
         if (gamepad1.right_bumper) {
             servo1.setPosition(0.1);
@@ -67,16 +67,16 @@ public class AldenTeleOpThingy extends OpMode {
             servo2.setPosition(0.7);
         }
 
-        if (gamepad1.dpad_down) {
-            motor1.setPower(-1);
-            motor2.setPower(-1);
-        } else if (gamepad1.dpad_up) {
-            motor1.setPower(1);
-            motor2.setPower(1);
-        } else {
-            motor1.setPower(0);
-            motor2.setPower(0);
-        }
+//        if (gamepad1.dpad_down) {
+//            motor1.setPower(-1);
+//            motor2.setPower(-1);
+//        } else if (gamepad1.dpad_up) {
+//            motor1.setPower(1);
+//            motor2.setPower(1);
+//        } else {
+//            motor1.setPower(0);
+//            motor2.setPower(0);
+//        }
 
         if(Math.abs(gamepad1.left_stick_y) > threshold || Math.abs(gamepad1.left_stick_x) > threshold)
         {
@@ -123,10 +123,10 @@ public class AldenTeleOpThingy extends OpMode {
             leftBack.setPower(0);
 
         }
-        if (gamepad1.dpad_left || gamepad1.dpad_right) {
-            motor1offset = motor1.getCurrentPosition();
-            motor2offset = motor2.getCurrentPosition();
-        }
+//        if (gamepad1.dpad_left || gamepad1.dpad_right) {
+//            motor1offset = motor1.getCurrentPosition();
+//            motor2offset = motor2.getCurrentPosition();
+//        }
     }
 
     @Override
