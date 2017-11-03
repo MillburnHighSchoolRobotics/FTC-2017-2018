@@ -11,7 +11,7 @@ import virtualRobot.logicThreads.competition.Red1AutoLogic;
  */
 
 @Autonomous(name = "Autonomous: Red 1 Full", group = "Competition")
-public class Red1AutoUpdate extends UpdateThread {
+public class RedNearAutoUpdate extends UpdateThread {
     @Override
     public void setLogicThread() {
         logicThread = Red1AutoLogic.class;
