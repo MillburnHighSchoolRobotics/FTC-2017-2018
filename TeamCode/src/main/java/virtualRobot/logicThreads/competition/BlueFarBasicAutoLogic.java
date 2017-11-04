@@ -34,7 +34,8 @@ public class BlueFarBasicAutoLogic extends AutonomousLogicThread {
         robot.addToTelemetry("Blue ", blue);
 //        blue = Math.max(1, blue);
         double rat = red/(double)blue;
-        if (red != 0 && blue != 0) {
+        if (red != 0 || blue != 0) {
+            blue = Math.max(1, blue);
             if (rat >= 1.5) {
                 startPosition = leftFront.getPosition();
                 leftFront.setPower(power);
