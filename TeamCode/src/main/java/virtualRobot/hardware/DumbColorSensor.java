@@ -1,36 +1,41 @@
 package virtualRobot.hardware;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 /**
  * Created by david on 11/3/17.
  */
 
 public class DumbColorSensor {
-    private int red;
-    private int green;
-    private int blue;
+    private AtomicInteger red;
+    private AtomicInteger green;
+    private AtomicInteger blue;
+//    private int red;
+//    private int green;
+//    private int blue;
 
-    public synchronized int getRed() {
-        return red;
+    public int getRed() {
+        return red.get();
     }
 
-    public synchronized void setRed(int red) {
-        this.red = red;
+    public void setRed(int red) {
+        this.red.set(red);
     }
 
-    public synchronized int getGreen() {
-        return green;
+    public int getGreen() {
+        return green.get();
     }
 
-    public synchronized void setGreen(int green) {
-        this.green = green;
+    public void setGreen(int green) {
+        this.green.set(green);
     }
 
-    public synchronized int getBlue() {
-        return blue;
+    public int getBlue() {
+        return blue.get();
     }
 
-    public synchronized void setBlue(int blue) {
-        this.blue = blue;
+    public void setBlue(int blue) {
+        this.blue.set(blue);
     }
 
 
