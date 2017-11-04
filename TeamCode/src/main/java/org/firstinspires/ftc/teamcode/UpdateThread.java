@@ -120,9 +120,17 @@ public abstract class UpdateThread extends OpMode {
 
         //MOTOR SETUP (with physical componenents, e.g. leftBack = hardwareMap.dcMotor.get("leftBack")
 		leftFront = hardwareMap.dcMotor.get("leftFront");
+		leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		leftBack = hardwareMap.dcMotor.get("leftBack");
+		leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		rightFront = hardwareMap.dcMotor.get("rightFront");
+		rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		rightBack = hardwareMap.dcMotor.get("rightBack");
+		rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		Log.d("Components ", "Motors Initialized");
 //		rollerLeft = hardwareMap.dcMotor.get("rollerLeft");
 //		rollerRight = hardwareMap.dcMotor.get("rollerRight");
