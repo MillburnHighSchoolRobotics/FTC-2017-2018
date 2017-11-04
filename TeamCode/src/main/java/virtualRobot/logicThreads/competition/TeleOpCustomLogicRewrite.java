@@ -16,7 +16,7 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
 
     double leftPos = 0;
     double rightPos = 0;
-
+    double gearCoefficient = 1;
     @Override
     protected void addPresets() {
         shouldStartISR = false;
@@ -29,6 +29,7 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
         JoystickController controller2;
         controller1 = robot.getJoystickController1();
         controller2 = robot.getJoystickController2();
+
         final int POWER_MATRIX[][] = { //for each of the directions
 
                 {1, 1, 1, 1},
@@ -54,11 +55,17 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
             double scale;
             double RF = 0, RB = 0, LF = 0, LB = 0;
             robot.addToTelemetry("mag", translateMag);
+
+            if (controller1.isDpadUp()) {
+                gearCoefficient = 1;
+            } else if (controller1.isDpadDown()) {
+                gearCoefficient = 0.5;
+            }
             if (!MathUtils.equals(rotateX, 0, 0.05)) {
-                robot.getRFMotor().setPower(-rotateX);
-                robot.getRBMotor().setPower(-rotateX);
-                robot.getLFMotor().setPower(rotateX);
-                robot.getLBMotor().setPower(rotateX);
+                robot.getRFMotor().setPower(-rotateX * gearCoefficient);
+                robot.getRBMotor().setPower(-rotateX * gearCoefficient);
+                robot.getLFMotor().setPower(rotateX * gearCoefficient);
+                robot.getLBMotor().setPower(rotateX * gearCoefficient);
 //                robot.addToTelemetry("TeleOp if statement lvl", 0);
             } else if (!MathUtils.equals(translateMag, 0, 0.05)) {
                 double translatePower = translateMag * 0.666;
@@ -90,13 +97,12 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
                     RF = (translatePower * POWER_MATRIX[6][2]);
                     RB = (translatePower * POWER_MATRIX[6][3] * scale);
                 }
-
                 robot.addToTelemetry("1", LF + "\t" + RF);
                 robot.addToTelemetry("2", LB + "\t" + RB);
-                robot.getLFMotor().setPower(LF);
-                robot.getLBMotor().setPower(LB);
-                robot.getRBMotor().setPower(RB);
-                robot.getRFMotor().setPower(RF);
+                robot.getLFMotor().setPower(LF * gearCoefficient);
+                robot.getLBMotor().setPower(LB * gearCoefficient);
+                robot.getRBMotor().setPower(RB * gearCoefficient);
+                robot.getRFMotor().setPower(RF * gearCoefficient);
 
             } else {
 //                robot.addToTelemetry("TeleOp if statement lvl", 2);
