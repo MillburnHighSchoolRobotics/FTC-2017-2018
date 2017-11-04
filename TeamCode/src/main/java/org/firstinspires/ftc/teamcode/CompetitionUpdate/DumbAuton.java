@@ -37,7 +37,7 @@ public class DumbAuton extends OpMode {
 
     @Override
     public void loop() {
-        if (leftFront.getCurrentPosition() < 1440*0.9) {
+        if (leftFront.getCurrentPosition() < 1440*1.2) {
             leftFront.setPower(1);
             rightFront.setPower(1);
             leftBack.setPower(1);
