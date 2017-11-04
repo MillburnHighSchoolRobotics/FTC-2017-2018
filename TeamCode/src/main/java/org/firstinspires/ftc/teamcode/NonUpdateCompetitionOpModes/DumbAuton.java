@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.CompetitionUpdate;
+package org.firstinspires.ftc.teamcode.NonUpdateCompetitionOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
