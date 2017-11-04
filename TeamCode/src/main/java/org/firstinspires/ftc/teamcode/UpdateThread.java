@@ -133,8 +133,8 @@ public abstract class UpdateThread extends OpMode {
 		clawRight = hardwareMap.servo.get("clawRight");
 
         //REVERSE ONE SIDE (If needed, e.g. rightFront.setDirection(DcMotor.Direction.REVERSE)
-		rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-		rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+		leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+		leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
 		//SET MOTOR MODES
 //		leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
