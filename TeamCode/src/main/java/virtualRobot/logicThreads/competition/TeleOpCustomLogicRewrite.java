@@ -57,9 +57,9 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
             robot.addToTelemetry("mag", translateMag);
 
             if (controller1.isDpadUp()) {
-                gearCoefficient = 1;
+                gearCoefficient = 0.666;
             } else if (controller1.isDpadDown()) {
-                gearCoefficient = 0.5;
+                gearCoefficient = 0.333;
             }
             if (!MathUtils.equals(rotateX, 0, 0.05)) {
                 robot.getRFMotor().setPower(-rotateX * gearCoefficient);
