@@ -231,6 +231,8 @@ public abstract class UpdateThread extends OpMode {
 //		clawRight.setPosition(0);
 		robot.moveClaw(false);
 		jewelServo.setPosition(0);
+		glyphLiftRight.setPosition(0);
+		glyphLiftLeft.setPosition(1);
 
 		//Copy positions to virtualRobot
 //		vRelicArmWinch.setSpeed(relicArmWinch.getPosition());
