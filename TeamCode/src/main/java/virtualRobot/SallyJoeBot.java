@@ -3,7 +3,9 @@ package virtualRobot;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
+import virtualRobot.hardware.ColorSensor;
 import virtualRobot.hardware.ContinuousRotationServo;
+import virtualRobot.hardware.DumbColorSensor;
 import virtualRobot.hardware.IMU;
 import virtualRobot.hardware.Motor;
 import virtualRobot.hardware.Sensor;
@@ -33,6 +35,7 @@ public class SallyJoeBot {
     private Servo clawLeft, clawRight;
     private ContinuousRotationServo relicArmWinch;
     private Servo jewelServo;
+    private DumbColorSensor colorSensor;
 
     //Sensors
     private IMU imu;
@@ -63,11 +66,14 @@ public class SallyJoeBot {
         clawRight = new Servo();
         relicArmWinch = new ContinuousRotationServo();
         jewelServo = new Servo();
+        colorSensor = new DumbColorSensor();
         //capLift = new SyncedMotors(LiftLeftMotor, LiftRightMotor, LiftLeftEncoder, LiftRightEncoder, KP, KI, KD, SyncedMotors.SyncAlgo.POSITION);
         //capLift.setRatio(1);
 
     }
     //All of Autonomous and TeleopRobot's functions are created e.g. (public synchronized Motor getMotor() {return Motor;}
+
+    public synchronized DumbColorSensor getColorSensor() { return colorSensor; }
 
     public synchronized Sensor getVoltageSensor() { return voltageSensor; }
 

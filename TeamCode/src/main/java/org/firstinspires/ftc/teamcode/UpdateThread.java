@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -36,6 +37,7 @@ import virtualRobot.commands.Command;
 import virtualRobot.commands.Rotate;
 import virtualRobot.commands.Translate;
 import virtualRobot.hardware.ContinuousRotationServo;
+import virtualRobot.hardware.DumbColorSensor;
 import virtualRobot.hardware.IMU;
 import virtualRobot.hardware.Motor;
 import virtualRobot.hardware.Sensor;
@@ -80,6 +82,7 @@ public abstract class UpdateThread extends OpMode {
 	private Servo glyphLiftRight, glyphLiftLeft;
 	private Servo clawLeft, clawRight;
 	private Servo jewelServo;
+	private ColorSensor colorSensor;
 
 //Now initiate the VIRTUAL componenents (from VirtualRobot!!), e.g. private Motor vDriveRightMotor, private virtualRobot.hardware.Servo ..., private Sensor vDriveRightMotorEncoder, private LocationSensor vLocationSensor
 
@@ -96,6 +99,7 @@ public abstract class UpdateThread extends OpMode {
 	private virtualRobot.hardware.Servo vJewelServo;
 	private virtualRobot.hardware.Servo vClawLeft, vClawRight;
 	private virtualRobot.hardware.Servo vGlyphLiftLeft, vGlyphLiftRight;
+	private DumbColorSensor vColorSensor;
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -131,6 +135,9 @@ public abstract class UpdateThread extends OpMode {
 		jewelServo = hardwareMap.servo.get("jewelArm");
 		clawLeft = hardwareMap.servo.get("clawLeft");
 		clawRight = hardwareMap.servo.get("clawRight");
+
+		//SENSOR SETUP
+		colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
 
         //REVERSE ONE SIDE (If needed, e.g. rightFront.setDirection(DcMotor.Direction.REVERSE)
 		leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -169,6 +176,9 @@ public abstract class UpdateThread extends OpMode {
 		vRollerRight = robot.getRollerRight();
 		vClawLeft = robot.getClawLeft();
 		vClawRight = robot.getClawRight();
+
+		//FETCH VIRTUAL SENSORS OF VIRTUAL ROBOT from robot. E.g. vColorSensor = robot.getColorSensor();
+		vColorSensor = robot.getColorSensor();
 
 		//Set Motor Types
 		vLeftFront.setMotorType(leftFront.getMotorType());
@@ -223,6 +233,11 @@ public abstract class UpdateThread extends OpMode {
 
 		//set sensors e.g. vDriveRightMotorEncoder.setRawValue(-rightFront.getCurrentPosition())
         vVoltageSensor.setRawValue(getBatteryVoltage());
+
+		vColorSensor.setRed(colorSensor.red());
+		vColorSensor.setBlue(colorSensor.blue());
+		vColorSensor.setGreen(colorSensor.green());
+
 
 		vLeftFront.setPosition(leftFront.getCurrentPosition());
 		vLeftBack.setPosition(leftBack.getCurrentPosition());
@@ -293,6 +308,11 @@ public abstract class UpdateThread extends OpMode {
 		vLeftBack.setPosition(leftBack.getCurrentPosition());
 		vRightFront.setPosition(rightFront.getCurrentPosition());
 		vRightBack.setPosition(rightBack.getCurrentPosition());
+
+		vColorSensor.setRed(colorSensor.red());
+		vColorSensor.setBlue(colorSensor.blue());
+		vColorSensor.setGreen(colorSensor.green());
+
 //		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
 //		vRollerRight.setPosition(rollerRight.getCurrentPosition());
 //		vRelicArm.setPosition(relicArm.getCurrentPosition());
