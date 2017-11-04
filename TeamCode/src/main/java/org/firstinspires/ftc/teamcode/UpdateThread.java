@@ -144,9 +144,6 @@ public abstract class UpdateThread extends OpMode {
 		clawLeft = hardwareMap.servo.get("clawLeft");
 		clawRight = hardwareMap.servo.get("clawRight");
 
-		//SENSOR SETUP
-		colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
-
         //REVERSE ONE SIDE (If needed, e.g. rightFront.setDirection(DcMotor.Direction.REVERSE)
 		leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
 		leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -158,12 +155,20 @@ public abstract class UpdateThread extends OpMode {
 //		rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //SENSOR SETUP e.g. colorSensor = hardwareMap.colorsensor.get("color"), sonar1 = hardwareMap.analogInput.get("sonar1"), liftEndStop1 = hardwareMap.digitalChannel.get("liftEndStop1")
+		colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
 
 		//FETCH VIRTUAL ROBOT FROM COMMAND INTERFACE
 		robot = Command.ROBOT;
 		robot.initialBattery = getBatteryVoltage();
 
-        //FETCH CONSTANT COMPONENTS OF VIRTUAL ROBOT (Do not touch)
+
+		clawLeft.setPosition(1);
+		clawRight.setPosition(0);
+		jewelServo.setPosition(0);
+		glyphLiftRight.setPosition(0);
+		glyphLiftLeft.setPosition(1);
+
+		//FETCH CONSTANT COMPONENTS OF VIRTUAL ROBOT (Do not touch)
         vJoystickController1 = robot.getJoystickController1();
         vJoystickController2 = robot.getJoystickController2();
         vVoltageSensor = robot.getVoltageSensor();
@@ -229,10 +234,6 @@ public abstract class UpdateThread extends OpMode {
 //		relicArmWinch.setPosition(0.5);
 //		clawLeft.setPosition(0);
 //		clawRight.setPosition(0);
-		robot.moveClaw(false);
-		jewelServo.setPosition(0);
-		glyphLiftRight.setPosition(0);
-		glyphLiftLeft.setPosition(1);
 
 		//Copy positions to virtualRobot
 //		vRelicArmWinch.setSpeed(relicArmWinch.getPosition());
