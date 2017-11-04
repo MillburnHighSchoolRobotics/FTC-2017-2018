@@ -58,13 +58,13 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         jewelArm.setPosition(0);
         robot.stopMotors();
         Thread.sleep(2000);
-//        startPosition = leftFront.getPosition();
-//        leftFront.setPower(power);
-//        leftBack.setPower(power);
-//        rightFront.setPower(power);
-//        rightBack.setPower(power);
-//        while ((leftFront.getPosition() - startPosition) + dist < 1440*1 && !Thread.interrupted()) {}
-//        robot.stopMotors();
+        startPosition = leftFront.getPosition();
+        leftFront.setPower(power);
+        leftBack.setPower(power);
+        rightFront.setPower(power);
+        rightBack.setPower(power);
+        while ((leftFront.getPosition() - startPosition) + dist < 1440*1 && !Thread.interrupted()) {}
+        robot.stopMotors();
         while(!Thread.interrupted()) {}
     }
 }
