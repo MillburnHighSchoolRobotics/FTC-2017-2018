@@ -14,6 +14,12 @@ public class DumbColorSensor {
 //    private int green;
 //    private int blue;
 
+	public DumbColorSensor() {
+		red = new AtomicInteger();
+		green = new AtomicInteger();
+		blue = new AtomicInteger();
+	}
+
     public int getRed() {
         return red.get();
     }
