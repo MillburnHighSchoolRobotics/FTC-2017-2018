@@ -12,7 +12,6 @@ import virtualRobot.monitorThreads.TimeMonitor;
  *
  */
 
-@Autonomous(name="Test Backend", group="Testing")
 public class ExampleLogic extends LogicThread {
     @Override
     protected void addPresets() {
@@ -21,6 +20,6 @@ public class ExampleLogic extends LogicThread {
 
     @Override
     protected void realRun() throws InterruptedException {
-        runCommand(new Rotate(90));
+//        runCommand(new Rotate(90));
     }
 }
