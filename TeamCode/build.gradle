@@ -16,4 +16,5 @@ apply from: '../build.common.gradle'
 
 dependencies {
     compile files('../libs/opencv-android.jar')
+    compile files('../libs/retrofit-2.3.0.jar')
 }
