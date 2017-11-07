@@ -14,40 +14,25 @@ public class Sensor {
 
     //Soft clears a sensor or encoder value
     public synchronized void clearValue() {
-    	synchronized (this) {
     		offset = hardValue;
-    	}
     }
 
     //return the current softValue of the sensor
     public synchronized double getValue() {
-    	double retVal = 0;
-    	synchronized (this) {
-    		retVal = hardValue - offset;
-    	}
-    	
-        return retVal;
+        return hardValue - offset;
     }
 
     //allows the UpdateThread to set the HardValue
     public synchronized void setRawValue(double hardValue) {
-    	synchronized (this) {
-    		this.hardValue = hardValue;
-    	}
+    	this.hardValue = hardValue;
     }
     
     public synchronized double getRawValue() {
-    	double retVal = 0;
-    	synchronized (this) {
-    		retVal = hardValue;
-    	}
-    	return retVal;
+    	return hardValue;
     }
     
     public synchronized void incrementRawValue(double delta) {
-    	synchronized (this) {
     		this.hardValue += delta;
-    	}
     }
 
 }

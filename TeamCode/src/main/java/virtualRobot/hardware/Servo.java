@@ -1,5 +1,7 @@
 package virtualRobot.hardware;
 
+import virtualRobot.utils.MathUtils;
+
 /**
  * Created by Alex on 9/30/2015.
  * The virtual servo component
@@ -9,19 +11,12 @@ public class Servo {
     private volatile double position;
 
     public synchronized double getPosition() {
-    	double retVal = 0;
-    	synchronized (this) {
-    		retVal = position;
-    	}
-        return retVal;
+        return position;
     }
 
 
     public synchronized void setPosition(double position) {
-    	position = Math.max (Math.min(position, 1), 0);
-        synchronized (this) {
-            this.position = position;
-    	}
+        this.position = MathUtils.clamp(position,0,1);
     }
 
 }

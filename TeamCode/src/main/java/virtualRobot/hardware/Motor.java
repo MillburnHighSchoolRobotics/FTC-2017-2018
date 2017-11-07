@@ -25,14 +25,10 @@ public class Motor {
     }
 
     public synchronized double getPower () {
-    	double retVal = 0;
-    	synchronized (this) {
-    		retVal = power;
-    	}
 //		if (robot != null) {
 //			robot.addToTelemetry("motorTime: ", System.currentTimeMillis());
 //		}
-        return retVal;
+        return power;
     }
 
     public synchronized void setPower(double newPower) {
