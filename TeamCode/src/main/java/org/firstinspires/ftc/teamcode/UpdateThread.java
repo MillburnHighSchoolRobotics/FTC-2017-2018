@@ -103,6 +103,12 @@ public abstract class UpdateThread extends OpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
+	public UpdateThread() {
+		//Crappy work-around
+		super.msStuckDetectInit = msStuckDetectInit + 1000;
+		super.msStuckDetectLoop = Integer.MAX_VALUE;
+	}
+
 	@Override
 	public void init() {
         //IMU SETUP (Do not touch)
