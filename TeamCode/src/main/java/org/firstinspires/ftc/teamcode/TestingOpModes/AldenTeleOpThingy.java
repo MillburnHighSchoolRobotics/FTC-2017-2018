@@ -34,6 +34,7 @@ public class AldenTeleOpThingy extends OpMode {
         rightFront = hardwareMap.dcMotor.get("rightFront");
         leftBack = hardwareMap.dcMotor.get("leftBack");
         rightBack = hardwareMap.dcMotor.get("rightBack");
+        hardwareMap.servo.get("jewelArm").setPosition(0);
 //        motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor1offset = 0;

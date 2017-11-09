@@ -103,11 +103,6 @@ public abstract class  UpdateThread extends OpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
-	public UpdateThread() {
-		//Crappy work-around
-		super.msStuckDetectInit = msStuckDetectInit + 1000;
-		super.msStuckDetectLoop = Integer.MAX_VALUE;
-	}
 
 	@Override
 	public void init() {
@@ -161,7 +156,7 @@ public abstract class  UpdateThread extends OpMode {
 //		rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //SENSOR SETUP e.g. colorSensor = hardwareMap.colorsensor.get("color"), sonar1 = hardwareMap.analogInput.get("sonar1"), liftEndStop1 = hardwareMap.digitalChannel.get("liftEndStop1")
-		colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
+//		colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
 
 		//FETCH VIRTUAL ROBOT FROM COMMAND INTERFACE
 		robot = Command.ROBOT;
@@ -252,9 +247,9 @@ public abstract class  UpdateThread extends OpMode {
 		//set sensors e.g. vDriveRightMotorEncoder.setRawValue(-rightFront.getCurrentPosition())
         vVoltageSensor.setRawValue(getBatteryVoltage());
 
-		vColorSensor.setRed(colorSensor.red());
-		vColorSensor.setBlue(colorSensor.blue());
-		vColorSensor.setGreen(colorSensor.green());
+//		vColorSensor.setRed(colorSensor.red());
+//		vColorSensor.setBlue(colorSensor.blue());
+//		vColorSensor.setGreen(colorSensor.green());
 
 
 		vLeftFront.setPosition(leftFront.getCurrentPosition());
@@ -326,10 +321,12 @@ public abstract class  UpdateThread extends OpMode {
 		vLeftBack.setPosition(leftBack.getCurrentPosition());
 		vRightFront.setPosition(rightFront.getCurrentPosition());
 		vRightBack.setPosition(rightBack.getCurrentPosition());
+		Log.d("Completed", "virtual encoders");
 
 		vColorSensor.setRed(colorSensor.red());
-		vColorSensor.setBlue(colorSensor.blue());
-		vColorSensor.setGreen(colorSensor.green());
+//		vColorSensor.setBlue(colorSensor.blue());
+//		vColorSensor.setGreen(colorSensor.green());
+		Log.d("Completed", "color sensor");
 
 //		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
 //		vRollerRight.setPosition(rollerRight.getCurrentPosition());
@@ -342,6 +339,7 @@ public abstract class  UpdateThread extends OpMode {
 		glyphLiftLeft.setPosition(vGlyphLiftLeft.getPosition());
 		glyphLiftRight.setPosition(vGlyphLiftRight.getPosition());
 		jewelServo.setPosition(vJewelServo.getPosition());
+		Log.d("Completed", "servos");
 
 		// Capture Motor Powers,E.g. double leftPower = vDriveLeftMotore.getPower();
 		double leftFrontPower = vLeftFront.getPower();
@@ -351,12 +349,14 @@ public abstract class  UpdateThread extends OpMode {
         double relicArmPower = vRelicArm.getPower();
 		double rollerLeftPower = vRollerLeft.getPower();
 		double rollerRightPower = vRollerRight.getPower();
+		Log.d("Completed", "powers");
 
 		// Copy State of Motors and Servos E.g. leftFront.setPower(leftPower), Servo.setPosition(vServo.getPosition());
 		leftFront.setPower(leftFrontPower);
 		leftBack.setPower(leftBackPower);
 		rightFront.setPower(rightFrontPower);
 		rightBack.setPower(rightBackPower);
+		Log.d("Completed", "motor powers");
 //		relicArm.setPower(relicArmPower);
 //		rollerLeft.setPower(rollerLeftPower);
 //		rollerRight.setPower(rollerRightPower);
@@ -364,6 +364,7 @@ public abstract class  UpdateThread extends OpMode {
 		for (Map.Entry<String,Object> e: robot.getTelemetry().entrySet()) {
 			telemetry.addData(e.getKey(),e.getValue());
 		}
+		Log.d("Completed", "telemetry");
 
 		for (int i = 0; i < robot.getProgress().size(); i++) {
 			telemetry.addData("robot progress " + i, robot.getProgress().get(i));
