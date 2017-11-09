@@ -156,7 +156,7 @@ public abstract class  UpdateThread extends OpMode {
 //		rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //SENSOR SETUP e.g. colorSensor = hardwareMap.colorsensor.get("color"), sonar1 = hardwareMap.analogInput.get("sonar1"), liftEndStop1 = hardwareMap.digitalChannel.get("liftEndStop1")
-//		colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
+		colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
 
 		//FETCH VIRTUAL ROBOT FROM COMMAND INTERFACE
 		robot = Command.ROBOT;
@@ -250,7 +250,10 @@ public abstract class  UpdateThread extends OpMode {
 //		vColorSensor.setRed(colorSensor.red());
 //		vColorSensor.setBlue(colorSensor.blue());
 //		vColorSensor.setGreen(colorSensor.green());
-
+		int r = colorSensor.red();
+		int g = colorSensor.green();
+		int b = colorSensor.blue();
+		System.out.println(r + g + b);
 
 		vLeftFront.setPosition(leftFront.getCurrentPosition());
 		vLeftBack.setPosition(leftBack.getCurrentPosition());
@@ -323,9 +326,13 @@ public abstract class  UpdateThread extends OpMode {
 		vRightBack.setPosition(rightBack.getCurrentPosition());
 		Log.d("Completed", "virtual encoders");
 
-		vColorSensor.setRed(colorSensor.red());
+//		vColorSensor.setRed(colorSensor.red());
 //		vColorSensor.setBlue(colorSensor.blue());
 //		vColorSensor.setGreen(colorSensor.green());
+		int r = colorSensor.red();
+		int g = colorSensor.green();
+		int b = colorSensor.blue();
+		System.out.println(r + g + b);
 		Log.d("Completed", "color sensor");
 
 //		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());

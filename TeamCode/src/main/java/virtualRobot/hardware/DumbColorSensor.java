@@ -7,41 +7,41 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 
 public class DumbColorSensor {
-    private AtomicInteger red;
-    private AtomicInteger green;
-    private AtomicInteger blue;
-//    private int red;
-//    private int green;
-//    private int blue;
+//    private AtomicInteger red;
+//    private AtomicInteger green;
+//    private AtomicInteger blue;
+    private int red;
+    private int green;
+    private int blue;
 
-	public DumbColorSensor() {
-		red = new AtomicInteger();
-		green = new AtomicInteger();
-		blue = new AtomicInteger();
-	}
+//	public DumbColorSensor() {
+//		red = new AtomicInteger();
+//		green = new AtomicInteger();
+//		blue = new AtomicInteger();
+//	}
 
-    public int getRed() {
-        return red.get();
+    public synchronized int getRed() {
+        return red;
     }
 
-    public void setRed(int red) {
-        this.red.set(red);
+    public synchronized void setRed(int red) {
+        this.red = red;
     }
 
-    public int getGreen() {
-        return green.get();
+    public synchronized int getGreen() {
+        return green;
     }
 
-    public void setGreen(int green) {
-        this.green.set(green);
+    public synchronized void setGreen(int green) {
+        this.green = green;
     }
 
-    public int getBlue() {
-        return blue.get();
+    public synchronized int getBlue() {
+        return blue;
     }
 
-    public void setBlue(int blue) {
-        this.blue.set(blue);
+    public synchronized void setBlue(int blue) {
+        this.blue = blue;
     }
 
 
