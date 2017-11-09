@@ -7,16 +7,15 @@ import virtualRobot.utils.MathUtils;
  * The virtual servo component
  */
 public class Servo {
-
-    private volatile double position;
+    private volatile double position = 0;
 
     public synchronized double getPosition() {
         return position;
     }
 
-
     public synchronized void setPosition(double position) {
+        if (Double.isNaN(position))
+            position = 0;
         this.position = MathUtils.clamp(position,0,1);
     }
-
 }
