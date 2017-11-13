@@ -121,17 +121,9 @@ public abstract class  UpdateThread extends OpMode {
 
         //MOTOR SETUP (with physical componenents, e.g. leftBack = hardwareMap.dcMotor.get("leftBack")
 		leftFront = hardwareMap.dcMotor.get("leftFront");
-		leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-		leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		leftBack = hardwareMap.dcMotor.get("leftBack");
-		leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-		leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		rightFront = hardwareMap.dcMotor.get("rightFront");
-		rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-		rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		rightBack = hardwareMap.dcMotor.get("rightBack");
-		rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-		rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		Log.d("Components ", "Motors Initialized");
 //		rollerLeft = hardwareMap.dcMotor.get("rollerLeft");
 //		rollerRight = hardwareMap.dcMotor.get("rollerRight");
@@ -154,6 +146,10 @@ public abstract class  UpdateThread extends OpMode {
 //		leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //		rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //		rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //SENSOR SETUP e.g. colorSensor = hardwareMap.colorsensor.get("color"), sonar1 = hardwareMap.analogInput.get("sonar1"), liftEndStop1 = hardwareMap.digitalChannel.get("liftEndStop1")
 		colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
@@ -326,14 +322,14 @@ public abstract class  UpdateThread extends OpMode {
 		vRightBack.setPosition(rightBack.getCurrentPosition());
 		Log.d("Completed", "virtual encoders");
 
-//		vColorSensor.setRed(colorSensor.red());
-//		vColorSensor.setBlue(colorSensor.blue());
-//		vColorSensor.setGreen(colorSensor.green());
-		int r = colorSensor.red();
-		int g = colorSensor.green();
-		int b = colorSensor.blue();
-		System.out.println(r + g + b);
-		Log.d("Completed", "color sensor");
+		vColorSensor.setRed(colorSensor.red());
+		vColorSensor.setBlue(colorSensor.blue());
+		vColorSensor.setGreen(colorSensor.green());
+//		int r = colorSensor.red();
+//		int g = colorSensor.green();
+//		int b = colorSensor.blue();
+//		System.out.println(r + g + b);
+//		Log.d("Completed", "color sensor");
 
 //		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
 //		vRollerRight.setPosition(rollerRight.getCurrentPosition());
