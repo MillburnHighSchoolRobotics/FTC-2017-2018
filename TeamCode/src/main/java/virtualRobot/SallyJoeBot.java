@@ -1,8 +1,13 @@
 package virtualRobot;
 
+import org.opencv.core.Mat;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
+import retrofit2.Call;
+import retrofit2.Retrofit;
 import virtualRobot.hardware.ColorSensor;
 import virtualRobot.hardware.ContinuousRotationServo;
 import virtualRobot.hardware.DumbColorSensor;
@@ -11,6 +16,8 @@ import virtualRobot.hardware.Motor;
 import virtualRobot.hardware.Sensor;
 import virtualRobot.hardware.Servo;
 import virtualRobot.hardware.StateSensor;
+import virtualRobot.utils.CVTelemetry;
+import virtualRobot.utils.MatConverterFactory;
 
 /**
  * Created by DOSullivan on 9/14/16.
@@ -42,6 +49,10 @@ public class SallyJoeBot {
     private Sensor voltageSensor;
     private JoystickController joystickController1, joystickController2;
     private StateSensor stateSensor;
+
+    //CVTelemetry
+    private CVTelemetry cvtel;
+    private final String ipaddr = "http://172.20.95.70:8080/";
 
     //Motors, sensors, servos instantiated (e.g Motor = new Motor(), some positions can also be set if desired
     public SallyJoeBot() {
@@ -130,4 +141,16 @@ public class SallyJoeBot {
     public synchronized void addToTelemetry(String s, Object arg) { telemetry.put(s,arg); }
 
     public synchronized ConcurrentHashMap<String, Object> getTelemetry () { return telemetry; }
+
+    public synchronized void initCVTelemetry() {
+        cvtel = new Retrofit.Builder()
+                .baseUrl(ipaddr)
+                .addConverterFactory(MatConverterFactory.create())
+                .build()
+                .create(CVTelemetry.class);
+    }
+
+    public synchronized Call<Void> sendCVTelemetry(String windowName, Mat img) throws IOException {
+        return cvtel.sendImage(windowName, img);
+    }
 }
