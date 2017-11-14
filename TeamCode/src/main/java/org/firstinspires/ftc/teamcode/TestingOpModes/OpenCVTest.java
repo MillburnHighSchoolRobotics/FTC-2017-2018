@@ -5,6 +5,7 @@ import android.graphics.Camera;
 import android.hardware.camera2.CameraDevice;
 import android.util.Log;
 
+import retrofit2.Retrofit;
 import virtualRobot.utils.BetterLog;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -31,6 +32,7 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
 import org.opencv.videoio.Videoio;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Collections;
@@ -40,6 +42,8 @@ import java.util.List;
 
 import virtualRobot.VuforiaLocalizerImplSubclass;
 import virtualRobot.exceptions.CameraException;
+import virtualRobot.utils.CVTelemetry;
+import virtualRobot.utils.MatConverterFactory;
 
 import static org.opencv.core.CvType.CV_8UC1;
 
@@ -69,6 +73,12 @@ public class OpenCVTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        CVTelemetry opencvtel = new Retrofit.Builder()
+                .baseUrl("http://172.20.95.207:8080/")
+                .addConverterFactory(MatConverterFactory.create())
+                .build()
+                .create(CVTelemetry.class);
+
         VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName()));
         params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         params.vuforiaLicenseKey = "AdVGalv/////AAAAGYhiDIdk+UI+ivt0Y7WGvUJnm5cKX/lWesW2pH7gnK3eOLTKThLekYSO1q65ttw7X1FvNhxxhdQl3McS+mzYjO+HkaFNJlHxltsI5+b4giqNQKWhyKjzbYbNw8aWarI5YCYUFnyiPPjH39/CbBzzFk3G2RWIzNB7cy4AYhjwYRKRiL3k33YvXv0ZHRzJRkMpnytgvdv5jEQyWa20DIkriC+ZBaj8dph8/akyYfyD1/U19vowknmzxef3ncefgOZoI9yrK82T4GBWazgWvZkIz7bPy/ApGiwnkVzp44gVGsCJCUFERiPVwfFa0SBLeCrQMrQaMDy3kOIVcWTotFn4m1ridgE5ZP/lvRzEC4/vcuV0";
@@ -87,6 +97,14 @@ public class OpenCVTest extends LinearOpMode {
             //vuforiaInstance.rgb.getPixels().array().length +
             bm.copyPixelsFromBuffer(vuforiaInstance.rgb.getPixels());
             Utils.bitmapToMat(bm, img);
+            Mat bgrimg = new Mat();
+            Imgproc.cvtColor(img, bgrimg, Imgproc.COLOR_RGB2BGR);
+            try {
+                opencvtel.sendImage("Image", bgrimg).execute();
+            } catch (IOException err) {
+                telemetry.addData("ImageError", err.getMessage());
+            }
+            bgrimg.release();
             telemetry.addData("Center: ", Arrays.toString(img.get(img.rows()/2, img.cols()/2)));
 //            img.release();
 //            telemetry.addData("Vuforia size: ", "" + " " + height + " " + width);
@@ -106,6 +124,11 @@ public class OpenCVTest extends LinearOpMode {
             // inRange - Checks if array elements lie between the elements of two other arrays
             // -- in this case the two other arrays are redLower and redUpper which will be determined experimentally
             Core.inRange(blur.clone(), redLower, redUpper, red);
+            try {
+                opencvtel.sendImage("Red", red).execute();
+            } catch (IOException err) {
+                telemetry.addData("RedError", err.getMessage());
+            }
             List<MatOfPoint> redContours = new LinkedList<>();
             // findContours - Finds contours (essentially edges) of every physical object in 'red'
             // 'contours' List stores all detected contours as a vector of points
@@ -155,6 +178,11 @@ public class OpenCVTest extends LinearOpMode {
 
             Mat blue = new Mat();
             Core.inRange(blur.clone(), blueLower, blueUpper, blue);
+            try {
+                opencvtel.sendImage("Blue", blue).execute();
+            } catch (IOException err) {
+                telemetry.addData("BlueError", err.getMessage());
+            }
             LinkedList<MatOfPoint> blueContours = new LinkedList<>();
             Imgproc.findContours(blue.clone(), blueContours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
             blue.release();
