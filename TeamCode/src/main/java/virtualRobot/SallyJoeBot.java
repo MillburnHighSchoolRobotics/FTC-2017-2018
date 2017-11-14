@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import virtualRobot.hardware.ColorSensor;
 import virtualRobot.hardware.ContinuousRotationServo;
@@ -150,7 +151,7 @@ public class SallyJoeBot {
                 .create(CVTelemetry.class);
     }
 
-    public synchronized Call<Void> sendCVTelemetry(String windowName, Mat img) throws IOException {
-        return cvtel.sendImage(windowName, img);
+    public synchronized Response<Void> sendCVTelemetry(String windowName, Mat img) throws IOException {
+        return cvtel.sendImage(windowName, img).execute();
     }
 }
