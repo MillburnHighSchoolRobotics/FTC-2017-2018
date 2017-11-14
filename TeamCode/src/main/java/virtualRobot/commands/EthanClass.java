@@ -11,11 +11,13 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import virtualRobot.SallyJoeBot;
 import virtualRobot.VuforiaLocalizerImplSubclass;
 import virtualRobot.logicThreads.AutonomousLogicThread;
 
@@ -33,11 +35,13 @@ public class EthanClass extends Command {
     Scalar redLower = new Scalar(0, 0, 50);
     Scalar blueUpper = new Scalar(50, 0, 0);
     Scalar blueLower = new Scalar(200, 50, 50);
+    private static final SallyJoeBot robot = Command.ROBOT;
 
     public EthanClass() {
         vuforiaInstance = UpdateThread.vuforiaInstance;
         width = vuforiaInstance.rgb.getBufferWidth();
         height = vuforiaInstance.rgb.getHeight();
+        robot.initCVTelemetry();
     }
 
     @Override
@@ -49,10 +53,20 @@ public class EthanClass extends Command {
         Mat img = new Mat(height, width, CvType.CV_8UC1);
         img.put(0,0,vuforiaInstance.rgb.getPixels().array());
         Imgproc.cvtColor(img, img, Imgproc.COLOR_RGB2BGR);
+        try {
+            robot.sendCVTelemetry("Image", img);
+        } catch (IOException e) {
+            robot.addToTelemetry("Image", e.getMessage());
+        }
         Mat blur = new Mat();
         Imgproc.GaussianBlur(img, blur, new Size(kSize,kSize), 0);
         Mat red = new Mat();
         Core.inRange(img, redLower, redUpper, red);
+        try {
+            robot.sendCVTelemetry("Red", red);
+        } catch (IOException e) {
+            robot.addToTelemetry("RedImage", e.getMessage());
+        }
         List<MatOfPoint> contours = new LinkedList<>();
         Imgproc.findContours(red.clone(), contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
         Collections.sort(contours, new Comparator<MatOfPoint>() {
@@ -70,6 +84,11 @@ public class EthanClass extends Command {
         Imgproc.minEnclosingCircle(new MatOfPoint2f(contours.get(contours.size() - 1).toArray()),centerRed,radiusRed);
         Mat blue = new Mat();
         Core.inRange(img, blueLower, blueUpper, blue);
+        try {
+            robot.sendCVTelemetry("Blue", img);
+        } catch (IOException e) {
+            robot.addToTelemetry("BlueImage", e.getMessage());
+        }
         contours = new LinkedList<>();
         Imgproc.findContours(blue.clone(), contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
         Collections.sort(contours, new Comparator<MatOfPoint>() {
