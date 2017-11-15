@@ -151,7 +151,7 @@ public class SallyJoeBot {
                 .create(CVTelemetry.class);
     }
 
-    public synchronized Response<Void> sendCVTelemetry(String windowName, Mat img) throws IOException {
-        return cvtel.sendImage(windowName, img).execute();
+    public synchronized Call<Void> sendCVTelemetry(String windowName, Mat img) throws IOException {
+        return cvtel.sendImage(windowName, img);
     }
 }

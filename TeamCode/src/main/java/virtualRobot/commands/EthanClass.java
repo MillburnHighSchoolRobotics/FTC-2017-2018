@@ -54,7 +54,7 @@ public class EthanClass extends Command {
         img.put(0,0,vuforiaInstance.rgb.getPixels().array());
         Imgproc.cvtColor(img, img, Imgproc.COLOR_RGB2BGR);
         try {
-            robot.sendCVTelemetry("Image", img);
+            robot.sendCVTelemetry("Image", img).execute();
         } catch (IOException e) {
             robot.addToTelemetry("Image", e.getMessage());
         }
@@ -63,7 +63,7 @@ public class EthanClass extends Command {
         Mat red = new Mat();
         Core.inRange(img, redLower, redUpper, red);
         try {
-            robot.sendCVTelemetry("Red", red);
+            robot.sendCVTelemetry("Red", red).execute();
         } catch (IOException e) {
             robot.addToTelemetry("RedImage", e.getMessage());
         }
@@ -85,7 +85,7 @@ public class EthanClass extends Command {
         Mat blue = new Mat();
         Core.inRange(img, blueLower, blueUpper, blue);
         try {
-            robot.sendCVTelemetry("Blue", img);
+            robot.sendCVTelemetry("Blue", img).execute();
         } catch (IOException e) {
             robot.addToTelemetry("BlueImage", e.getMessage());
         }
