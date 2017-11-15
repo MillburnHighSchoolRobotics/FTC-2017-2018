@@ -53,7 +53,7 @@ public class SallyJoeBot {
 
     //CVTelemetry
     private CVTelemetry cvtel;
-    private final String ipaddr = "http://172.20.95.70:8080/";
+    private final String ipaddr = "http://172.20.95.207:8080/";
 
     //Motors, sensors, servos instantiated (e.g Motor = new Motor(), some positions can also be set if desired
     public SallyJoeBot() {
