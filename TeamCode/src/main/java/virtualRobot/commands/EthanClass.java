@@ -1,5 +1,7 @@
 package virtualRobot.commands;
 
+import android.util.Log;
+
 import org.firstinspires.ftc.teamcode.UpdateThread;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -46,27 +48,34 @@ public class EthanClass extends Command {
 
     @Override
     public boolean changeRobotState() throws InterruptedException {
+        int point = 0;
+//        Log.d("EthanClass", Integer.toString(point++));
         if (parentThread instanceof AutonomousLogicThread)
             currentThread = ((AutonomousLogicThread) parentThread);
         else
             throw new RuntimeException("Was not called in Autonomous?");
+//        Log.d("EthanClass", Integer.toString(point++));
         Mat img = new Mat(height, width, CvType.CV_8UC1);
         img.put(0,0,vuforiaInstance.rgb.getPixels().array());
         Imgproc.cvtColor(img, img, Imgproc.COLOR_RGB2BGR);
+//        Log.d("EthanClass", Integer.toString(point++));
         try {
             robot.sendCVTelemetry("Image", img).execute();
         } catch (IOException e) {
             robot.addToTelemetry("Image", e.getMessage());
         }
+//        Log.d("EthanClass", Integer.toString(point++));
         Mat blur = new Mat();
         Imgproc.GaussianBlur(img, blur, new Size(kSize,kSize), 0);
         Mat red = new Mat();
         Core.inRange(img, redLower, redUpper, red);
+//        Log.d("EthanClass", Integer.toString(point++));
         try {
             robot.sendCVTelemetry("Red", red).execute();
         } catch (IOException e) {
             robot.addToTelemetry("RedImage", e.getMessage());
         }
+//        Log.d("EthanClass", Integer.toString(point++));
         List<MatOfPoint> contours = new LinkedList<>();
         Imgproc.findContours(red.clone(), contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
         Collections.sort(contours, new Comparator<MatOfPoint>() {
@@ -75,6 +84,7 @@ public class EthanClass extends Command {
                 return (int) Math.signum(Imgproc.contourArea(matOfPoint) - Imgproc.contourArea(t1));
             }
         });
+//        Log.d("EthanClass", Integer.toString(point++));
         if (contours.size() <= 0) {
             currentThread.redIsLeft.set(false);
             return Thread.currentThread().isInterrupted();
@@ -84,11 +94,13 @@ public class EthanClass extends Command {
         Imgproc.minEnclosingCircle(new MatOfPoint2f(contours.get(contours.size() - 1).toArray()),centerRed,radiusRed);
         Mat blue = new Mat();
         Core.inRange(img, blueLower, blueUpper, blue);
+//        Log.d("EthanClass", Integer.toString(point++));
         try {
             robot.sendCVTelemetry("Blue", img).execute();
         } catch (IOException e) {
             robot.addToTelemetry("BlueImage", e.getMessage());
         }
+//        Log.d("EthanClass", Integer.toString(point++));
         contours = new LinkedList<>();
         Imgproc.findContours(blue.clone(), contours, new Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
         Collections.sort(contours, new Comparator<MatOfPoint>() {
@@ -97,6 +109,7 @@ public class EthanClass extends Command {
                 return (int) Math.signum(Imgproc.contourArea(matOfPoint) - Imgproc.contourArea(t1));
             }
         });
+//        Log.d("EthanClass", Integer.toString(point++));
         if (contours.size() <= 0) {
             currentThread.redIsLeft.set(false);
             return Thread.currentThread().isInterrupted();
@@ -105,6 +118,7 @@ public class EthanClass extends Command {
         float[] radiusBlue = new float[1];
         Imgproc.minEnclosingCircle(new MatOfPoint2f(contours.get(contours.size() - 1).toArray()),centerBlue,radiusBlue);
         currentThread.redIsLeft.set(centerRed.x < centerBlue.x);
+//        Log.d("EthanClass", Integer.toString(point++));
         return Thread.currentThread().isInterrupted();
     }
 }
