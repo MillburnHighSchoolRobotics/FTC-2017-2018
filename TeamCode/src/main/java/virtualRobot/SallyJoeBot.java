@@ -77,6 +77,8 @@ public class SallyJoeBot {
         boxLeft = new ContinuousRotationServo();
         boxRight = new ContinuousRotationServo();
         relicArm = new Motor();
+        liftLeft = new Motor();
+        liftRight = new Motor();
         clawLeft = new Servo();
         clawRight = new Servo();
         relicArmWinch = new ContinuousRotationServo();
