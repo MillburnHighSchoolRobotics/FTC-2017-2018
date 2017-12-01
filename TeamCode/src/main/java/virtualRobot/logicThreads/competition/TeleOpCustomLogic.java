@@ -166,20 +166,20 @@ public class TeleOpCustomLogic extends LogicThread {
             double intakeElevationY = controller2.getValue(JoystickController.Y_2);
 
             if (!MathUtils.equals(intakeDirectionY, 0, 0.1)) {
-                robot.getRollerLeft().setPower(intakeDirectionY * intakeDirectionSensitivity);
-                robot.getRollerRight().setPower(-intakeDirectionY * intakeDirectionSensitivity);
+                robot.getRollerLeft().setSpeed(intakeDirectionY * intakeDirectionSensitivity);
+                robot.getRollerRight().setSpeed(-intakeDirectionY * intakeDirectionSensitivity);
             } else {
-                robot.getRollerLeft().setPower(0);
-                robot.getRollerRight().setPower(0);
+                robot.getRollerLeft().setSpeed(0);
+                robot.getRollerRight().setSpeed(0);
             }
-//
-//            if (!MathUtils.equals(intakeElevationY, 0, 0.1)) {
-//                robot.getGlyphLiftLeft().setPower(intakeElevationY * intakeElevationSensitivity);
-//                robot.getGlyphLiftRight().setPower(intakeElevationY * intakeElevationSensitivity);
-//            } else {
-//                robot.getGlyphLiftLeft().setPower(0);
-//                robot.getGlyphLiftRight().setPower(0);
-//            }
+
+            if (!MathUtils.equals(intakeElevationY, 0, 0.1)) {
+                robot.getLiftLeft().setPower(intakeElevationY * intakeElevationSensitivity);
+                robot.getLiftRight().setPower(intakeElevationY * intakeElevationSensitivity);
+            } else {
+                robot.getLiftLeft().setPower(0);
+                robot.getLiftRight().setPower(0);
+            }
 
 
 

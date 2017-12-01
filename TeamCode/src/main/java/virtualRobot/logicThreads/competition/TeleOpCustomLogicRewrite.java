@@ -44,8 +44,8 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
 
         while (true) {
 //            robot.addToTelemetry("TeleOp timestamp: ", System.currentTimeMillis());
-            robot.addToTelemetry("EncoderL", robot.getGlyphLiftLeft().getPosition());
-            robot.addToTelemetry("EncoderR", robot.getGlyphLiftRight().getPosition());
+            robot.addToTelemetry("EncoderL", robot.getLiftLeft().getPosition());
+            robot.addToTelemetry("EncoderR", robot.getLiftRight().getPosition());
             controller1.logicalRefresh();
             controller2.logicalRefresh();
             double translateTheta = Math.toDegrees(controller1.getValue(JoystickController.THETA_1));
@@ -141,8 +141,8 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
             }
             robot.addToTelemetry("leftPos", leftPos);
             robot.addToTelemetry("rightPos", rightPos);
-            robot.getGlyphLiftLeft().setPosition(1-leftPos);
-            robot.getGlyphLiftRight().setPosition(rightPos);
+           // robot.getGlyphLiftLeft().setPosition(1-leftPos);
+            //robot.getGlyphLiftRight().setPosition(rightPos);
 
             if (controller2.isPressed(JoystickController.BUTTON_LB)) {
                 robot.moveClaw(false);

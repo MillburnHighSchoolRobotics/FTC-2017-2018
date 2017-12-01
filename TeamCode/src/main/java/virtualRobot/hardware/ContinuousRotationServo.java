@@ -17,7 +17,7 @@ public class ContinuousRotationServo {
     }
 
     public synchronized void setSpeed (double speed) {
-        speed = Math.max (Math.min(speed, 1), 0);
+        speed = Math.max (Math.min(speed, 1), -1);
     	synchronized (this) {
     		this.speed = speed;
     	}

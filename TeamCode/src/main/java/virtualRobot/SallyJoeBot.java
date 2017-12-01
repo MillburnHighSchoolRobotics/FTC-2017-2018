@@ -1,5 +1,7 @@
 package virtualRobot;
 
+import com.qualcomm.robotcore.hardware.CRServo;
+
 import org.opencv.core.Mat;
 
 import java.io.IOException;
@@ -37,9 +39,10 @@ public class SallyJoeBot {
 
     //Motors and Servos
     private Motor LFMotor, LBMotor, RFMotor, RBMotor;
-    private Motor rollerLeft, rollerRight;
-    private Servo glyphLiftLeft, glyphLiftRight;
+    private ContinuousRotationServo rollerLeft, rollerRight;
+    private ContinuousRotationServo boxLeft, boxRight;
     private Motor relicArm;
+    private Motor liftLeft, liftRight;
     private Servo clawLeft, clawRight;
     private ContinuousRotationServo relicArmWinch;
     private Servo jewelServo;
@@ -69,10 +72,10 @@ public class SallyJoeBot {
         LBMotor = new Motor();
         RFMotor = new Motor();
         RBMotor = new Motor();
-        rollerLeft = new Motor();
-        rollerRight = new Motor();
-        glyphLiftLeft = new Servo();
-        glyphLiftRight = new Servo();
+        rollerLeft = new ContinuousRotationServo();
+        rollerRight = new ContinuousRotationServo();
+        boxLeft = new ContinuousRotationServo();
+        boxRight = new ContinuousRotationServo();
         relicArm = new Motor();
         clawLeft = new Servo();
         clawRight = new Servo();
@@ -99,17 +102,21 @@ public class SallyJoeBot {
 
     public synchronized Motor getRBMotor() { return RBMotor; }
 
-    public synchronized Servo getGlyphLiftLeft() { return glyphLiftLeft; }
+    public synchronized Motor getLiftLeft() { return liftLeft; }
 
-    public synchronized Servo getGlyphLiftRight() { return glyphLiftRight; }
+    public synchronized Motor getLiftRight() { return liftRight; }
+
+    public synchronized ContinuousRotationServo getBoxLeft() { return boxLeft; }
+
+    public synchronized ContinuousRotationServo getBoxRight() { return boxRight; }
 
     public synchronized Motor getRelicArm() { return relicArm; }
 
     public synchronized ContinuousRotationServo getRelicArmWinch() { return relicArmWinch; }
 
-    public synchronized Motor getRollerLeft() { return rollerLeft; }
+    public synchronized ContinuousRotationServo getRollerLeft() { return rollerLeft; }
 
-    public synchronized Motor getRollerRight() { return rollerRight; }
+    public synchronized ContinuousRotationServo getRollerRight() { return rollerRight; }
 
     public synchronized Servo getClawLeft() { return clawLeft; }
 
