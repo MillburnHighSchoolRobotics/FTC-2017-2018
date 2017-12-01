@@ -14,7 +14,7 @@ public abstract class I2CSensor extends I2cDeviceSynchDevice<I2cDeviceSynch> {
         super(i2cDeviceSynch, deviceClientIsOwned);
     }
 
-    protected interface Register {
+    public interface Register {
         int getVal();
     }
 

@@ -136,7 +136,7 @@ public class ADS9960 extends I2CSensor {
         temp = 256 - temp;
         if (temp > 255) temp = 255;
         if (temp < 0) temp = 0;
-  
+
   /* Update the timing register */
         write8(APDS9960_ATIME, (byte) temp);
     }

@@ -75,8 +75,8 @@ public class RedNearAutoLogic extends AutonomousLogicThread {
             runCommand(new Rotate(90));
         }
 
-        robot.getRollerLeft().setPower(1);
-        robot.getRollerRight().setPower(1);
+        robot.getRollerLeft().setSpeed(1);
+        robot.getRollerRight().setSpeed(1);
 
         runCommand(new Translate(2000, Translate.Direction.BACKWARD,0));
 
@@ -124,8 +124,8 @@ public class RedNearAutoLogic extends AutonomousLogicThread {
         Pair<Integer, Integer> indexData;
         for (int i = 0; getMonitorData(TimeMonitor.class); i++) {
             runCommand(new Rotate(-30));
-            robot.getRollerLeft().setPower(1);
-            robot.getRollerRight().setPower(1);
+            robot.getRollerLeft().setSpeed(1);
+            robot.getRollerRight().setSpeed(1);
             runCommand(new Translate(2000 + i*300, Translate.Direction.BACKWARD,0));
             runCommand(new Translate(2000 + i*300, Translate.Direction.FORWARD, 0));
 
