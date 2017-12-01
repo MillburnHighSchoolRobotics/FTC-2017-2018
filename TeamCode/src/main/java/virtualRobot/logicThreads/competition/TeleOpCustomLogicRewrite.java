@@ -2,6 +2,8 @@ package virtualRobot.logicThreads.competition;
 
 import com.qualcomm.robotcore.robot.Robot;
 
+import org.opencv.core.Mat;
+
 import java.util.Date;
 
 import virtualRobot.JoystickController;
@@ -14,8 +16,10 @@ import virtualRobot.utils.MathUtils;
 
 public class TeleOpCustomLogicRewrite extends LogicThread {
 
-    double leftPos = 0;
-    double rightPos = 0;
+    double leftRollerSpeed = 0;
+    double rightRollerSpeed = 0;
+    double leftIntakeSpeed = 0;
+    double rightIntakeSpeed = 0;
     double gearCoefficient = 1;
     @Override
     protected void addPresets() {
@@ -109,40 +113,78 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
                 robot.stopMotors();
             }
 
-            if (controller2.isPressed(JoystickController.BUTTON_LT)) {
-                leftPos = MathUtils.clamp(leftPos -= .1,0,1);
-                rightPos = MathUtils.clamp(rightPos -= .1,0,1);
-            } else if (controller2.isPressed(JoystickController.BUTTON_RT)) {
-                leftPos = MathUtils.clamp(leftPos += .1, 0, 1);
-                rightPos = MathUtils.clamp(rightPos += .1, 0, 1);
-            } else if (controller2.isPressed(JoystickController.BUTTON_A))
-                rightPos = MathUtils.clamp(rightPos -= .1,0,1);
-            else if (controller2.isPressed(JoystickController.BUTTON_X))
-                leftPos = MathUtils.clamp(leftPos -= .1,0,1);
-            else if (controller2.isPressed(JoystickController.BUTTON_B))
-                rightPos = MathUtils.clamp(rightPos += .1,0,1);
-            else if (controller2.isPressed(JoystickController.BUTTON_Y))
-                leftPos = MathUtils.clamp(leftPos += .1,0,1);
-            if(controller2.isDpadUp()) {
-                leftPos = 1;
-                rightPos = 1;
+//            if (controller2.isPressed(JoystickController.BUTTON_LT)) {
+//                leftPos = MathUtils.clamp(leftPos -= .1,0,1);
+//                rightPos = MathUtils.clamp(rightPos -= .1,0,1);
+//            } else if (controller2.isPressed(JoystickController.BUTTON_RT)) {
+//                leftPos = MathUtils.clamp(leftPos += .1, 0, 1);
+//                rightPos = MathUtils.clamp(rightPos += .1, 0, 1);
+//            } else if (controller2.isPressed(JoystickController.BUTTON_A))
+//                rightPos = MathUtils.clamp(rightPos -= .1,0,1);
+//            else if (controller2.isPressed(JoystickController.BUTTON_X))
+//                leftPos = MathUtils.clamp(leftPos -= .1,0,1);
+//            else if (controller2.isPressed(JoystickController.BUTTON_B))
+//                rightPos = MathUtils.clamp(rightPos += .1,0,1);
+//            else if (controller2.isPressed(JoystickController.BUTTON_Y))
+//                leftPos = MathUtils.clamp(leftPos += .1,0,1);
+//            if(controller2.isDpadUp()) {
+//                leftPos = 1;
+//                rightPos = 1;
+//            }
+//            if(controller2.isDpadRight()) {
+//                leftPos = 0.666;
+//                rightPos = 0.666;
+//            }
+//            if(controller2.isDpadDown()) {
+//                leftPos = 0;
+//                rightPos = 0;
+//            }
+//            if(controller2.isDpadLeft()) {
+//                leftPos = 0.333;
+//                rightPos = 0.333;
+//            }
+//            robot.addToTelemetry("leftPos", leftPos);
+//            robot.addToTelemetry("rightPos", rightPos);
+//            robot.getGlyphLiftLeft().setPosition(1-leftPos);
+//            robot.getGlyphLiftRight().setPosition(rightPos);
+
+            //Main rollers
+            if (controller2.isDpadUp()) {
+                if (MathUtils.equals(leftRollerSpeed, 1) || MathUtils.equals(rightRollerSpeed, 1)) {
+                    leftRollerSpeed = 0;
+                    rightRollerSpeed = 0;
+                } else {
+                    leftRollerSpeed = 1;
+                    rightRollerSpeed = 1;
+                }
+            } else if (controller2.isDpadDown()) {
+                if (MathUtils.equals(leftRollerSpeed, -1) || MathUtils.equals(leftRollerSpeed, -1)) {
+                    leftRollerSpeed = 0;
+                    rightRollerSpeed = 0;
+                } else {
+                    leftRollerSpeed = -1;
+                    rightRollerSpeed = -1;
+                }
             }
-            if(controller2.isDpadRight()) {
-                leftPos = 0.666;
-                rightPos = 0.666;
+
+            //Intake rollers
+            if (controller2.isDown(JoystickController.BUTTON_Y)) {
+                if (MathUtils.equals(leftIntakeSpeed, 1) || MathUtils.equals(rightIntakeSpeed, 1)) {
+                    leftRollerSpeed = 0;
+                    rightRollerSpeed = 0;
+                } else {
+                    leftRollerSpeed = 1;
+                    rightRollerSpeed = 1;
+                }
+            } else if (controller2.isDown(JoystickController.BUTTON_A)) {
+                if (MathUtils.equals(leftIntakeSpeed, -1) || MathUtils.equals(rightIntakeSpeed, -1)) {
+                    leftRollerSpeed = 0;
+                    rightRollerSpeed = 0;
+                } else {
+                    leftRollerSpeed = -1;
+                    rightRollerSpeed = -1;
+                }
             }
-            if(controller2.isDpadDown()) {
-                leftPos = 0;
-                rightPos = 0;
-            }
-            if(controller2.isDpadLeft()) {
-                leftPos = 0.333;
-                rightPos = 0.333;
-            }
-            robot.addToTelemetry("leftPos", leftPos);
-            robot.addToTelemetry("rightPos", rightPos);
-            robot.getGlyphLiftLeft().setPosition(1-leftPos);
-            robot.getGlyphLiftRight().setPosition(rightPos);
 
             if (controller2.isPressed(JoystickController.BUTTON_LB)) {
                 robot.moveClaw(false);
