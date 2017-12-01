@@ -37,10 +37,11 @@ public class SallyJoeBot {
 
     //Motors and Servos
     private Motor LFMotor, LBMotor, RFMotor, RBMotor;
-    private Motor rollerLeft, rollerRight;
-    private Servo glyphLiftLeft, glyphLiftRight;
+    private ContinuousRotationServo rollerLeft, rollerRight;
+    private Motor glyphLiftLeft, glyphLiftRight;
     private Motor relicArm;
     private Servo clawLeft, clawRight;
+    private ContinuousRotationServo intakeLeft, intakeRight;
     private ContinuousRotationServo relicArmWinch;
     private Servo jewelServo;
     private DumbColorSensor colorSensor;
@@ -69,13 +70,15 @@ public class SallyJoeBot {
         LBMotor = new Motor();
         RFMotor = new Motor();
         RBMotor = new Motor();
-        rollerLeft = new Motor();
-        rollerRight = new Motor();
-        glyphLiftLeft = new Servo();
-        glyphLiftRight = new Servo();
+        rollerLeft = new ContinuousRotationServo();
+        rollerRight = new ContinuousRotationServo();
+        glyphLiftLeft = new Motor();
+        glyphLiftRight = new Motor();
         relicArm = new Motor();
         clawLeft = new Servo();
         clawRight = new Servo();
+        intakeLeft = new ContinuousRotationServo();
+        intakeRight = new ContinuousRotationServo();
         relicArmWinch = new ContinuousRotationServo();
         jewelServo = new Servo();
         colorSensor = new DumbColorSensor();
@@ -99,17 +102,17 @@ public class SallyJoeBot {
 
     public synchronized Motor getRBMotor() { return RBMotor; }
 
-    public synchronized Servo getGlyphLiftLeft() { return glyphLiftLeft; }
+    public synchronized Motor getGlyphLiftLeft() { return glyphLiftLeft; }
 
-    public synchronized Servo getGlyphLiftRight() { return glyphLiftRight; }
+    public synchronized Motor getGlyphLiftRight() { return glyphLiftRight; }
 
     public synchronized Motor getRelicArm() { return relicArm; }
 
     public synchronized ContinuousRotationServo getRelicArmWinch() { return relicArmWinch; }
 
-    public synchronized Motor getRollerLeft() { return rollerLeft; }
+    public synchronized ContinuousRotationServo getRollerLeft() { return rollerLeft; }
 
-    public synchronized Motor getRollerRight() { return rollerRight; }
+    public synchronized ContinuousRotationServo getRollerRight() { return rollerRight; }
 
     public synchronized Servo getClawLeft() { return clawLeft; }
 
@@ -117,10 +120,19 @@ public class SallyJoeBot {
 
     public synchronized Servo getJewelServo() { return jewelServo; }
 
+    public synchronized ContinuousRotationServo getIntakeLeft() {
+        return intakeLeft;
+    }
+
+    public synchronized ContinuousRotationServo getIntakeRight() {
+        return intakeRight;
+    }
+
     public synchronized StateSensor getStateSensor() { return stateSensor; }
 
     public synchronized void stopMotors() {LFMotor.setPower(0); RFMotor.setPower(0); LBMotor.setPower(0); RBMotor.setPower(0);}
 
+    @Deprecated
     public synchronized void moveClaw(boolean isOpen) { clawLeft.setPosition(isOpen ? 0.75 : 0.45); clawRight.setPosition(isOpen ? 0.25 : 0.55);}
 
     public synchronized JoystickController getJoystickController1() {
