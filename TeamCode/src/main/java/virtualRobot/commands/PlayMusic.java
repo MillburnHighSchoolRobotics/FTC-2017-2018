@@ -15,9 +15,15 @@ import virtualRobot.utils.GlobalUtils;
  */
 public class PlayMusic extends Command {
     private String fileName;
+    private boolean async;
 
-    public PlayMusic (String fileName) {
+    public PlayMusic(String fileName) {
+        this(fileName, true);
+    }
+
+    public PlayMusic (String fileName, boolean async) {
         this.fileName = fileName;
+        this.async = async;
     }
 
     @Override
@@ -37,6 +43,9 @@ public class PlayMusic extends Command {
             mp.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
             mp.prepare();
             mp.start();
+            while (mp.isPlaying()) {
+                Thread.sleep(20);
+            }
         } catch (IllegalStateException e) {
             e.printStackTrace();
         } catch (IOException e) {

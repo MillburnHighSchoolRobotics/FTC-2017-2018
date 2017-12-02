@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.app.Activity;
+import android.media.MediaPlayer;
 import android.util.Log;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -402,6 +403,9 @@ public abstract class  UpdateThread extends OpMode {
 	public void stop() {
 //        imu.stopAccelerationIntegration();
 //		imu.close();
+		MediaPlayer mp = new MediaPlayer();
+		if (mp.isPlaying())
+			mp.stop();
 		vuforiaInstance = null;
 		if (tInstantiated)
 			t.interrupt();
