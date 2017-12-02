@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.UpdateThread;
 
+import virtualRobot.logicThreads.competition.TeleOpCustomLogic;
 import virtualRobot.logicThreads.competition.TeleOpCustomLogicRewrite;
 
 /**
@@ -12,6 +13,6 @@ import virtualRobot.logicThreads.competition.TeleOpCustomLogicRewrite;
 @TeleOp(name = "TeleOp: Run TeleOp Rewrite", group = "Competition")
 public class TeleOpRewriteUpdate extends UpdateThread {
     public void setLogicThread() {
-        logicThread = TeleOpCustomLogicRewrite.class;
+        logicThread = TeleOpCustomLogic.class;
     }
 }

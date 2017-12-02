@@ -21,7 +21,7 @@ public class BlueFarBasicAutoLogic extends AutonomousLogicThread {
         rightBack = robot.getRBMotor();
         colorSensor = robot.getColorSensor();
         jewelArm = robot.getJewelServo();
-        jewelArm.setPosition(0.5);
+        jewelArm.setPosition(0.65);
         int dist = 0;
         int travel = 200;
         int sideTravel = 200;

@@ -21,7 +21,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         rightBack = robot.getRBMotor();
         colorSensor = robot.getColorSensor();
         jewelArm = robot.getJewelServo();
-        jewelArm.setPosition(0.5);
+        jewelArm.setPosition(0.65);
         int dist = 0;
         int travel = 200;
         double power = 0.5;
@@ -32,24 +32,24 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         robot.addToTelemetry("Red ", red);
         robot.addToTelemetry("Blue ", blue);
 //        blue = Math.max(1, blue);
-        double rat = red/(double)blue;
         if (red != 0 || blue != 0) {
             blue = Math.max(1, blue);
+            double rat = red/(double)blue;
             if (rat >= 1.5) {
-                startPosition = leftFront.getPosition();
-                leftFront.setPower(power);
-                leftBack.setPower(power);
-                rightFront.setPower(power);
-                rightBack.setPower(power);
-                while (leftFront.getPosition() - startPosition < travel) {
-                }
-                dist = travel;
-            } else if (rat <= 0.5) {
                 startPosition = leftFront.getPosition();
                 leftFront.setPower(-power);
                 leftBack.setPower(-power);
                 rightFront.setPower(-power);
                 rightBack.setPower(-power);
+                while (leftFront.getPosition() - startPosition < travel) {
+                }
+                dist = travel;
+            } else if (rat <= 0.5) {
+                startPosition = leftFront.getPosition();
+                leftFront.setPower(power);
+                leftBack.setPower(power);
+                rightFront.setPower(power);
+                rightBack.setPower(power);
                 while (leftFront.getPosition() - startPosition > -travel) {
                 }
                 dist = -travel;
