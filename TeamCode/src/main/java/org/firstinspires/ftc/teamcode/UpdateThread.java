@@ -328,6 +328,10 @@ public abstract class  UpdateThread extends OpMode {
         }
 
         // Update Sensor Values E.g. vPitchSensor.setRawValue(imu.getIntegratedPitch()); vHeadingSensor, vRollSensor, vColorSensor...
+		telemetry.addData("leftFront", leftFront.getCurrentPosition());
+		telemetry.addData("leftBack", leftBack.getCurrentPosition());
+		telemetry.addData("rightFront", rightFront.getCurrentPosition());
+		telemetry.addData("rightBack", rightBack.getCurrentPosition());
 		vLeftFront.setPosition(leftFront.getCurrentPosition());
 		vLeftBack.setPosition(leftBack.getCurrentPosition());
 		vRightFront.setPosition(rightFront.getCurrentPosition());

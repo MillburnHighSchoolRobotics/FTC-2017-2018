@@ -84,7 +84,7 @@ public class RedNearBasicAutoLogic extends AutonomousLogicThread {
                 leftBack.setPower(power);
                 rightFront.setPower(power);
                 rightBack.setPower(power);
-                while (leftFront.getPosition() - startPosition > -travel) {
+                while (leftFront.getPosition() - startPosition < travel) {
                 }
                 dist = -travel;
             } else if (rat <= 0.5) {
@@ -93,7 +93,7 @@ public class RedNearBasicAutoLogic extends AutonomousLogicThread {
                 leftBack.setPower(-power);
                 rightFront.setPower(-power);
                 rightBack.setPower(-power);
-                while (leftFront.getPosition() - startPosition < travel) {
+                while (leftFront.getPosition() - startPosition > -travel) {
                 }
                 dist = travel;
             }

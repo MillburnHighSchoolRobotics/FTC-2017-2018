@@ -36,21 +36,22 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
             blue = Math.max(1, blue);
             double rat = red/(double)blue;
             if (rat >= 1.5) {
-                startPosition = leftFront.getPosition();
+                startPosition = rightBack.getPosition();
                 leftFront.setPower(-power);
                 leftBack.setPower(-power);
                 rightFront.setPower(-power);
                 rightBack.setPower(-power);
-                while (leftFront.getPosition() - startPosition < travel) {
+                while (rightBack.getPosition() - startPosition > -travel) {
+//                    robot.addToTelemetry("Meme", leftFront.getPosition() - startPosition);
                 }
                 dist = travel;
             } else if (rat <= 0.5) {
-                startPosition = leftFront.getPosition();
+                startPosition = rightBack.getPosition();
                 leftFront.setPower(power);
                 leftBack.setPower(power);
                 rightFront.setPower(power);
                 rightBack.setPower(power);
-                while (leftFront.getPosition() - startPosition > -travel) {
+                while (rightBack.getPosition() - startPosition < travel) {
                 }
                 dist = -travel;
             }
@@ -58,12 +59,12 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         jewelArm.setPosition(0);
         robot.stopMotors();
         Thread.sleep(2000);
-        startPosition = leftFront.getPosition();
+        startPosition = rightBack.getPosition();
         leftFront.setPower(power);
         leftBack.setPower(power);
         rightFront.setPower(power);
         rightBack.setPower(power);
-        while ((leftFront.getPosition() - startPosition) + dist < 1440*0.85 && !Thread.interrupted()) {}
+        while ((rightBack.getPosition() - startPosition) + dist < 1440*0.85 && !Thread.interrupted()) {}
         robot.stopMotors();
         while(!Thread.interrupted()) {}
     }
