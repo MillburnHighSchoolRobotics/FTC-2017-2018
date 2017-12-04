@@ -155,15 +155,18 @@ public abstract class  UpdateThread extends OpMode {
 		rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
 		//SET MOTOR MODES
-//		leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//		leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//		rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//		rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+
+		liftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		liftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		liftLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		liftRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 

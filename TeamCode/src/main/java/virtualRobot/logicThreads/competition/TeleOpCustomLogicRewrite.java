@@ -29,7 +29,8 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
         JoystickController controller2;
         controller1 = robot.getJoystickController1();
         controller2 = robot.getJoystickController2();
-
+        long lastMilli = -1;
+        boolean clawMove = false;
         final int POWER_MATRIX[][] = { //for each of the directions
 
                 {1, 1, 1, 1},
@@ -144,10 +145,10 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
            // robot.getGlyphLiftLeft().setPosition(1-leftPos);
             //robot.getGlyphLiftRight().setPosition(rightPos);
 
-            if (controller2.isPressed(JoystickController.BUTTON_LB)) {
-                robot.moveClaw(false);
-            } else if (controller2.isPressed(JoystickController.BUTTON_RB)) {
-                robot.moveClaw(true);
+            if (lastMilli < 0 || System.currentTimeMillis() - lastMilli >= 1000) {
+                robot.moveClaw(clawMove);
+                clawMove = !clawMove;
+                lastMilli = System.currentTimeMillis();
             }
 
             if (Thread.currentThread().isInterrupted())

@@ -130,7 +130,7 @@ public class SallyJoeBot {
 
     public synchronized void stopMotors() {LFMotor.setPower(0); RFMotor.setPower(0); LBMotor.setPower(0); RBMotor.setPower(0);}
 
-    public synchronized void moveClaw(boolean isOpen) { clawLeft.setPosition(isOpen ? 0.9 : 0.7); clawRight.setPosition(isOpen ? 0.1 : 0.55);}
+    public synchronized void moveClaw(boolean isOpen) { clawLeft.setPosition(isOpen ? 0.7 : 0.5); clawRight.setPosition(isOpen ? 0.7 : 0.5);}
 
     public synchronized JoystickController getJoystickController1() {
         return joystickController1;
