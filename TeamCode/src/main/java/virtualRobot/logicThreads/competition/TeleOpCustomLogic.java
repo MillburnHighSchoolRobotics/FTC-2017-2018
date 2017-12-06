@@ -24,6 +24,8 @@ public class TeleOpCustomLogic extends LogicThread {
         controller2 = robot.getJoystickController2();
         Translate.Direction direction = null;
         Translate.Direction lastDirection = null;
+        double intakePos = 0;
+        long lastIntakePosChange = 0;
         int translateAngle = 0;
         int lastTranslateAngle = 0;
         final int POWER_MATRIX[][] = { //for each of the directions
@@ -174,10 +176,10 @@ public class TeleOpCustomLogic extends LogicThread {
                 robot.getBoxRight().setSpeed(0);
             }
 
-            if (controller2.isDown(JoystickController.BUTTON_RB)) {
-                robot.moveClaw(false);
-            } else if (controller2.isDown(JoystickController.BUTTON_LB)) {
-                robot.moveClaw(true);
+            if (controller2.isDown(JoystickController.BUTTON_RB) && System.currentTimeMillis() - lastIntakePosChange > 100) {
+                intakePos = MathUtils.clamp(intakePos + 0.1, 0, 1);
+            } else if (controller2.isDown(JoystickController.BUTTON_LB) && System.currentTimeMillis() - lastIntakePosChange > 100) {
+                intakePos = MathUtils.clamp(intakePos - 0.1, 0, 1);
             }
 
             if (controller2.isDpadUp()) {
