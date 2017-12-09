@@ -178,9 +178,12 @@ public class TeleOpCustomLogic extends LogicThread {
 
             if (controller2.isDown(JoystickController.BUTTON_RB) && System.currentTimeMillis() - lastIntakePosChange > 100) {
                 intakePos = MathUtils.clamp(intakePos + 0.1, 0, 1);
+                lastIntakePosChange = System.currentTimeMillis();
             } else if (controller2.isDown(JoystickController.BUTTON_LB) && System.currentTimeMillis() - lastIntakePosChange > 100) {
                 intakePos = MathUtils.clamp(intakePos - 0.1, 0, 1);
+                lastIntakePosChange = System.currentTimeMillis();
             }
+            robot.getClawLeft().setPosition(intakePos);
 
             if (controller2.isDpadUp()) {
                 robot.getLiftLeft().setPower(liftSpeed);
@@ -193,6 +196,7 @@ public class TeleOpCustomLogic extends LogicThread {
                 robot.getLiftRight().setPower(0);
             }
 
+            robot.addToTelemetry("liftEncoders", robot.getLiftLeft().getPosition() + ", " + robot.getLiftRight().getPosition());
 
             if (Thread.currentThread().isInterrupted())
                 throw new InterruptedException();
