@@ -136,7 +136,7 @@ public abstract class  UpdateThread extends OpMode {
 		rightBack = hardwareMap.dcMotor.get("rightBack");
 		Log.d("Components ", "Motors Initialized");
 		rollerLeft = hardwareMap.crservo.get("rollerLeft");
-		rollerRight = hardwareMap.crservo.get("rollerRight");
+//		rollerRight = hardwareMap.crservo.get("rollerRight");
 		boxLeft = hardwareMap.crservo.get("boxLeft");
 		boxRight = hardwareMap.crservo.get("boxRight");
 		liftLeft = hardwareMap.dcMotor.get("liftLeft");
@@ -147,17 +147,20 @@ public abstract class  UpdateThread extends OpMode {
 //		relicArmWinch = hardwareMap.servo.get("relicArmWinch");
 		jewelServo = hardwareMap.servo.get("jewelArm");
 		clawLeft = hardwareMap.servo.get("clawLeft");
-		clawRight = hardwareMap.servo.get("clawRight");
+//		clawRight = hardwareMap.servo.get("clawRight");
 
         //REVERSE ONE SIDE (If needed, e.g. rightFront.setDirection(DcMotor.Direction.REVERSE)
 		rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
 		rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+		liftLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
 		//SET MOTOR MODES
 //		leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //		leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //		rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //		rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		liftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+		liftRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 		rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -173,8 +176,8 @@ public abstract class  UpdateThread extends OpMode {
 		robot = Command.ROBOT;
 		robot.initialBattery = getBatteryVoltage();
 		clawLeft.setPosition(0);
-		clawRight.setPosition(1);
-		jewelServo.setPosition(0);
+//		clawRight.setPosition(1);
+		jewelServo.setPosition(0.45);
 
 		//FETCH CONSTANT COMPONENTS OF VIRTUAL ROBOT (Do not touch)
         vJoystickController1 = robot.getJoystickController1();
@@ -248,7 +251,7 @@ public abstract class  UpdateThread extends OpMode {
 		//Copy positions to virtualRobot
 //		vRelicArmWinch.setSpeed(relicArmWinch.getPosition());
 		vClawLeft.setPosition(clawLeft.getPosition());
-		vClawRight.setPosition(clawRight.getPosition());
+//		vClawRight.setPosition(clawRight.getPosition());
 		vJewelServo.setPosition(jewelServo.getPosition());
 
 		//set sensors e.g. vDriveRightMotorEncoder.setRawValue(-rightFront.getCurrentPosition())
@@ -351,7 +354,7 @@ public abstract class  UpdateThread extends OpMode {
 		//Copy Servo Positions
 //		relicArmWinch.setPosition(vRelicArmWinch.getSpeed());
 		clawLeft.setPosition(vClawLeft.getPosition());
-		clawRight.setPosition(vClawRight.getPosition());
+//		clawRight.setPosition(vClawRight.getPosition());
 		boxLeft.setPower(vBoxLeft.getSpeed());
 		boxRight.setPower(vBoxRight.getSpeed());
 		jewelServo.setPosition(vJewelServo.getPosition());
@@ -375,7 +378,7 @@ public abstract class  UpdateThread extends OpMode {
 		rightFront.setPower(rightFrontPower);
 		rightBack.setPower(rightBackPower);
 		rollerLeft.setPower(rollerLeftPower);
-		rollerRight.setPower(rollerRightPower);
+//		rollerRight.setPower(rollerRightPower);
 		liftLeft.setPower(liftLeftPower);
 		liftRight.setPower(liftRightPower);
 //		Log.d("Completed", "motor powers");

@@ -1,5 +1,8 @@
 package virtualRobot.logicThreads.competition;
 
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+
+import virtualRobot.commands.GetVuMarkSide;
 import virtualRobot.hardware.DumbColorSensor;
 import virtualRobot.hardware.Motor;
 import virtualRobot.hardware.Servo;
@@ -27,6 +30,10 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         double power = 0.5;
         int startPosition;
         Thread.sleep(1000);
+
+        GetVuMarkSide er = new GetVuMarkSide();
+        runCommand(er);
+
         int red = colorSensor.getRed();
         int blue = colorSensor.getBlue();
         robot.addToTelemetry("Red ", red);
@@ -39,32 +46,91 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
                 startPosition = leftFront.getPosition();
                 leftFront.setPower(-power);
                 leftBack.setPower(-power);
+                rightFront.setPower(power);
+                rightBack.setPower(power);
+                while (rightFront.getPosition() - startPosition < travel) {
+                }
+                leftFront.setPower(power);
+                leftBack.setPower(power);
                 rightFront.setPower(-power);
                 rightBack.setPower(-power);
-                while (leftFront.getPosition() - startPosition < travel) {
+                while (rightFront.getPosition() - startPosition > -travel) {
                 }
                 dist = travel;
             } else if (rat <= 0.5) {
                 startPosition = leftFront.getPosition();
                 leftFront.setPower(power);
                 leftBack.setPower(power);
+                rightFront.setPower(-power);
+                rightBack.setPower(-power);
+                while (rightFront.getPosition() - startPosition > -travel) {
+                }
+                leftFront.setPower(-power);
+                leftBack.setPower(-power);
                 rightFront.setPower(power);
                 rightBack.setPower(power);
-                while (leftFront.getPosition() - startPosition > -travel) {
+                while (rightFront.getPosition() - startPosition < travel) {
                 }
                 dist = -travel;
             }
         }
-        jewelArm.setPosition(0);
         robot.stopMotors();
+        jewelArm.setPosition(0);
         Thread.sleep(2000);
         startPosition = leftFront.getPosition();
         leftFront.setPower(power);
         leftBack.setPower(power);
         rightFront.setPower(power);
         rightBack.setPower(power);
-        while ((leftFront.getPosition() - startPosition) + dist < 1440*0.85 && !Thread.interrupted()) {}
+
+        double yes= 1440;
+
+        switch(currentVuMark){
+            case LEFT:
+                yes =900;
+                break;
+            case CENTER:
+                yes = 1100;
+                break;
+            case RIGHT:
+                yes = 1300;
+                break;
+        }
+
+        while ((leftFront.getPosition() - startPosition) + dist < yes*0.85 && !Thread.interrupted()) {}
         robot.stopMotors();
-        while(!Thread.interrupted()) {}
+
+        Thread.sleep(1000);
+        leftFront.setPower(power);
+        leftBack.setPower(power);
+        rightFront.setPower(-power);
+        rightBack.setPower(-power);
+
+        while ((leftFront.getPosition() - startPosition) + dist < 1300*0.85 && !Thread.interrupted()) {}
+
+        robot.stopMotors();
+
+        Thread.sleep(1000);
+        leftFront.setPower(-power);
+        leftBack.setPower(-power);
+        rightFront.setPower(-power);
+        rightBack.setPower(-power);
+
+        while ((leftFront.getPosition() - startPosition) + dist < 100*0.85 && !Thread.interrupted()) {}
+        robot.stopMotors();
+
+        Thread.sleep(1000);
+        leftFront.setPower(power);
+        leftBack.setPower(power);
+        rightFront.setPower(power);
+        rightBack.setPower(power);
+
+        while ((leftFront.getPosition() - startPosition) + dist < 100*0.85 && !Thread.interrupted()) {}
+        robot.stopMotors();
+
+
+        while(!Thread.interrupted()) {
+
+        }
     }
 }

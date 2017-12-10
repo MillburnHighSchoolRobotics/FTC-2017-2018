@@ -17,7 +17,7 @@ public class TeleOpCustomLogic extends LogicThread {
 
     @Override
     protected void realRun() throws InterruptedException {
-        robot.getJewelServo().setPosition(0.1);
+        robot.getJewelServo().setPosition(0.55);
         JoystickController controller1;
         JoystickController controller2;
         controller1 = robot.getJoystickController1();
@@ -182,10 +182,10 @@ public class TeleOpCustomLogic extends LogicThread {
 
             if (controller2.isDpadUp()) {
                 robot.getLiftLeft().setPower(liftSpeed);
-                robot.getLiftRight().setPower(liftSpeed);
+                robot.getLiftRight().setPower(liftSpeed-0.08);
             } else if (controller2.isDpadDown()) {
                 robot.getLiftLeft().setPower(-liftSpeed);
-                robot.getLiftRight().setPower(-liftSpeed);
+                robot.getLiftRight().setPower(-liftSpeed+0.08);
             } else {
                 robot.getLiftLeft().setPower(0);
                 robot.getLiftRight().setPower(0);

@@ -82,24 +82,36 @@ public class RedNearBasicAutoLogic extends AutonomousLogicThread {
                 startPosition = leftFront.getPosition();
                 leftFront.setPower(power);
                 leftBack.setPower(power);
+                rightFront.setPower(-power);
+                rightBack.setPower(-power);
+                while (rightFront.getPosition() - startPosition > -travel) {
+                }
+                leftFront.setPower(-power);
+                leftBack.setPower(-power);
                 rightFront.setPower(power);
                 rightBack.setPower(power);
-                while (leftFront.getPosition() - startPosition > -travel) {
+                while (rightFront.getPosition() - startPosition < travel) {
                 }
                 dist = -travel;
             } else if (rat <= 0.5) {
                 startPosition = leftFront.getPosition();
                 leftFront.setPower(-power);
                 leftBack.setPower(-power);
+                rightFront.setPower(power);
+                rightBack.setPower(power);
+                while (rightFront.getPosition() - startPosition < travel) {
+                }
+                leftFront.setPower(power);
+                leftBack.setPower(power);
                 rightFront.setPower(-power);
                 rightBack.setPower(-power);
-                while (leftFront.getPosition() - startPosition < travel) {
+                while (rightFront.getPosition() - startPosition > -travel) {
                 }
                 dist = travel;
             }
         }
-        jewelArm.setPosition(0);
         robot.stopMotors();
+        jewelArm.setPosition(0);
         Thread.sleep(2000);
         startPosition = leftFront.getPosition();
         leftFront.setPower(-power);
