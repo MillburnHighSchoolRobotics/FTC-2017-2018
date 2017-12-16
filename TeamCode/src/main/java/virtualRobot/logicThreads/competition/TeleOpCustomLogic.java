@@ -17,7 +17,7 @@ public class TeleOpCustomLogic extends LogicThread {
 
     @Override
     protected void realRun() throws InterruptedException {
-        robot.getJewelServo().setPosition(0.55);
+        robot.getJewelServo().setPosition(0.50);
         JoystickController controller1;
         JoystickController controller2;
         controller1 = robot.getJoystickController1();
