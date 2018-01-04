@@ -43,7 +43,6 @@ public class SallyJoeBot {
     private ContinuousRotationServo boxLeft, boxRight;
     private Motor relicArm;
     private Motor liftLeft, liftRight;
-    private Servo clawLeft, clawRight;
     private ContinuousRotationServo relicArmWinch;
     private Servo jewelServo;
     private DumbColorSensor colorSensor;
@@ -79,8 +78,6 @@ public class SallyJoeBot {
         relicArm = new Motor();
         liftLeft = new Motor();
         liftRight = new Motor();
-        clawLeft = new Servo();
-        clawRight = new Servo();
         relicArmWinch = new ContinuousRotationServo();
         jewelServo = new Servo();
         colorSensor = new DumbColorSensor();
@@ -120,17 +117,11 @@ public class SallyJoeBot {
 
     public synchronized ContinuousRotationServo getRollerRight() { return rollerRight; }
 
-    public synchronized Servo getClawLeft() { return clawLeft; }
-
-    public synchronized Servo getClawRight() { return clawRight; }
-
     public synchronized Servo getJewelServo() { return jewelServo; }
 
     public synchronized StateSensor getStateSensor() { return stateSensor; }
 
     public synchronized void stopMotors() {LFMotor.setPower(0); RFMotor.setPower(0); LBMotor.setPower(0); RBMotor.setPower(0);}
-
-    public synchronized void moveClaw(boolean isOpen) { clawLeft.setPosition(isOpen ? 0.9 : 0.75); clawRight.setPosition(isOpen ? 0.1 : 0.55);}
 
     public synchronized JoystickController getJoystickController1() {
         return joystickController1;

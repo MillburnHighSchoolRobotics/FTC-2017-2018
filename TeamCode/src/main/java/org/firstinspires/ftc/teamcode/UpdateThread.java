@@ -82,7 +82,6 @@ public abstract class  UpdateThread extends OpMode {
 	private DcMotor leftFront, leftBack, rightFront, rightBack;
 	private DcMotor liftLeft, liftRight;
 	private CRServo boxLeft, boxRight;
-	private Servo clawLeft, clawRight;
 	private CRServo rollerLeft, rollerRight;
 	private Servo jewelServo;
 	private ColorSensor colorSensor;
@@ -146,8 +145,6 @@ public abstract class  UpdateThread extends OpMode {
 //        //SERVO SETUP (with physical hardware, e.g. servo = hardwareMap....)
 //		relicArmWinch = hardwareMap.servo.get("relicArmWinch");
 		jewelServo = hardwareMap.servo.get("jewelArm");
-		clawLeft = hardwareMap.servo.get("clawLeft");
-//		clawRight = hardwareMap.servo.get("clawRight");
 
         //REVERSE ONE SIDE (If needed, e.g. rightFront.setDirection(DcMotor.Direction.REVERSE)
 		rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -175,8 +172,6 @@ public abstract class  UpdateThread extends OpMode {
 		//FETCH VIRTUAL ROBOT FROM COMMAND INTERFACE
 		robot = Command.ROBOT;
 		robot.initialBattery = getBatteryVoltage();
-		clawLeft.setPosition(0);
-//		clawRight.setPosition(1);
 		jewelServo.setPosition(0.45);
 
 		//FETCH CONSTANT COMPONENTS OF VIRTUAL ROBOT (Do not touch)
@@ -198,8 +193,6 @@ public abstract class  UpdateThread extends OpMode {
 		vRelicArmWinch = robot.getRelicArmWinch();
 		vRollerLeft = robot.getRollerLeft();
 		vRollerRight = robot.getRollerRight();
-		vClawLeft = robot.getClawLeft();
-		vClawRight = robot.getClawRight();
 		vLiftLeft = robot.getLiftLeft();
 		vLiftRight = robot.getLiftRight();
 
@@ -250,8 +243,6 @@ public abstract class  UpdateThread extends OpMode {
 
 		//Copy positions to virtualRobot
 //		vRelicArmWinch.setSpeed(relicArmWinch.getPosition());
-		vClawLeft.setPosition(clawLeft.getPosition());
-//		vClawRight.setPosition(clawRight.getPosition());
 		vJewelServo.setPosition(jewelServo.getPosition());
 
 		//set sensors e.g. vDriveRightMotorEncoder.setRawValue(-rightFront.getCurrentPosition())
@@ -353,8 +344,6 @@ public abstract class  UpdateThread extends OpMode {
 
 		//Copy Servo Positions
 //		relicArmWinch.setPosition(vRelicArmWinch.getSpeed());
-		clawLeft.setPosition(vClawLeft.getPosition());
-//		clawRight.setPosition(vClawRight.getPosition());
 		boxLeft.setPower(vBoxLeft.getSpeed());
 		boxRight.setPower(vBoxRight.getSpeed());
 		jewelServo.setPosition(vJewelServo.getPosition());

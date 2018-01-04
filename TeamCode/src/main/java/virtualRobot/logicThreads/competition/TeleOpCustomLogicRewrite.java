@@ -11,7 +11,7 @@ import virtualRobot.utils.MathUtils;
 /**
  * Created by david on 9/29/17.
  */
-
+@Deprecated
 public class TeleOpCustomLogicRewrite extends LogicThread {
 
     double leftPos = 0;
@@ -146,7 +146,7 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
             //robot.getGlyphLiftRight().setPosition(rightPos);
 
             if (lastMilli < 0 || System.currentTimeMillis() - lastMilli >= 1000) {
-                robot.moveClaw(clawMove);
+//                robot.moveClaw(clawMove);
                 clawMove = !clawMove;
                 lastMilli = System.currentTimeMillis();
             }
