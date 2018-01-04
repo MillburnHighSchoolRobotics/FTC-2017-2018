@@ -156,10 +156,10 @@ public class TeleOpCustomLogic extends LogicThread {
             double intakeRotation = controller2.getValue(JoystickController.X_2);
 
             if (!MathUtils.equals(intakeDirection, 0, 0.1)) {
-                robot.getRollerLeft().setSpeed(intakeDirection * intakeDirectionSensitivity);
+                robot.getRollerLeft().setPower(intakeDirection * intakeDirectionSensitivity);
                 robot.getRollerRight().setSpeed(-intakeDirection * intakeDirectionSensitivity);
             } else {
-                robot.getRollerLeft().setSpeed(0);
+                robot.getRollerLeft().setPower(0);
                 robot.getRollerRight().setSpeed(0);
             }
 

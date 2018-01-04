@@ -82,7 +82,8 @@ public abstract class  UpdateThread extends OpMode {
 	private DcMotor leftFront, leftBack, rightFront, rightBack;
 	private DcMotor liftLeft, liftRight;
 	private CRServo boxLeft, boxRight;
-	private CRServo rollerLeft, rollerRight;
+	private DcMotor rollerLeft;
+	private CRServo rollerRight;
 	private Servo jewelServo;
 	private ColorSensor colorSensor;
 
@@ -96,7 +97,8 @@ public abstract class  UpdateThread extends OpMode {
 
 	private Motor vLeftFront, vLeftBack, vRightFront, vRightBack;
 	private Motor vLiftLeft, vLiftRight;
-	private ContinuousRotationServo vRollerLeft, vRollerRight;
+	private Motor vRollerLeft;
+	private ContinuousRotationServo vRollerRight;
 	private Motor vRelicArm;
 	private ContinuousRotationServo vRelicArmWinch;
 	private virtualRobot.hardware.Servo vJewelServo;
@@ -134,8 +136,8 @@ public abstract class  UpdateThread extends OpMode {
 		rightFront = hardwareMap.dcMotor.get("rightFront");
 		rightBack = hardwareMap.dcMotor.get("rightBack");
 		Log.d("Components ", "Motors Initialized");
-		rollerLeft = hardwareMap.crservo.get("rollerLeft");
-//		rollerRight = hardwareMap.crservo.get("rollerRight");
+		rollerLeft = hardwareMap.dcMotor.get("rollerLeft");
+		rollerRight = hardwareMap.crservo.get("rollerRight");
 		boxLeft = hardwareMap.crservo.get("boxLeft");
 		boxRight = hardwareMap.crservo.get("boxRight");
 		liftLeft = hardwareMap.dcMotor.get("liftLeft");
@@ -204,7 +206,7 @@ public abstract class  UpdateThread extends OpMode {
 		vLeftBack.setMotorType(leftBack.getMotorType());
 		vRightFront.setMotorType(rightFront.getMotorType());
 		vRightBack.setMotorType(rightBack.getMotorType());
-//		vRollerLeft.setMotorType(rollerLeft.getMotorType());
+		vRollerLeft.setMotorType(rollerLeft.getMotorType());
 //		vRollerRight.setMotorType(rollerRight.getMotorType());
 //		vRelicArm.setMotorType(relicArm.getMotorType());
 
@@ -260,7 +262,7 @@ public abstract class  UpdateThread extends OpMode {
 		vLeftBack.setPosition(leftBack.getCurrentPosition());
 		vRightFront.setPosition(rightFront.getCurrentPosition());
 		vRightBack.setPosition(rightBack.getCurrentPosition());
-//		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
+		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
 //		vRollerRight.setPosition(rollerRight.getCurrentPosition());
 //		vRelicArm.setPosition(relicArm.getCurrentPosition());
 
@@ -327,6 +329,7 @@ public abstract class  UpdateThread extends OpMode {
 		vRightBack.setPosition(rightBack.getCurrentPosition());
 		vLiftLeft.setPosition(liftLeft.getCurrentPosition());
 		vLiftRight.setPosition(liftRight.getCurrentPosition());
+		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
 //		Log.d("Completed", "virtual encoders");
 
 		vColorSensor.setRed(colorSensor.red());
@@ -355,7 +358,7 @@ public abstract class  UpdateThread extends OpMode {
         double rightFrontPower = vRightFront.getPower();
         double rightBackPower = vRightBack.getPower();
         double relicArmPower = vRelicArm.getPower();
-		double rollerLeftPower = vRollerLeft.getSpeed();
+		double rollerLeftPower = vRollerLeft.getPower();
 		double rollerRightPower = vRollerRight.getSpeed();
 		double liftLeftPower = vLiftLeft.getPower();
 		double liftRightPower = vLiftRight.getPower();
@@ -367,7 +370,7 @@ public abstract class  UpdateThread extends OpMode {
 		rightFront.setPower(rightFrontPower);
 		rightBack.setPower(rightBackPower);
 		rollerLeft.setPower(rollerLeftPower);
-//		rollerRight.setPower(rollerRightPower);
+		rollerRight.setPower(rollerRightPower);
 		liftLeft.setPower(liftLeftPower);
 		liftRight.setPower(liftRightPower);
 //		Log.d("Completed", "motor powers");

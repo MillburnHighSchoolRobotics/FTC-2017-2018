@@ -39,7 +39,8 @@ public class SallyJoeBot {
 
     //Motors and Servos
     private Motor LFMotor, LBMotor, RFMotor, RBMotor;
-    private ContinuousRotationServo rollerLeft, rollerRight;
+    private ContinuousRotationServo rollerRight;
+    private Motor rollerLeft;
     private ContinuousRotationServo boxLeft, boxRight;
     private Motor relicArm;
     private Motor liftLeft, liftRight;
@@ -71,7 +72,7 @@ public class SallyJoeBot {
         LBMotor = new Motor();
         RFMotor = new Motor();
         RBMotor = new Motor();
-        rollerLeft = new ContinuousRotationServo();
+        rollerLeft = new Motor();
         rollerRight = new ContinuousRotationServo();
         boxLeft = new ContinuousRotationServo();
         boxRight = new ContinuousRotationServo();
@@ -113,7 +114,7 @@ public class SallyJoeBot {
 
     public synchronized ContinuousRotationServo getRelicArmWinch() { return relicArmWinch; }
 
-    public synchronized ContinuousRotationServo getRollerLeft() { return rollerLeft; }
+    public synchronized Motor getRollerLeft() { return rollerLeft; }
 
     public synchronized ContinuousRotationServo getRollerRight() { return rollerRight; }
 
