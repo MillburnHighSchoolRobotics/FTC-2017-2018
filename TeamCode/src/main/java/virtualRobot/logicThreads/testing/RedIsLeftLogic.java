@@ -15,7 +15,7 @@ public class RedIsLeftLogic extends AutonomousLogicThread {
         jewelDetector.setParentThread(this);
         while (true) {
             runCommand(jewelDetector);
-            robot.addToTelemetry("Red is Left", redIsLeft.get());
+            getRobot().addToTelemetry("Red is Left", getRedIsLeft().get());
         }
     }
 }
