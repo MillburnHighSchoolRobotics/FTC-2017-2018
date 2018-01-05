@@ -14,6 +14,6 @@ import virtualRobot.logicThreads.competition.RedFarBasicAutoLogic;
 public class RedFarBasicAutoUpdate extends UpdateThread {
     @Override
     public void setLogicThread() {
-        logicThread = RedFarBasicAutoLogic.class;
+        setLogicThread(RedFarBasicAutoLogic.class);
     }
 }
