@@ -51,8 +51,8 @@ public class OpenCVTelemetryTest extends LinearOpMode {
 
         waitForStart();
 
-        width = vuforiaInstance.rgb.getBufferWidth();
-        height = vuforiaInstance.rgb.getHeight();
+        width = vuforiaInstance.getRgb().getBufferWidth();
+        height = vuforiaInstance.getRgb().getHeight();
 
         Bitmap bm = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
 
@@ -60,7 +60,7 @@ public class OpenCVTelemetryTest extends LinearOpMode {
 
         while (opModeIsActive()) {
             Mat img = new Mat();
-            bm.copyPixelsFromBuffer(vuforiaInstance.rgb.getPixels());
+            bm.copyPixelsFromBuffer(vuforiaInstance.getRgb().getPixels());
             Utils.bitmapToMat(bm, img);
 
             if (firstPress && gamepad1.a) {
