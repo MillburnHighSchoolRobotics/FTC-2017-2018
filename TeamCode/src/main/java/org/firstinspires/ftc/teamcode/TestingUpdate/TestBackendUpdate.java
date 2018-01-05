@@ -14,6 +14,6 @@ import virtualRobot.logicThreads.testing.TestBackendLogic;
 public class TestBackendUpdate extends UpdateThread {
     @Override
     public void setLogicThread() {
-        logicThread = TestBackendLogic.class;
+        setLogicThread(TestBackendLogic.class);
     }
 }
