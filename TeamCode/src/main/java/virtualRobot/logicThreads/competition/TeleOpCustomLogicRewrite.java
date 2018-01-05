@@ -19,16 +19,16 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
     double gearCoefficient = 1;
     @Override
     protected void addPresets() {
-        setShouldStartISR(false);
+        shouldStartISR = false;
     }
 
     @Override
     protected void realRun() throws InterruptedException {
-        getRobot().getJewelServo().setPosition(0);
+        robot.getJewelServo().setPosition(0);
         JoystickController controller1;
         JoystickController controller2;
-        controller1 = getRobot().getJoystickController1();
-        controller2 = getRobot().getJoystickController2();
+        controller1 = robot.getJoystickController1();
+        controller2 = robot.getJoystickController2();
         long lastMilli = -1;
         boolean clawMove = false;
         final int POWER_MATRIX[][] = { //for each of the directions
@@ -45,17 +45,17 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
 
         while (true) {
 //            robot.addToTelemetry("TeleOp timestamp: ", System.currentTimeMillis());
-            getRobot().addToTelemetry("EncoderL", getRobot().getLiftLeft().getPosition());
-            getRobot().addToTelemetry("EncoderR", getRobot().getLiftRight().getPosition());
+            robot.addToTelemetry("EncoderL", robot.getLiftLeft().getPosition());
+            robot.addToTelemetry("EncoderR", robot.getLiftRight().getPosition());
             controller1.logicalRefresh();
             controller2.logicalRefresh();
-            double translateTheta = Math.toDegrees(controller1.getValue(JoystickController.Companion.getTHETA_1()));
-            double translateMag = controller1.getValue(JoystickController.Companion.getR_1());
-            double rotateX = controller1.getValue(JoystickController.Companion.getX_2());
+            double translateTheta = Math.toDegrees(controller1.getValue(JoystickController.THETA_1));
+            double translateMag = controller1.getValue(JoystickController.R_1);
+            double rotateX = controller1.getValue(JoystickController.X_2);
             if (translateTheta < 0) translateTheta += 360;
             double scale;
             double RF = 0, RB = 0, LF = 0, LB = 0;
-            getRobot().addToTelemetry("mag", translateMag);
+            robot.addToTelemetry("mag", translateMag);
 
             if (controller1.isDpadUp()) {
                 gearCoefficient = 0.666;
@@ -63,10 +63,10 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
                 gearCoefficient = 0.333;
             }
             if (!MathUtils.equals(rotateX, 0, 0.05)) {
-                getRobot().getRFMotor().setPower(-rotateX * gearCoefficient);
-                getRobot().getRBMotor().setPower(-rotateX * gearCoefficient);
-                getRobot().getLFMotor().setPower(rotateX * gearCoefficient);
-                getRobot().getLBMotor().setPower(rotateX * gearCoefficient);
+                robot.getRFMotor().setPower(-rotateX * gearCoefficient);
+                robot.getRBMotor().setPower(-rotateX * gearCoefficient);
+                robot.getLFMotor().setPower(rotateX * gearCoefficient);
+                robot.getLBMotor().setPower(rotateX * gearCoefficient);
 //                robot.addToTelemetry("TeleOp if statement lvl", 0);
             } else if (!MathUtils.equals(translateMag, 0, 0.05)) {
                 double translatePower = translateMag * 0.666;
@@ -98,31 +98,31 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
                     RF = (translatePower * POWER_MATRIX[6][2]);
                     RB = (translatePower * POWER_MATRIX[6][3] * scale);
                 }
-                getRobot().addToTelemetry("1", LF + "\t" + RF);
-                getRobot().addToTelemetry("2", LB + "\t" + RB);
-                getRobot().getLFMotor().setPower(LF * gearCoefficient);
-                getRobot().getLBMotor().setPower(LB * gearCoefficient);
-                getRobot().getRBMotor().setPower(RB * gearCoefficient);
-                getRobot().getRFMotor().setPower(RF * gearCoefficient);
+                robot.addToTelemetry("1", LF + "\t" + RF);
+                robot.addToTelemetry("2", LB + "\t" + RB);
+                robot.getLFMotor().setPower(LF * gearCoefficient);
+                robot.getLBMotor().setPower(LB * gearCoefficient);
+                robot.getRBMotor().setPower(RB * gearCoefficient);
+                robot.getRFMotor().setPower(RF * gearCoefficient);
 
             } else {
 //                robot.addToTelemetry("TeleOp if statement lvl", 2);
-                getRobot().stopMotors();
+                robot.stopMotors();
             }
 
-            if (controller2.isPressed(JoystickController.Companion.getBUTTON_LT())) {
+            if (controller2.isPressed(JoystickController.BUTTON_LT)) {
                 leftPos = MathUtils.clamp(leftPos -= .1,0,1);
                 rightPos = MathUtils.clamp(rightPos -= .1,0,1);
-            } else if (controller2.isPressed(JoystickController.Companion.getBUTTON_RT())) {
+            } else if (controller2.isPressed(JoystickController.BUTTON_RT)) {
                 leftPos = MathUtils.clamp(leftPos += .1, 0, 1);
                 rightPos = MathUtils.clamp(rightPos += .1, 0, 1);
-            } else if (controller2.isPressed(JoystickController.Companion.getBUTTON_A()))
+            } else if (controller2.isPressed(JoystickController.BUTTON_A))
                 rightPos = MathUtils.clamp(rightPos -= .1,0,1);
-            else if (controller2.isPressed(JoystickController.Companion.getBUTTON_X()))
+            else if (controller2.isPressed(JoystickController.BUTTON_X))
                 leftPos = MathUtils.clamp(leftPos -= .1,0,1);
-            else if (controller2.isPressed(JoystickController.Companion.getBUTTON_B()))
+            else if (controller2.isPressed(JoystickController.BUTTON_B))
                 rightPos = MathUtils.clamp(rightPos += .1,0,1);
-            else if (controller2.isPressed(JoystickController.Companion.getBUTTON_Y()))
+            else if (controller2.isPressed(JoystickController.BUTTON_Y))
                 leftPos = MathUtils.clamp(leftPos += .1,0,1);
             if(controller2.isDpadUp()) {
                 leftPos = 1;
@@ -140,8 +140,8 @@ public class TeleOpCustomLogicRewrite extends LogicThread {
                 leftPos = 0.333;
                 rightPos = 0.333;
             }
-            getRobot().addToTelemetry("leftPos", leftPos);
-            getRobot().addToTelemetry("rightPos", rightPos);
+            robot.addToTelemetry("leftPos", leftPos);
+            robot.addToTelemetry("rightPos", rightPos);
            // robot.getGlyphLiftLeft().setPosition(1-leftPos);
             //robot.getGlyphLiftRight().setPosition(rightPos);
 
