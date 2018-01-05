@@ -14,6 +14,6 @@ import virtualRobot.logicThreads.testing.ColorSensorTestLogic;
 public class ColorSensorTestUpdate extends UpdateThread {
     @Override
     public void setLogicThread() {
-        setLogicThread(ColorSensorTestLogic.class);
+        logicThread = ColorSensorTestLogic.class;
     }
 }
