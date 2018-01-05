@@ -87,9 +87,9 @@ public class TakePictureTest extends LinearOpMode {
             telemetry.update();
         }
 
-        if (vuforia.rgb != null) {
-            Bitmap bm = Bitmap.createBitmap(vuforia.rgb.getWidth(), vuforia.rgb.getHeight(), Bitmap.Config.RGB_565);
-            bm.copyPixelsFromBuffer(vuforia.rgb.getPixels());
+        if (vuforia.getRgb() != null) {
+            Bitmap bm = Bitmap.createBitmap(vuforia.getRgb().getWidth(), vuforia.getRgb().getHeight(), Bitmap.Config.RGB_565);
+            bm.copyPixelsFromBuffer(vuforia.getRgb().getPixels());
             boolean analyzed = DavidClass.analyzePic2(bm);
             telemetry.addData("cameraReturn", analyzed + " ");
             telemetry.update();
