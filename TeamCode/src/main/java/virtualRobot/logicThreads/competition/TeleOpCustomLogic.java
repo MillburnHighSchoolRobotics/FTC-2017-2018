@@ -125,8 +125,26 @@ public class TeleOpCustomLogic extends LogicThread {
 
             if (controller1.isPressed(JoystickController.BUTTON_LB)) {
                 //Grasp Relic
+                robot.getRelicArmClaw().setPosition(0);
             } else if (controller1.isPressed(JoystickController.BUTTON_RB)) {
                 //Release Relic
+                robot.getRelicArmClaw().setPosition(1);
+            }
+
+            if (controller1.isDown(JoystickController.BUTTON_X)) {
+                //Extend arm
+                robot.getRelicArmWinch().setSpeed(1);
+            } else if (controller1.isDown(JoystickController.BUTTON_A)) {
+                //Retract arm
+                robot.getRelicArmWinch().setSpeed(-1);
+            }
+
+            if (controller1.isDown(JoystickController.BUTTON_B)) {
+                //Raise wrist
+                robot.getRelicArmWrist().setPosition(1);
+            } else if (controller1.isDown(JoystickController.BUTTON_Y)) {
+                //Lower wrist
+                robot.getRelicArmWrist().setPosition(0);
             }
 
 //            if (controller2.isPressed(JoystickController.BUTTON_A)) robot.moveClaw(false);
@@ -162,6 +180,7 @@ public class TeleOpCustomLogic extends LogicThread {
                 robot.getRollerLeft().setPower(0);
                 robot.getRollerRight().setSpeed(0);
             }
+
 
 //            if (!MathUtils.equals(intakeRotation, 0, 0.1)) {
 //                robot.getClawLeft().setPosition(intakeRotation);
