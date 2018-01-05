@@ -14,6 +14,6 @@ import virtualRobot.logicThreads.testing.JoystickTelemetryLogic;
 public class JoystickUpdate extends UpdateThread {
     @Override
     public void setLogicThread() {
-        setLogicThread(JoystickTelemetryLogic.class);
+        logicThread = JoystickTelemetryLogic.class;
     }
 }
