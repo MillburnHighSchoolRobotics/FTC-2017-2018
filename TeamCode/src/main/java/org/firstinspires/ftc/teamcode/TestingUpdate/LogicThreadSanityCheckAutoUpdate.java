@@ -13,6 +13,6 @@ import virtualRobot.logicThreads.testing.LogicThreadSanityCheckAutoLogic;
 public class LogicThreadSanityCheckAutoUpdate extends UpdateThread {
     @Override
     public void setLogicThread() {
-        logicThread = LogicThreadSanityCheckAutoLogic.class;
+        setLogicThread(LogicThreadSanityCheckAutoLogic.class);
     }
 }
