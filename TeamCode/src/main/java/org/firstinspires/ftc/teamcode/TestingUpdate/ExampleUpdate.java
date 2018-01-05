@@ -16,6 +16,6 @@ import virtualRobot.logicThreads.ExampleLogic;
 public class ExampleUpdate extends UpdateThread {
     @Override
     public void setLogicThread() {
-        setLogicThread(ExampleLogic.class);
+        logicThread = ExampleLogic.class;
     }
 }
