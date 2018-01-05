@@ -15,6 +15,6 @@ import virtualRobot.logicThreads.competition.TeleOpLogic;
 public class TeleOpUpdate extends UpdateThread {
     @Override
     public void setLogicThread() {
-        setLogicThread(TeleOpCustomLogic.class);
+        logicThread = TeleOpCustomLogic.class;
     }
 }
