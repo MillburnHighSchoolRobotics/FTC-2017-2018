@@ -70,7 +70,7 @@ public class fastRedIsLeft extends Command {
         robot.getRFMotor().clearEncoder();
         robot.getLBMotor().clearEncoder();
         robot.getRBMotor().clearEncoder();
-        int width = vuforia.rgb.getWidth(), height = vuforia.rgb.getHeight();
+        int width = vuforia.getRgb().getWidth(), height = vuforia.getRgb().getHeight();
         Vector2i start1;
         Vector2i end1;
         Vector2i start2;
@@ -91,15 +91,15 @@ public class fastRedIsLeft extends Command {
         double blue;
         boolean isInterrupted = false;
         double adjustedPower = 0;
-        bm.copyPixelsFromBuffer(vuforia.rgb.getPixels());
+        bm.copyPixelsFromBuffer(vuforia.getRgb().getPixels());
         long start = System.currentTimeMillis();
         Vector2i currentPos,currentPos2;
         curr = 0;
-        bm.copyPixelsFromBuffer(vuforia.rgb.getPixels());
+        bm.copyPixelsFromBuffer(vuforia.getRgb().getPixels());
         currentPos = new Vector2i(start1);
         currentPos2 = new Vector2i(start1.x, end1.y-1);
         Vector2i slope1, slope2;
-        if (vuforia.rgb.getHeight() > vuforia.rgb.getWidth()) {
+        if (vuforia.getRgb().getHeight() > vuforia.getRgb().getWidth()) {
             slope1 = new Vector2i(coF, closestToFrac(((double) (end1.y - start1.y)) / (end1.x - start1.x), coF));
             slope2 = new Vector2i(coF, closestToFrac(((double) (end2.y - start2.y)) / (end2.x - start2.x), coF));
         } else {
