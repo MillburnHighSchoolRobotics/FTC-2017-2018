@@ -86,8 +86,8 @@ public class OpenCVTest extends LinearOpMode {
 
         waitForStart();
 
-        width = vuforiaInstance.getRgb().getBufferWidth();
-        height = vuforiaInstance.getRgb().getHeight();
+        width = vuforiaInstance.rgb.getBufferWidth();
+        height = vuforiaInstance.rgb.getHeight();
 
         Bitmap bm = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
 
@@ -95,7 +95,7 @@ public class OpenCVTest extends LinearOpMode {
             Mat img = new Mat();
 
             //vuforiaInstance.rgb.getPixels().array().length +
-            bm.copyPixelsFromBuffer(vuforiaInstance.getRgb().getPixels());
+            bm.copyPixelsFromBuffer(vuforiaInstance.rgb.getPixels());
             Utils.bitmapToMat(bm, img);
             Mat bgrimg = new Mat();
             Imgproc.cvtColor(img, bgrimg, Imgproc.COLOR_RGB2BGR);
