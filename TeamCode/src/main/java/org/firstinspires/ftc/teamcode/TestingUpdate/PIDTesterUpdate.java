@@ -11,6 +11,6 @@ import virtualRobot.logicThreads.testing.PIDTesterLogic;
 public class PIDTesterUpdate extends UpdateThread {
     @Override
     public void setLogicThread() {
-        setLogicThread(PIDTesterLogic.class);
+        logicThread = PIDTesterLogic.class;
     }
 }
