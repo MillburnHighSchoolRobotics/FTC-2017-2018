@@ -21,17 +21,17 @@ public class StackingLogic extends LogicThread {
         boolean isInterrupted = false;
         resetGlyphsHeld();
         while (!isInterrupted) {
-            if (false && !getIsPaused().get()) { //See the block hit end of conveyor
+            if (false && !isPaused.get()) { //See the block hit end of conveyor
                 //Check for color
                 currentIndex++;
                 GlyphColor color = GlyphColor.UNKNOWN;
                 glyphsHeld[currentIndex] = GlyphColor.STACKING;
-                getRobot().getRollerLeft().setPower(0);
-                getRobot().getRollerRight().setSpeed(0);
+                robot.getRollerLeft().setPower(0);
+                robot.getRollerRight().setSpeed(0);
 //                robot.moveClaw(false);
 //                runCommand(new MoveMotor(robot.getGlyphLift(), 1, 2000, Translate.RunMode.WITH_PID, false));
-                getRobot().getRollerLeft().setPower(1);
-                getRobot().getRollerRight().setSpeed(1);
+                robot.getRollerLeft().setPower(1);
+                robot.getRollerRight().setSpeed(1);
 //                robot.moveClaw(true);
 //                runCommand(new MoveMotor(robot.getGlyphLift(), 1, 0, Translate.RunMode.WITH_PID, false));
                 glyphsHeld[currentIndex] = color;
@@ -61,11 +61,11 @@ public class StackingLogic extends LogicThread {
     }
 
     public synchronized void pause() {
-        getIsPaused().set(true);
+        isPaused.set(true);
     }
 
     public synchronized void resumeThread() {
-        getIsPaused().set(false);
+        isPaused.set(false);
     }
 
     public enum GlyphColor {
