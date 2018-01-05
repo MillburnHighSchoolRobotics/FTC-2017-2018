@@ -10,20 +10,20 @@ import virtualRobot.LogicThread;
 public class TestLiftTeleOpLogic extends LogicThread {
     @Override
     protected void addPresets() {
-        shouldStartISR = false;
+        setShouldStartISR(false);
     }
 
     @Override
     protected void realRun() throws InterruptedException {
         boolean isInterrupted = false;
-        JoystickController controller1 = robot.getJoystickController1();
-        JoystickController controller2 = robot.getJoystickController2();
+        JoystickController controller1 = getRobot().getJoystickController1();
+        JoystickController controller2 = getRobot().getJoystickController2();
 
         while (!isInterrupted) {
             controller1.logicalRefresh();
             controller2.logicalRefresh();
 
-            if (controller1.isDown(JoystickController.BUTTON_A)) {
+            if (controller1.isDown(JoystickController.Companion.getBUTTON_A())) {
 
             }
 
