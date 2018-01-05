@@ -14,12 +14,12 @@ public class CollisionMonitor extends MonitorThread {
     private final double COLLISION_THRESHOLD_DELTA_G = 0.5;
 
     public CollisionMonitor() {
-        lastAccel = getRobot().getImu().getLinearAccel();
+        lastAccel = robot.getImu().getLinearAccel();
     }
 
     @Override
     public boolean setStatus() {
-        Vector3f accel = getRobot().getImu().getLinearAccel();
+        Vector3f accel = robot.getImu().getLinearAccel();
         double curr_world_linear_accel_x = accel.x;
         double currentJerkX = curr_world_linear_accel_x - lastAccel.x;
         lastAccel.x = curr_world_linear_accel_x;
