@@ -14,6 +14,6 @@ import virtualRobot.logicThreads.testing.SleepyBoiTestLogic;
 public class SleepyBoiTestUpdate extends UpdateThread {
     @Override
     public void setLogicThread() {
-        logicThread = SleepyBoiTestLogic.class;
+        setLogicThread(SleepyBoiTestLogic.class);
     }
 }
