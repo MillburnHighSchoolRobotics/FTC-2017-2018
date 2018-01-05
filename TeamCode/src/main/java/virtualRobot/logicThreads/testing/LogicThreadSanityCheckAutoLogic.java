@@ -15,7 +15,7 @@ import virtualRobot.utils.MathUtils;
 public class LogicThreadSanityCheckAutoLogic extends LogicThread {
     @Override
     protected void addPresets() {
-        setShouldStartISR(false);
+        shouldStartISR = false;
     }
 
     @Override
@@ -23,8 +23,8 @@ public class LogicThreadSanityCheckAutoLogic extends LogicThread {
         double pow = 1;
         int n = 0;
         while (!Thread.currentThread().isInterrupted()) {
-            runCommand(new MoveMotor(getRobot().getLBMotor(), pow, 1000));
-            getRobot().addToTelemetry("Iteration: ", n++);
+            runCommand(new MoveMotor(robot.getLBMotor(), pow, 1000));
+            robot.addToTelemetry("Iteration: ", n++);
             if (MathUtils.equals(pow % 1, 0)) {
                 pow *= 0.5;
             } else {
