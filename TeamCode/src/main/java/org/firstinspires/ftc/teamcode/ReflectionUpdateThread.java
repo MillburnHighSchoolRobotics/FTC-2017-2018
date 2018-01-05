@@ -70,8 +70,8 @@ public abstract class ReflectionUpdateThread extends OpMode {
     private DcMotor leftFront, leftBack, rightFront, rightBack;
     private DcMotor liftLeft, liftRight;
     private CRServo boxLeft, boxRight;
-    private Servo clawLeft, clawRight;
-    private CRServo rollerLeft, rollerRight;
+    private CRServo rollerRight;
+    private DcMotor rollerLeft;
     private Servo jewelServo;
     private ColorSensor colorSensor;
 
@@ -85,7 +85,8 @@ public abstract class ReflectionUpdateThread extends OpMode {
 
     private Motor vLeftFront, vLeftBack, vRightFront, vRightBack;
     private Motor vLiftLeft, vLiftRight;
-    private ContinuousRotationServo vRollerLeft, vRollerRight;
+    private ContinuousRotationServo vRollerRight;
+    private Motor vRollerLeft;
     private Motor vRelicArm;
     private ContinuousRotationServo vRelicArmWinch;
     private virtualRobot.hardware.Servo vJewelServo;
@@ -123,7 +124,7 @@ public abstract class ReflectionUpdateThread extends OpMode {
         rightFront = hardwareMap.dcMotor.get("rightFront");
         rightBack = hardwareMap.dcMotor.get("rightBack");
         Log.d("Components ", "Motors Initialized");
-        rollerLeft = hardwareMap.crservo.get("rollerLeft");
+        rollerLeft = hardwareMap.dcMotor.get("rollerLeft");
         rollerRight = hardwareMap.crservo.get("rollerRight");
         boxLeft = hardwareMap.crservo.get("boxLeft");
         boxRight = hardwareMap.crservo.get("boxRight");
@@ -134,8 +135,6 @@ public abstract class ReflectionUpdateThread extends OpMode {
 //        //SERVO SETUP (with physical hardware, e.g. servo = hardwareMap....)
 //		relicArmWinch = hardwareMap.servo.get("relicArmWinch");
         jewelServo = hardwareMap.servo.get("jewelArm");
-        clawLeft = hardwareMap.servo.get("clawLeft");
-        clawRight = hardwareMap.servo.get("clawRight");
 
         //REVERSE ONE SIDE (If needed, e.g. rightFront.setDirection(DcMotor.Direction.REVERSE)
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -160,8 +159,6 @@ public abstract class ReflectionUpdateThread extends OpMode {
         //FETCH VIRTUAL ROBOT FROM COMMAND INTERFACE
         robot = Command.ROBOT;
         robot.initialBattery = getBatteryVoltage();
-        clawLeft.setPosition(0);
-        clawRight.setPosition(1);
         jewelServo.setPosition(0);
 
         //FETCH CONSTANT COMPONENTS OF VIRTUAL ROBOT (Do not touch)
@@ -183,8 +180,6 @@ public abstract class ReflectionUpdateThread extends OpMode {
         vRelicArmWinch = robot.getRelicArmWinch();
         vRollerLeft = robot.getRollerLeft();
         vRollerRight = robot.getRollerRight();
-        vClawLeft = robot.getClawLeft();
-        vClawRight = robot.getClawRight();
         vLiftLeft = robot.getLiftLeft();
         vLiftRight = robot.getLiftRight();
 
@@ -213,7 +208,7 @@ public abstract class ReflectionUpdateThread extends OpMode {
         vLeftBack.setMotorType(leftBack.getMotorType());
         vRightFront.setMotorType(rightFront.getMotorType());
         vRightBack.setMotorType(rightBack.getMotorType());
-//		vRollerLeft.setMotorType(rollerLeft.getMotorType());
+        vRollerLeft.setMotorType(rollerLeft.getMotorType());
 //		vRollerRight.setMotorType(rollerRight.getMotorType());
 //		vRelicArm.setMotorType(relicArm.getMotorType());
 
@@ -252,8 +247,6 @@ public abstract class ReflectionUpdateThread extends OpMode {
 
         //Copy positions to virtualRobot
 //		vRelicArmWinch.setSpeed(relicArmWinch.getPosition());
-        vClawLeft.setPosition(clawLeft.getPosition());
-        vClawRight.setPosition(clawRight.getPosition());
         vJewelServo.setPosition(jewelServo.getPosition());
 
         //set sensors e.g. vDriveRightMotorEncoder.setRawValue(-rightFront.getCurrentPosition())
@@ -271,7 +264,7 @@ public abstract class ReflectionUpdateThread extends OpMode {
         vLeftBack.setPosition(leftBack.getCurrentPosition());
         vRightFront.setPosition(rightFront.getCurrentPosition());
         vRightBack.setPosition(rightBack.getCurrentPosition());
-//		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
+        vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
 //		vRollerRight.setPosition(rollerRight.getCurrentPosition());
 //		vRelicArm.setPosition(relicArm.getCurrentPosition());
 
@@ -338,6 +331,7 @@ public abstract class ReflectionUpdateThread extends OpMode {
         vRightBack.setPosition(rightBack.getCurrentPosition());
         vLiftLeft.setPosition(liftLeft.getCurrentPosition());
         vLiftRight.setPosition(liftRight.getCurrentPosition());
+        vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
 //		Log.d("Completed", "virtual encoders");
 
         vColorSensor.setRed(colorSensor.red());
@@ -355,8 +349,6 @@ public abstract class ReflectionUpdateThread extends OpMode {
 
         //Copy Servo Positions
 //		relicArmWinch.setPosition(vRelicArmWinch.getSpeed());
-        clawLeft.setPosition(vClawLeft.getPosition());
-        clawRight.setPosition(vClawRight.getPosition());
         boxLeft.setPower(vBoxLeft.getSpeed());
         boxRight.setPower(vBoxRight.getSpeed());
         jewelServo.setPosition(vJewelServo.getPosition());
@@ -368,7 +360,7 @@ public abstract class ReflectionUpdateThread extends OpMode {
         double rightFrontPower = vRightFront.getPower();
         double rightBackPower = vRightBack.getPower();
         double relicArmPower = vRelicArm.getPower();
-        double rollerLeftPower = vRollerLeft.getSpeed();
+        double rollerLeftPower = vRollerLeft.getPower();
         double rollerRightPower = vRollerRight.getSpeed();
         double liftLeftPower = vLiftLeft.getPower();
         double liftRightPower = vLiftRight.getPower();

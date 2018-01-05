@@ -39,12 +39,14 @@ public class SallyJoeBot {
 
     //Motors and Servos
     private Motor LFMotor, LBMotor, RFMotor, RBMotor;
-    private ContinuousRotationServo rollerLeft, rollerRight;
+    private ContinuousRotationServo rollerRight;
+    private Motor rollerLeft;
     private ContinuousRotationServo boxLeft, boxRight;
     private Motor relicArm;
     private Motor liftLeft, liftRight;
-    private Servo clawLeft, clawRight;
     private ContinuousRotationServo relicArmWinch;
+    private Servo relicArmWrist;
+    private Servo relicArmClaw;
     private Servo jewelServo;
     private DumbColorSensor colorSensor;
 
@@ -72,16 +74,16 @@ public class SallyJoeBot {
         LBMotor = new Motor();
         RFMotor = new Motor();
         RBMotor = new Motor();
-        rollerLeft = new ContinuousRotationServo();
+        rollerLeft = new Motor();
         rollerRight = new ContinuousRotationServo();
         boxLeft = new ContinuousRotationServo();
         boxRight = new ContinuousRotationServo();
         relicArm = new Motor();
         liftLeft = new Motor();
         liftRight = new Motor();
-        clawLeft = new Servo();
-        clawRight = new Servo();
         relicArmWinch = new ContinuousRotationServo();
+        relicArmWrist = new Servo();
+        relicArmClaw = new Servo();
         jewelServo = new Servo();
         colorSensor = new DumbColorSensor();
         //capLift = new SyncedMotors(LiftLeftMotor, LiftRightMotor, LiftLeftEncoder, LiftRightEncoder, KP, KI, KD, SyncedMotors.SyncAlgo.POSITION);
@@ -90,47 +92,88 @@ public class SallyJoeBot {
     }
     //All of Autonomous and TeleopRobot's functions are created e.g. (public synchronized Motor getMotor() {return Motor;}
 
-    public synchronized DumbColorSensor getColorSensor() { return colorSensor; }
+    public synchronized DumbColorSensor getColorSensor() {
+        return colorSensor;
+    }
 
-    public synchronized Sensor getVoltageSensor() { return voltageSensor; }
+    public synchronized Sensor getVoltageSensor() {
+        return voltageSensor;
+    }
 
-    public synchronized IMU getImu() { return imu; }
+    public synchronized IMU getImu() {
+        return imu;
+    }
 
-    public synchronized Motor getLFMotor() { return LFMotor; }
+    public synchronized Motor getLFMotor() {
+        return LFMotor;
+    }
 
-    public synchronized Motor getLBMotor() { return LBMotor; }
+    public synchronized Motor getLBMotor() {
+        return LBMotor;
+    }
 
-    public synchronized Motor getRFMotor() { return RFMotor; }
+    public synchronized Motor getRFMotor() {
+        return RFMotor;
+    }
 
-    public synchronized Motor getRBMotor() { return RBMotor; }
+    public synchronized Motor getRBMotor() {
+        return RBMotor;
+    }
 
-    public synchronized Motor getLiftLeft() { return liftLeft; }
+    public synchronized Motor getLiftLeft() {
+        return liftLeft;
+    }
 
-    public synchronized Motor getLiftRight() { return liftRight; }
+    public synchronized Motor getLiftRight() {
+        return liftRight;
+    }
 
-    public synchronized ContinuousRotationServo getBoxLeft() { return boxLeft; }
+    public synchronized ContinuousRotationServo getBoxLeft() {
+        return boxLeft;
+    }
 
-    public synchronized ContinuousRotationServo getBoxRight() { return boxRight; }
+    public synchronized ContinuousRotationServo getBoxRight() {
+        return boxRight;
+    }
 
-    public synchronized Motor getRelicArm() { return relicArm; }
+    public synchronized Motor getRelicArm() {
+        return relicArm;
+    }
 
-    public synchronized ContinuousRotationServo getRelicArmWinch() { return relicArmWinch; }
+    public synchronized ContinuousRotationServo getRelicArmWinch() {
+        return relicArmWinch;
+    }
 
-    public synchronized ContinuousRotationServo getRollerLeft() { return rollerLeft; }
+    public synchronized Servo getRelicArmWrist() {
+        return relicArmWrist;
+    }
 
-    public synchronized ContinuousRotationServo getRollerRight() { return rollerRight; }
+    public synchronized Servo getRelicArmClaw() {
+        return relicArmClaw;
+    }
 
-    public synchronized Servo getClawLeft() { return clawLeft; }
+    public synchronized Motor getRollerLeft() {
+        return rollerLeft;
+    }
 
-    public synchronized Servo getClawRight() { return clawRight; }
+    public synchronized ContinuousRotationServo getRollerRight() {
+        return rollerRight;
+    }
 
-    public synchronized Servo getJewelServo() { return jewelServo; }
+    public synchronized Servo getJewelServo() {
+        return jewelServo;
+    }
 
-    public synchronized StateSensor getStateSensor() { return stateSensor; }
+    public synchronized StateSensor getStateSensor() {
+        return stateSensor;
+    }
 
-    public synchronized void stopMotors() {LFMotor.setPower(0); RFMotor.setPower(0); LBMotor.setPower(0); RBMotor.setPower(0);}
-
-    public synchronized void moveClaw(boolean isOpen) { clawLeft.setPosition(isOpen ? 0.9 : 0.75); clawRight.setPosition(isOpen ? 0.1 : 0.55);}
+    public synchronized void stopMotors() {
+        LFMotor.setPower(0);
+        RFMotor.setPower(0);
+        LBMotor.setPower(0);
+        RBMotor.setPower(0);
+    }
 
     public synchronized JoystickController getJoystickController1() {
         return joystickController1;
@@ -140,17 +183,21 @@ public class SallyJoeBot {
         return joystickController2;
     }
 
-    public synchronized void addToProgress (String s) {
+    public synchronized void addToProgress(String s) {
         robotProgress.add(s);
     }
 
-    public synchronized ArrayList<String> getProgress () {
+    public synchronized ArrayList<String> getProgress() {
         return robotProgress;
     }
 
-    public synchronized void addToTelemetry(String s, Object arg) { telemetry.put(s,arg); }
+    public synchronized void addToTelemetry(String s, Object arg) {
+        telemetry.put(s, arg);
+    }
 
-    public synchronized ConcurrentHashMap<String, Object> getTelemetry () { return telemetry; }
+    public synchronized ConcurrentHashMap<String, Object> getTelemetry() {
+        return telemetry;
+    }
 
     public synchronized void initCVTelemetry() {
         cvtel = new Retrofit.Builder()

@@ -15,9 +15,10 @@ public abstract class AutonomousLogicThread extends LogicThread {
     public RelicRecoveryVuMark currentVuMark = RelicRecoveryVuMark.UNKNOWN;
     public AtomicBoolean redIsLeft = new AtomicBoolean(false);
 
+
     protected void depositGlyph() throws InterruptedException {
         runCommand(new Translate(100, Translate.Direction.FORWARD, 0));
-        robot.moveClaw(true);
+        //TODO: RUN BOX TO DEPOSIT GLYPH
         runCommand(new Translate(100, Translate.Direction.BACKWARD, 0));
     }
 }

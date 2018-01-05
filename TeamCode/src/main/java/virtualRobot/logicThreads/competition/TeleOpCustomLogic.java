@@ -125,8 +125,26 @@ public class TeleOpCustomLogic extends LogicThread {
 
             if (controller1.isPressed(JoystickController.BUTTON_LB)) {
                 //Grasp Relic
+                robot.getRelicArmClaw().setPosition(0);
             } else if (controller1.isPressed(JoystickController.BUTTON_RB)) {
                 //Release Relic
+                robot.getRelicArmClaw().setPosition(1);
+            }
+
+            if (controller1.isDown(JoystickController.BUTTON_X)) {
+                //Extend arm
+                robot.getRelicArmWinch().setSpeed(1);
+            } else if (controller1.isDown(JoystickController.BUTTON_A)) {
+                //Retract arm
+                robot.getRelicArmWinch().setSpeed(-1);
+            }
+
+            if (controller1.isDown(JoystickController.BUTTON_B)) {
+                //Raise wrist
+                robot.getRelicArmWrist().setPosition(1);
+            } else if (controller1.isDown(JoystickController.BUTTON_Y)) {
+                //Lower wrist
+                robot.getRelicArmWrist().setPosition(0);
             }
 
 //            if (controller2.isPressed(JoystickController.BUTTON_A)) robot.moveClaw(false);
@@ -156,12 +174,13 @@ public class TeleOpCustomLogic extends LogicThread {
             double intakeRotation = controller2.getValue(JoystickController.X_2);
 
             if (!MathUtils.equals(intakeDirection, 0, 0.1)) {
-                robot.getRollerLeft().setSpeed(intakeDirection * intakeDirectionSensitivity);
+                robot.getRollerLeft().setPower(intakeDirection * intakeDirectionSensitivity);
                 robot.getRollerRight().setSpeed(-intakeDirection * intakeDirectionSensitivity);
             } else {
-                robot.getRollerLeft().setSpeed(0);
+                robot.getRollerLeft().setPower(0);
                 robot.getRollerRight().setSpeed(0);
             }
+
 
 //            if (!MathUtils.equals(intakeRotation, 0, 0.1)) {
 //                robot.getClawLeft().setPosition(intakeRotation);
@@ -176,14 +195,14 @@ public class TeleOpCustomLogic extends LogicThread {
                 robot.getBoxRight().setSpeed(0);
             }
 
-            if (controller2.isDown(JoystickController.BUTTON_RB) && System.currentTimeMillis() - lastIntakePosChange > 50) {
-                intakePos = MathUtils.clamp(intakePos + 0.05, 0, 1);
-                lastIntakePosChange = System.currentTimeMillis();
-            } else if (controller2.isDown(JoystickController.BUTTON_LB) && System.currentTimeMillis() - lastIntakePosChange > 50) {
-                intakePos = MathUtils.clamp(intakePos - 0.05, 0, 1);
-                lastIntakePosChange = System.currentTimeMillis();
-            }
-            robot.getClawLeft().setPosition(intakePos);
+//            if (controller2.isDown(JoystickController.BUTTON_RB) && System.currentTimeMillis() - lastIntakePosChange > 50) {
+//                intakePos = MathUtils.clamp(intakePos + 0.05, 0, 1);
+//                lastIntakePosChange = System.currentTimeMillis();
+//            } else if (controller2.isDown(JoystickController.BUTTON_LB) && System.currentTimeMillis() - lastIntakePosChange > 50) {
+//                intakePos = MathUtils.clamp(intakePos - 0.05, 0, 1);
+//                lastIntakePosChange = System.currentTimeMillis();
+//            }
+//            robot.getClawLeft().setPosition(intakePos);
 
             if (controller2.isDpadUp()) {
                 robot.getLiftLeft().setPower(liftSpeed);
