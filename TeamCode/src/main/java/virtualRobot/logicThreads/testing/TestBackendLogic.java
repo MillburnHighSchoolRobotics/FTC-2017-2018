@@ -39,7 +39,7 @@ public class TestBackendLogic extends LogicThread {
     @Override
     protected void realRun() throws InterruptedException{
 
-        runCommand(new MoveMotor(getRobot().getLFMotor(),1,5000));
+        runCommand(new MoveMotor(robot.getLFMotor(),1,5000));
 //        runCommand(new Command() {
 //            @Override
 //            protected int activate(String s) {
