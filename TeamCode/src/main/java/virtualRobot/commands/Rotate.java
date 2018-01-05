@@ -232,7 +232,7 @@ public class Rotate extends Command {
                             return isInterrupted;
                     }
 
-                    currentAngle = angle + ((robot.getRFMotor().getPosition() / robot.getRFMotor().getMotorType().getTicksPerRev()) * robot.wheelDiameter * Math.PI) / (Math.sqrt((Math.pow(robot.botWidth, 2) + Math.pow(robot.botLength, 2))) * Math.PI) * 360;
+                    currentAngle = angle + ((robot.getRFMotor().getPosition() / robot.getRFMotor().getMotorType().getTicksPerRev()) * robot.getWheelDiameter() * Math.PI) / (Math.sqrt((Math.pow(robot.getBotWidth(), 2) + Math.pow(robot.getBotLength(), 2))) * Math.PI) * 360;
                     robot.addToTelemetry("Rotate: ", currentAngle);
                     adjustedPower = MathUtils.clamp(pidController.getPIDOutput(currentAngle), -1, 1);
                     robot.getLBMotor().setPower(adjustedPower);
