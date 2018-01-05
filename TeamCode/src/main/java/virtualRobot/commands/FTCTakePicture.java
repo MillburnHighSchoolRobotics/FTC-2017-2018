@@ -34,9 +34,9 @@ public class FTCTakePicture extends Command{
     public boolean changeRobotState() throws InterruptedException {
 
         //Converts VuforiaLocalizerImplSubclass' picture to a bitmap for analysis by DavidClass
-        if (vuforia.getRgb() != null){
-            Bitmap bm =  Bitmap.createBitmap(vuforia.getRgb().getWidth(), vuforia.getRgb().getHeight(), Bitmap.Config.RGB_565);
-            bm.copyPixelsFromBuffer(vuforia.getRgb().getPixels());
+        if (vuforia.rgb != null){
+            Bitmap bm =  Bitmap.createBitmap(vuforia.rgb.getWidth(), vuforia.rgb.getHeight(), Bitmap.Config.RGB_565);
+            bm.copyPixelsFromBuffer(vuforia.rgb.getPixels());
             if (mode==Mode.TAKING_PICTURE){
                 boolean analyzed = DavidClass.analyzePic2(bm);
                 BetterLog.d("DavidClass","Analyzed: " + analyzed + " ");
