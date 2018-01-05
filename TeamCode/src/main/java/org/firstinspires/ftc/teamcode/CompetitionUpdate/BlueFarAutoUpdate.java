@@ -14,6 +14,6 @@ import virtualRobot.logicThreads.competition.BlueFarAutoLogic;
 public class BlueFarAutoUpdate extends UpdateThread {
     @Override
     public void setLogicThread() {
-        logicThread = BlueFarAutoLogic.class;
+        setLogicThread(BlueFarAutoLogic.class);
     }
 }
