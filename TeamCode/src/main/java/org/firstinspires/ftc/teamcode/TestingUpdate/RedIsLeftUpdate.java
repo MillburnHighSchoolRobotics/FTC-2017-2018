@@ -13,6 +13,6 @@ import virtualRobot.logicThreads.testing.RedIsLeftLogic;
 public class RedIsLeftUpdate extends UpdateThread {
     @Override
     public void setLogicThread() {
-        setLogicThread(RedIsLeftLogic.class);
+        logicThread = RedIsLeftLogic.class;
     }
 }
