@@ -87,6 +87,7 @@ public abstract class  UpdateThread extends OpMode {
 	private CRServo relicArmWinch;
 	private Servo jewelServo;
 	private Servo relicArmWrist;
+	private Servo relicArmClaw;
 	private ColorSensor colorSensor;
 
 //Now initiate the VIRTUAL componenents (from VirtualRobot!!), e.g. private Motor vDriveRightMotor, private virtualRobot.hardware.Servo ..., private Sensor vDriveRightMotorEncoder, private LocationSensor vLocationSensor
@@ -105,6 +106,7 @@ public abstract class  UpdateThread extends OpMode {
 	private ContinuousRotationServo vRelicArmWinch;
 	private virtualRobot.hardware.Servo vJewelServo;
 	private virtualRobot.hardware.Servo vRelicArmWrist;
+	private virtualRobot.hardware.Servo vRelicArmClaw;
 
 
 	private ContinuousRotationServo vBoxLeft, vBoxRight;
@@ -151,6 +153,7 @@ public abstract class  UpdateThread extends OpMode {
 //		relicArmWinch = hardwareMap.servo.get("relicArmWinch");
 		jewelServo = hardwareMap.servo.get("jewelArm");
 		relicArmWrist = hardwareMap.servo.get("relicArmWrist");
+		relicArmClaw = hardwareMap.servo.get("relicArmClaw");
 
         //REVERSE ONE SIDE (If needed, e.g. rightFront.setDirection(DcMotor.Direction.REVERSE)
 		rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -179,7 +182,8 @@ public abstract class  UpdateThread extends OpMode {
 		robot = Command.ROBOT;
 		robot.initialBattery = getBatteryVoltage();
 		jewelServo.setPosition(0.45);
-		relicArmWrist.setPosition(0);
+		relicArmWrist.setPosition(0); //TODO: Tune init value
+		relicArmClaw.setPosition(0); //TODO Tune init value
 
 		//FETCH CONSTANT COMPONENTS OF VIRTUAL ROBOT (Do not touch)
         vJoystickController1 = robot.getJoystickController1();
@@ -197,6 +201,7 @@ public abstract class  UpdateThread extends OpMode {
 		vBoxRight = robot.getBoxRight();
 		vJewelServo = robot.getJewelServo();
 		vRelicArmWrist = robot.getRelicArmWrist();
+		vRelicArmClaw = robot.getRelicArmClaw();
 		vRelicArm = robot.getRelicArm();
 		vRelicArmWinch = robot.getRelicArmWinch();
 		vRollerLeft = robot.getRollerLeft();
@@ -253,6 +258,7 @@ public abstract class  UpdateThread extends OpMode {
 //		vRelicArmWinch.setSpeed(relicArmWinch.getPosition());
 		vJewelServo.setPosition(jewelServo.getPosition());
 		vRelicArmWrist.setPosition(relicArmWrist.getPosition());
+		vRelicArmClaw.setPosition(relicArmClaw.getPosition());
 
 		//set sensors e.g. vDriveRightMotorEncoder.setRawValue(-rightFront.getCurrentPosition())
         vVoltageSensor.setRawValue(getBatteryVoltage());
@@ -358,6 +364,7 @@ public abstract class  UpdateThread extends OpMode {
 		boxRight.setPower(vBoxRight.getSpeed());
 		jewelServo.setPosition(vJewelServo.getPosition());
 		relicArmWrist.setPosition(vRelicArmWrist.getPosition());
+		relicArmClaw.setPosition(vRelicArmClaw.getPosition());
 //		Log.d("Completed", "servos");
 
 		// Capture Motor Powers,E.g. double leftPower = vDriveLeftMotore.getPower();
