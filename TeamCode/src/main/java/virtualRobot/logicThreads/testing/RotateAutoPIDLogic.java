@@ -29,16 +29,16 @@ public class RotateAutoPIDLogic extends LogicThread {
 
                 @Override
                 public boolean isConditionMet() {
-                    boolean temp = MathUtils.equals(robot.getImu().getHeading(), lastYaw);
-                    lastYaw = robot.getImu().getHeading();
+                    boolean temp = MathUtils.equals(getRobot().getImu().getHeading(), lastYaw);
+                    lastYaw = getRobot().getImu().getHeading();
                     return temp;
                 }
             }, "BREAK"));
             endTime = System.currentTimeMillis();
             currentKPTooBig = (endTime - startTime >= 35000);
             BetterLog.d("AutoPID", "Iteration: " + iteration + " KU: " + kP + " Increment: " + increment);
-            robot.addToTelemetry("KU: ", kP + " Increment: " + increment);
-            robot.addToTelemetry("Iteration #", iteration);
+            getRobot().addToTelemetry("KU: ", kP + " Increment: " + increment);
+            getRobot().addToTelemetry("Iteration #", iteration);
 
             if (iteration != 1) {
                 if (lastKPTooSmall && currentKPTooBig) {
