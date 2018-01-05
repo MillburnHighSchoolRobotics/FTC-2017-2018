@@ -14,13 +14,13 @@ public class DebrisMonitor extends MonitorThread {
 
     @Override
     public boolean setStatus() {
-        double totalAngle = Math.sqrt(Math.pow(getRobot().getImu().getRoll(), 2) + Math.pow(getRobot().getImu().getPitch(), 2));
+        double totalAngle = Math.sqrt(Math.pow(robot.getImu().getRoll(), 2) + Math.pow(robot.getImu().getPitch(), 2));
         if (totalAngle > 2.5) {
-            BetterLog.d("RoboAngle", getRobot().getImu().getRoll() + " " + getRobot().getImu().getPitch() + " " + totalAngle);
+            BetterLog.d("RoboAngle", robot.getImu().getRoll() + " " + robot.getImu().getPitch() + " " + totalAngle);
             BetterLog.d("RoboAngle", "Robot died in debris thread");
             return false;
         }
-        BetterLog.d("RoboAngle", "we still in here " + getRobot().getImu().getRoll() + " " + getRobot().getImu().getPitch());
+        BetterLog.d("RoboAngle", "we still in here " + robot.getImu().getRoll() + " " + robot.getImu().getPitch());
         return true;
     }
 
