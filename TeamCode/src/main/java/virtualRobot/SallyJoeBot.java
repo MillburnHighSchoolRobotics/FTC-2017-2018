@@ -43,6 +43,7 @@ public class SallyJoeBot {
     private Motor rollerLeft;
     private ContinuousRotationServo boxLeft, boxRight;
     private Motor relicArm;
+    private Servo relicArmWrist;
     private Motor liftLeft, liftRight;
     private ContinuousRotationServo relicArmWinch;
     private Servo relicArmWrist;

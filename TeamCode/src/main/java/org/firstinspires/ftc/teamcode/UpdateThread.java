@@ -259,7 +259,6 @@ public abstract class  UpdateThread extends OpMode {
 		vJewelServo.setPosition(jewelServo.getPosition());
 		vRelicArmWrist.setPosition(relicArmWrist.getPosition());
 		vRelicArmClaw.setPosition(relicArmClaw.getPosition());
-
 		//set sensors e.g. vDriveRightMotorEncoder.setRawValue(-rightFront.getCurrentPosition())
         vVoltageSensor.setRawValue(getBatteryVoltage());
 
