@@ -50,9 +50,9 @@ public class EthanClass extends Command {
         }
     }
     public EthanClass() {
-        vuforiaInstance = UpdateThread.Companion.getVuforiaInstance();
-        width = vuforiaInstance.getRgb().getBufferWidth();
-        height = vuforiaInstance.getRgb().getHeight();
+        vuforiaInstance = UpdateThread.vuforiaInstance;
+        width = vuforiaInstance.rgb.getBufferWidth();
+        height = vuforiaInstance.rgb.getHeight();
         robot.initCVTelemetry();
     }
 
@@ -67,7 +67,7 @@ public class EthanClass extends Command {
 //        Log.d("EthanClass", Integer.toString(point++));
         Mat img = new Mat();
         Bitmap bm = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-        bm.copyPixelsFromBuffer(vuforiaInstance.getRgb().getPixels());
+        bm.copyPixelsFromBuffer(vuforiaInstance.rgb.getPixels());
         Utils.bitmapToMat(bm, img);
         Mat imgbgr = new Mat();
         Imgproc.cvtColor(img, imgbgr, Imgproc.COLOR_RGB2BGR);
@@ -100,7 +100,7 @@ public class EthanClass extends Command {
         });
 //        Log.d("EthanClass", Integer.toString(point++));
         if (contours.size() <= 0) {
-            currentThread.getRedIsLeft().set(false);
+            currentThread.redIsLeft.set(false);
             return Thread.currentThread().isInterrupted();
         }
         Point centerRed = new Point();
@@ -125,13 +125,13 @@ public class EthanClass extends Command {
         });
 //        Log.d("EthanClass", Integer.toString(point++));
         if (contours.size() <= 0) {
-            currentThread.getRedIsLeft().set(false);
+            currentThread.redIsLeft.set(false);
             return Thread.currentThread().isInterrupted();
         }
         Point centerBlue = new Point();
         float[] radiusBlue = new float[1];
         Imgproc.minEnclosingCircle(new MatOfPoint2f(contours.get(contours.size() - 1).toArray()),centerBlue,radiusBlue);
-        currentThread.getRedIsLeft().set(centerRed.x < centerBlue.x);
+        currentThread.redIsLeft.set(centerRed.x < centerBlue.x);
 //        Log.d("EthanClass", Integer.toString(point++));
         return Thread.currentThread().isInterrupted();
     }
