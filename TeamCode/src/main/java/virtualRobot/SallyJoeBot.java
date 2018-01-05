@@ -43,6 +43,7 @@ public class SallyJoeBot {
     private Motor rollerLeft;
     private ContinuousRotationServo boxLeft, boxRight;
     private Motor relicArm;
+    private Servo relicArmWrist;
     private Motor liftLeft, liftRight;
     private ContinuousRotationServo relicArmWinch;
     private Servo jewelServo;
@@ -80,6 +81,7 @@ public class SallyJoeBot {
         liftLeft = new Motor();
         liftRight = new Motor();
         relicArmWinch = new ContinuousRotationServo();
+        relicArmWrist = new Servo();
         jewelServo = new Servo();
         colorSensor = new DumbColorSensor();
         //capLift = new SyncedMotors(LiftLeftMotor, LiftRightMotor, LiftLeftEncoder, LiftRightEncoder, KP, KI, KD, SyncedMotors.SyncAlgo.POSITION);
@@ -138,6 +140,10 @@ public class SallyJoeBot {
 
     public synchronized ContinuousRotationServo getRelicArmWinch() {
         return relicArmWinch;
+    }
+
+    public synchronized Servo getRelicArmWrist() {
+        return relicArmWrist;
     }
 
     public synchronized Motor getRollerLeft() {
