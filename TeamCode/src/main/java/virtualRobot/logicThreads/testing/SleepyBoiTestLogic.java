@@ -16,7 +16,7 @@ public class SleepyBoiTestLogic extends LogicThread {
         int pepe = 0;
         int pepe2 = 1;
         while (true) {
-            getRobot().addToTelemetry("Count", meme++);
+            robot.addToTelemetry("Count", meme++);
             pepe = 1 - pepe;
             pepe2 = 1 - pepe2;
 //            robot.getClawLeft().setPosition(pepe);
