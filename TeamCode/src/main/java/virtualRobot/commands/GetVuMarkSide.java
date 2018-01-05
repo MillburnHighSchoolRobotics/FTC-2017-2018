@@ -15,7 +15,7 @@ import virtualRobot.logicThreads.AutonomousLogicThread;
  */
 
 public class GetVuMarkSide extends Command {
-    VuforiaLocalizerImplSubclass vuforia = UpdateThread.vuforiaInstance;
+    VuforiaLocalizerImplSubclass vuforia = UpdateThread.Companion.getVuforiaInstance();
     VuforiaTrackables relicTrackables;
     VuforiaTrackable relicTemplate;
 
@@ -33,7 +33,7 @@ public class GetVuMarkSide extends Command {
             mark = RelicRecoveryVuMark.from(relicTemplate);
             if (mark != RelicRecoveryVuMark.UNKNOWN) {
                 if (parentThread instanceof AutonomousLogicThread)
-                    ((AutonomousLogicThread) parentThread).currentVuMark = mark;
+                    ((AutonomousLogicThread) parentThread).setCurrentVuMark(mark);
                 break;
             }
         } while (mark == RelicRecoveryVuMark.UNKNOWN);
