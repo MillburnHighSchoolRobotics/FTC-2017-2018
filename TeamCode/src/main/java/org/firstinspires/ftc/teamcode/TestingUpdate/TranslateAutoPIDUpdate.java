@@ -11,6 +11,6 @@ import virtualRobot.logicThreads.testing.TranslateAutoPIDLogic;
 public class TranslateAutoPIDUpdate extends UpdateThread {
     @Override
     public void setLogicThread() {
-        logicThread = TranslateAutoPIDLogic.class;
+        setLogicThread(TranslateAutoPIDLogic.class);
     }
 }
