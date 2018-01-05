@@ -14,6 +14,6 @@ import virtualRobot.logicThreads.testing.RotateAutoPIDLogic;
 public class RotateAutoPIDUpdate extends UpdateThread {
     @Override
     public void setLogicThread() {
-        setLogicThread(RotateAutoPIDLogic.class);
+        logicThread = RotateAutoPIDLogic.class;
     }
 }
