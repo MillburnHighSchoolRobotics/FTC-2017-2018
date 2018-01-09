@@ -44,7 +44,7 @@ public class SallyJoeBot {
     private ContinuousRotationServo boxLeft, boxRight;
     private Motor relicArm;
     private Motor liftLeft, liftRight;
-    private ContinuousRotationServo relicArmWinch;
+    private Motor relicArmWinch;
     private Servo relicArmWrist;
     private Servo relicArmClaw;
     private Servo jewelServo;
@@ -81,7 +81,7 @@ public class SallyJoeBot {
         relicArm = new Motor();
         liftLeft = new Motor();
         liftRight = new Motor();
-        relicArmWinch = new ContinuousRotationServo();
+        relicArmWinch = new Motor();
         relicArmWrist = new Servo();
         relicArmClaw = new Servo();
         jewelServo = new Servo();
@@ -140,7 +140,7 @@ public class SallyJoeBot {
         return relicArm;
     }
 
-    public synchronized ContinuousRotationServo getRelicArmWinch() {
+    public synchronized Motor getRelicArmWinch() {
         return relicArmWinch;
     }
 

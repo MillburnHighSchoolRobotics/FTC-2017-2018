@@ -84,7 +84,7 @@ public abstract class  UpdateThread extends OpMode {
 	private CRServo boxLeft, boxRight;
 	private DcMotor rollerLeft;
 	private CRServo rollerRight;
-	private CRServo relicArmWinch;
+	private DcMotor relicArmWinch;
 	private Servo jewelServo;
 	private Servo relicArmWrist;
 	private Servo relicArmClaw;
@@ -103,7 +103,7 @@ public abstract class  UpdateThread extends OpMode {
 	private Motor vRollerLeft;
 	private ContinuousRotationServo vRollerRight;
 	private Motor vRelicArm;
-	private ContinuousRotationServo vRelicArmWinch;
+	private Motor vRelicArmWinch;
 	private virtualRobot.hardware.Servo vJewelServo;
 	private virtualRobot.hardware.Servo vRelicArmWrist;
 	private virtualRobot.hardware.Servo vRelicArmClaw;
@@ -146,7 +146,7 @@ public abstract class  UpdateThread extends OpMode {
 		boxRight = hardwareMap.crservo.get("boxRight");
 		liftLeft = hardwareMap.dcMotor.get("liftLeft");
 		liftRight = hardwareMap.dcMotor.get("liftRight");
-		relicArmWinch = hardwareMap.crservo.get("relicArmWinch");
+		relicArmWinch = hardwareMap.dcMotor.get("relicArmWinch");
 //		relicArm = hardwareMap.dcMotor.get("relicArm");
 //
 //        //SERVO SETUP (with physical hardware, e.g. servo = hardwareMap....)
@@ -159,6 +159,8 @@ public abstract class  UpdateThread extends OpMode {
 		rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
 		rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 		liftLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
+		relicArmWinch.setDirection(DcMotorSimple.Direction.REVERSE);
 
 		//SET MOTOR MODES
 //		leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -374,7 +376,7 @@ public abstract class  UpdateThread extends OpMode {
         double relicArmPower = vRelicArm.getPower();
 		double rollerLeftPower = vRollerLeft.getPower();
 		double rollerRightPower = vRollerRight.getSpeed();
-		double relicArmWinchPower = vRelicArmWinch.getSpeed();
+		double relicArmWinchPower = vRelicArmWinch.getPower();
 		double liftLeftPower = vLiftLeft.getPower();
 		double liftRightPower = vLiftRight.getPower();
 //		Log.d("Completed", "powers");

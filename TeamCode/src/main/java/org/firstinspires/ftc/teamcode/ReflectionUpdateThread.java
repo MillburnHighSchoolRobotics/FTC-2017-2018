@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -88,7 +89,7 @@ public abstract class ReflectionUpdateThread extends OpMode {
     private ContinuousRotationServo vRollerRight;
     private Motor vRollerLeft;
     private Motor vRelicArm;
-    private ContinuousRotationServo vRelicArmWinch;
+    private Motor vRelicArmWinch;
     private virtualRobot.hardware.Servo vJewelServo;
     private virtualRobot.hardware.Servo vClawLeft, vClawRight;
 
@@ -119,24 +120,20 @@ public abstract class ReflectionUpdateThread extends OpMode {
 //        imu.startAccelerationIntegration(new Position(), new Velocity(),1);
 
         //MOTOR SETUP (with physical componenents, e.g. leftBack = hardwareMap.dcMotor.get("leftBack")
-        leftFront = hardwareMap.dcMotor.get("leftFront");
-        leftBack = hardwareMap.dcMotor.get("leftBack");
-        rightFront = hardwareMap.dcMotor.get("rightFront");
-        rightBack = hardwareMap.dcMotor.get("rightBack");
-        Log.d("Components ", "Motors Initialized");
-        rollerLeft = hardwareMap.dcMotor.get("rollerLeft");
-        rollerRight = hardwareMap.crservo.get("rollerRight");
-        boxLeft = hardwareMap.crservo.get("boxLeft");
-        boxRight = hardwareMap.crservo.get("boxRight");
-        liftLeft = hardwareMap.dcMotor.get("liftLeft");
-        liftRight = hardwareMap.dcMotor.get("liftRight");
-//		relicArm = hardwareMap.dcMotor.get("relicArm");
-//
-//        //SERVO SETUP (with physical hardware, e.g. servo = hardwareMap....)
-//		relicArmWinch = hardwareMap.servo.get("relicArmWinch");
-        jewelServo = hardwareMap.servo.get("jewelArm");
-
-        //REVERSE ONE SIDE (If needed, e.g. rightFront.setDirection(DcMotor.Direction.REVERSE)
+        Class<?> c = this.getClass();
+        Field[] fields = c.getDeclaredFields();
+        try {
+            String name;
+            for (Field f : fields) {
+                name = f.getName();
+                if (name.charAt(0) != 'v') {
+                    f.set(this, hardwareMap.get(f.getDeclaringClass(), f.getName()));
+                }
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+//      REVERSE ONE SIDE (If needed, e.g. rightFront.setDirection(DcMotor.Direction.REVERSE)
         rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
         rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -161,33 +158,7 @@ public abstract class ReflectionUpdateThread extends OpMode {
         robot.initialBattery = getBatteryVoltage();
         jewelServo.setPosition(0);
 
-        //FETCH CONSTANT COMPONENTS OF VIRTUAL ROBOT (Do not touch)
-        vJoystickController1 = robot.getJoystickController1();
-        vJoystickController2 = robot.getJoystickController2();
-        vVoltageSensor = robot.getVoltageSensor();
-        vIMU = robot.getImu();
-        vStateSensor = robot.getStateSensor();
-
-        //FETCH VIRTUAL COMPONENTS OF VIRTUAL ROBOT from robot. E.g. vDriveLeftMotor = robot.getDriveLeftMotor();
-        vLeftFront = robot.getLFMotor();
-        vLeftBack = robot.getLBMotor();
-        vRightFront = robot.getRFMotor();
-        vRightBack = robot.getRBMotor();
-        vBoxLeft = robot.getBoxLeft();
-        vBoxRight = robot.getBoxRight();
-        vJewelServo = robot.getJewelServo();
-        vRelicArm = robot.getRelicArm();
-        vRelicArmWinch = robot.getRelicArmWinch();
-        vRollerLeft = robot.getRollerLeft();
-        vRollerRight = robot.getRollerRight();
-        vLiftLeft = robot.getLiftLeft();
-        vLiftRight = robot.getLiftRight();
-
-        //FETCH VIRTUAL SENSORS OF VIRTUAL ROBOT from robot. E.g. vColorSensor = robot.getColorSensor();
-        vColorSensor = robot.getColorSensor();
         try {
-            Class<?> c = this.getClass();
-            Field[] fields = c.getDeclaredFields();
             String name;
             for (Field f : fields) {
                 name = f.getName();
@@ -195,20 +166,17 @@ public abstract class ReflectionUpdateThread extends OpMode {
                     f.set(this, SallyJoeBot.class.getMethod("get" + name.substring(1)).invoke(null));
                 }
             }
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
+            for (Field f : fields) {
+                name = f.getName();
+                if (name.charAt(0) == 'v' && Character.isUpperCase(name.charAt(1)) && f.getDeclaringClass().equals(Motor.class)) {
+                    f.getDeclaringClass().getMethod("setMotorType", MotorConfigurationType.class);
+                }
+            }
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
         }
 
         //Set Motor Types
-        vLeftFront.setMotorType(leftFront.getMotorType());
-        vLeftBack.setMotorType(leftBack.getMotorType());
-        vRightFront.setMotorType(rightFront.getMotorType());
-        vRightBack.setMotorType(rightBack.getMotorType());
-        vRollerLeft.setMotorType(rollerLeft.getMotorType());
 //		vRollerRight.setMotorType(rollerRight.getMotorType());
 //		vRelicArm.setMotorType(relicArm.getMotorType());
 

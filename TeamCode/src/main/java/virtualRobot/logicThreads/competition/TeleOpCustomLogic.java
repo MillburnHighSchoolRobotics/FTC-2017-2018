@@ -58,9 +58,9 @@ public class TeleOpCustomLogic extends LogicThread {
             robot.addToTelemetry("mag", translateMag);
 
             if (controller1.isDpadUp()) {
-                gearCoefficient = 0.666;
+                gearCoefficient = 1;
             } else if (controller1.isDpadDown()) {
-                gearCoefficient = 0.333;
+                gearCoefficient = 0.5;
             }
             if (!MathUtils.equals(rotateX, 0, 0.05)) {
                 robot.getRFMotor().setPower(rotateX * gearCoefficient);
@@ -131,12 +131,14 @@ public class TeleOpCustomLogic extends LogicThread {
                 robot.getRelicArmClaw().setPosition(1);
             }
 
-            if (controller1.isDown(JoystickController.BUTTON_X)) {
+            if (controller1.isDown(JoystickController.BUTTON_Y)) {
                 //Extend arm
-                robot.getRelicArmWinch().setSpeed(1);
+                robot.getRelicArmWinch().setPower(0.5);
             } else if (controller1.isDown(JoystickController.BUTTON_A)) {
                 //Retract arm
-                robot.getRelicArmWinch().setSpeed(-1);
+                robot.getRelicArmWinch().setPower(-0.5);
+            } else {
+                robot.getRelicArmWinch().setPower(0);
             }
 
             if (controller1.isDown(JoystickController.BUTTON_B)) {
@@ -174,7 +176,7 @@ public class TeleOpCustomLogic extends LogicThread {
             double intakeRotation = controller2.getValue(JoystickController.X_2);
 
             if (!MathUtils.equals(intakeDirection, 0, 0.1)) {
-                robot.getRollerLeft().setPower(intakeDirection * intakeDirectionSensitivity);
+                robot.getRollerLeft().setPower(intakeDirection * 0.25 * intakeDirectionSensitivity);
                 robot.getRollerRight().setSpeed(-intakeDirection * intakeDirectionSensitivity);
             } else {
                 robot.getRollerLeft().setPower(0);
@@ -206,10 +208,10 @@ public class TeleOpCustomLogic extends LogicThread {
 
             if (controller2.isDpadUp()) {
                 robot.getLiftLeft().setPower(liftSpeed);
-                robot.getLiftRight().setPower(liftSpeed-0.08);
+                robot.getLiftRight().setPower(liftSpeed);
             } else if (controller2.isDpadDown()) {
                 robot.getLiftLeft().setPower(-liftSpeed);
-                robot.getLiftRight().setPower(-liftSpeed+0.08);
+                robot.getLiftRight().setPower(-liftSpeed);
             } else {
                 robot.getLiftLeft().setPower(0);
                 robot.getLiftRight().setPower(0);
