@@ -88,7 +88,7 @@ public abstract class  UpdateThread extends OpMode {
 	private Servo jewelServo;
 	private Servo relicArmWrist;
 	private Servo relicArmClaw;
-	private ColorSensor colorSensor;
+//	private ColorSensor colorSensor;
 
 //Now initiate the VIRTUAL componenents (from VirtualRobot!!), e.g. private Motor vDriveRightMotor, private virtualRobot.hardware.Servo ..., private Sensor vDriveRightMotorEncoder, private LocationSensor vLocationSensor
 
@@ -178,7 +178,7 @@ public abstract class  UpdateThread extends OpMode {
 		liftRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //SENSOR SETUP e.g. colorSensor = hardwareMap.colorsensor.get("color"), sonar1 = hardwareMap.analogInput.get("sonar1"), liftEndStop1 = hardwareMap.digitalChannel.get("liftEndStop1")
-		colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
+//		colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
 
 		//FETCH VIRTUAL ROBOT FROM COMMAND INTERFACE
 		robot = Command.ROBOT;
@@ -267,10 +267,10 @@ public abstract class  UpdateThread extends OpMode {
 //		vColorSensor.setRed(colorSensor.red());
 //		vColorSensor.setBlue(colorSensor.blue());
 //		vColorSensor.setGreen(colorSensor.green());
-		int r = colorSensor.red();
-		int g = colorSensor.green();
-		int b = colorSensor.blue();
-		System.out.println(r + g + b);
+//		int r = colorSensor.red();
+//		int g = colorSensor.green();
+//		int b = colorSensor.blue();
+//		System.out.println(r + g + b);
 
 		vLeftFront.setPosition(leftFront.getCurrentPosition());
 		vLeftBack.setPosition(leftBack.getCurrentPosition());
@@ -346,9 +346,9 @@ public abstract class  UpdateThread extends OpMode {
 		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
 //		Log.d("Completed", "virtual encoders");
 
-		vColorSensor.setRed(colorSensor.red());
-		vColorSensor.setBlue(colorSensor.blue());
-		vColorSensor.setGreen(colorSensor.green());
+//		vColorSensor.setRed(colorSensor.red());
+//		vColorSensor.setBlue(colorSensor.blue());
+//		vColorSensor.setGreen(colorSensor.green());
 //		int r = colorSensor.red();
 //		int g = colorSensor.green();
 //		int b = colorSensor.blue();
