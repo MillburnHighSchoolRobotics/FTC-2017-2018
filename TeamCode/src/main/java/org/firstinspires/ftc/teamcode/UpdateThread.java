@@ -184,8 +184,8 @@ public abstract class  UpdateThread extends OpMode {
 		robot = Command.ROBOT;
 		robot.initialBattery = getBatteryVoltage();
 		jewelServo.setPosition(0.45);
-		relicArmWrist.setPosition(0); //TODO: Tune init value
-		relicArmClaw.setPosition(0); //TODO Tune init value
+		relicArmWrist.setPosition(1);
+		relicArmClaw.setPosition(0);
 
 		//FETCH CONSTANT COMPONENTS OF VIRTUAL ROBOT (Do not touch)
         vJoystickController1 = robot.getJoystickController1();

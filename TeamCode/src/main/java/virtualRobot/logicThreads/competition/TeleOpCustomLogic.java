@@ -143,7 +143,7 @@ public class TeleOpCustomLogic extends LogicThread {
 
             if (controller1.isDown(JoystickController.BUTTON_B)) {
                 //Raise wrist
-                robot.getRelicArmWrist().setPosition(1);
+                robot.getRelicArmWrist().setPosition(0.5);
             } else if (controller1.isDown(JoystickController.BUTTON_X)) {
                 //Lower wrist
                 robot.getRelicArmWrist().setPosition(0);
