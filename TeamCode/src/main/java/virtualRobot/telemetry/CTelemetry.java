@@ -11,7 +11,7 @@ import retrofit2.http.POST;
  * Created by david on 11/7/17.
  */
 
-public interface CVTelemetry {
+public interface CTelemetry {
     @POST("/")
     Call<Void> sendImage(@Header("window-name") String windowName, @Body Mat img);
 }

@@ -31,7 +31,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import virtualRobot.VuforiaLocalizerImplSubclass;
-import virtualRobot.telemetry.CVTelemetry;
+import virtualRobot.telemetry.CTelemetry;
 import virtualRobot.telemetry.MatConverterFactory;
 
 /**
@@ -60,11 +60,11 @@ public class OpenCVTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        CVTelemetry opencvtel = new Retrofit.Builder()
+        CTelemetry ctel = new Retrofit.Builder()
                 .baseUrl("http://172.20.95.207:8080/")
                 .addConverterFactory(MatConverterFactory.create())
                 .build()
-                .create(CVTelemetry.class);
+                .create(CTelemetry.class);
 
         VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName()));
         params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
@@ -87,7 +87,7 @@ public class OpenCVTest extends LinearOpMode {
             Mat bgrimg = new Mat();
             Imgproc.cvtColor(img, bgrimg, Imgproc.COLOR_RGB2BGR);
             try {
-                opencvtel.sendImage("Image", bgrimg).execute();
+                ctel.sendImage("Image", bgrimg).execute();
             } catch (IOException err) {
                 telemetry.addData("ImageError", err.getMessage());
             }
@@ -112,7 +112,7 @@ public class OpenCVTest extends LinearOpMode {
             // -- in this case the two other arrays are redLower and redUpper which will be determined experimentally
             Core.inRange(blur.clone(), redLower, redUpper, red);
             try {
-                opencvtel.sendImage("Red", red).execute();
+                ctel.sendImage("Red", red).execute();
             } catch (IOException err) {
                 telemetry.addData("RedError", err.getMessage());
             }
@@ -166,7 +166,7 @@ public class OpenCVTest extends LinearOpMode {
             Mat blue = new Mat();
             Core.inRange(blur.clone(), blueLower, blueUpper, blue);
             try {
-                opencvtel.sendImage("Blue", blue).execute();
+                ctel.sendImage("Blue", blue).execute();
             } catch (IOException err) {
                 telemetry.addData("BlueError", err.getMessage());
             }

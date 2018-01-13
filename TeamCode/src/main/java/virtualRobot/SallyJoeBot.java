@@ -15,7 +15,7 @@ import virtualRobot.hardware.Motor;
 import virtualRobot.hardware.Sensor;
 import virtualRobot.hardware.Servo;
 import virtualRobot.hardware.StateSensor;
-import virtualRobot.telemetry.CVTelemetry;
+import virtualRobot.telemetry.CTelemetry;
 import virtualRobot.telemetry.MatConverterFactory;
 
 /**
@@ -52,8 +52,8 @@ public class SallyJoeBot {
     private JoystickController joystickController1, joystickController2;
     private StateSensor stateSensor;
 
-    //CVTelemetry
-    private CVTelemetry cvtel;
+    //CTelemetry
+    private CTelemetry ctel;
     private final String ipaddr = "http://172.20.95.207:8080/";
 
     //Motors, sensors, servos instantiated (e.g Motor = new Motor(), some positions can also be set if desired
@@ -196,14 +196,14 @@ public class SallyJoeBot {
     }
 
     public synchronized void initCVTelemetry() {
-        cvtel = new Retrofit.Builder()
+        ctel = new Retrofit.Builder()
                 .baseUrl(ipaddr)
                 .addConverterFactory(MatConverterFactory.create())
                 .build()
-                .create(CVTelemetry.class);
+                .create(CTelemetry.class);
     }
 
     public synchronized Call<Void> sendCVTelemetry(String windowName, Mat img) throws IOException {
-        return cvtel.sendImage(windowName, img);
+        return ctel.sendImage(windowName, img);
     }
 }
