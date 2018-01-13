@@ -15,9 +15,8 @@ import java.io.IOException;
 import retrofit2.Retrofit;
 import virtualRobot.VuforiaLocalizerImplSubclass;
 import virtualRobot.utils.BetterLog;
-import virtualRobot.utils.CVTelemetry;
-import virtualRobot.utils.MatConverterFactory;
-import virtualRobot.utils.MatRequestBodyConverter;
+import virtualRobot.telemetry.CVTelemetry;
+import virtualRobot.telemetry.MatConverterFactory;
 
 /**
  * Created by david on 11/7/17.

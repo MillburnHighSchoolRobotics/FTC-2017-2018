@@ -1,7 +1,5 @@
 package virtualRobot;
 
-import com.qualcomm.robotcore.hardware.CRServo;
-
 import org.opencv.core.Mat;
 
 import java.io.IOException;
@@ -9,9 +7,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.Retrofit;
-import virtualRobot.hardware.ColorSensor;
 import virtualRobot.hardware.ContinuousRotationServo;
 import virtualRobot.hardware.DumbColorSensor;
 import virtualRobot.hardware.IMU;
@@ -19,8 +15,8 @@ import virtualRobot.hardware.Motor;
 import virtualRobot.hardware.Sensor;
 import virtualRobot.hardware.Servo;
 import virtualRobot.hardware.StateSensor;
-import virtualRobot.utils.CVTelemetry;
-import virtualRobot.utils.MatConverterFactory;
+import virtualRobot.telemetry.CVTelemetry;
+import virtualRobot.telemetry.MatConverterFactory;
 
 /**
  * Created by DOSullivan on 9/14/16.
