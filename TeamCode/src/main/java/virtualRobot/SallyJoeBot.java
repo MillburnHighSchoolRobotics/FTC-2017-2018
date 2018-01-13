@@ -195,7 +195,7 @@ public class SallyJoeBot {
         return telemetry;
     }
 
-    public synchronized void initCVTelemetry() {
+    public synchronized void initCTelemetry() {
         ctel = new Retrofit.Builder()
                 .baseUrl(ipaddr)
                 .addConverterFactory(MatConverterFactory.create())
@@ -203,7 +203,7 @@ public class SallyJoeBot {
                 .create(CTelemetry.class);
     }
 
-    public synchronized Call<Void> sendCVTelemetry(String windowName, Mat img) throws IOException {
-        return ctel.sendImage(windowName, img);
+    public synchronized CTelemetry getCTelemetry() {
+        return ctel;
     }
 }
