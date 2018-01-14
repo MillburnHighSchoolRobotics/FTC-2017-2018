@@ -10,7 +10,7 @@ import virtualRobot.logicThreads.competition.TeleOpCustomLogicRewrite;
 /**
  * Created by david on 9/29/17.
  */
-@TeleOp(name = "TeleOp: Run TeleOp Rewrite", group = "Competition")
+//@TeleOp(name = "TeleOp: Run TeleOp Rewrite", group = "Competition")
 public class TeleOpRewriteUpdate extends UpdateThread {
     public void setLogicThread() {
         logicThread = TeleOpCustomLogic.class;

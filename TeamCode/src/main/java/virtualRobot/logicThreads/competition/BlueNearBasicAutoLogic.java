@@ -74,12 +74,14 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
             }
         }
         robot.stopMotors();
-        jewelArm.setPosition(0);
+        jewelArm.setPosition(0.07);
         Thread.sleep(2000);
 
         dist = 0;
 
         robot.addToTelemetry("Current Vumark: ", currentVuMark.toString());
+        if (currentVuMark == RelicRecoveryVuMark.UNKNOWN)
+            currentVuMark = RelicRecoveryVuMark.LEFT;
         switch(currentVuMark){
             case LEFT:
                 dist = 45;
