@@ -28,15 +28,15 @@ public class GetVuMarkSide extends Command {
     @Override
     public boolean changeRobotState() throws InterruptedException {
         relicTrackables.activate();
-        RelicRecoveryVuMark mark;
-        do {
+        RelicRecoveryVuMark mark = RelicRecoveryVuMark.UNKNOWN;
+        for(int  i = 0; i < 10 && mark == RelicRecoveryVuMark.UNKNOWN; i++) {
             mark = RelicRecoveryVuMark.from(relicTemplate);
             if (mark != RelicRecoveryVuMark.UNKNOWN) {
                 if (parentThread instanceof AutonomousLogicThread)
                     ((AutonomousLogicThread) parentThread).currentVuMark = mark;
                 break;
             }
-        } while (mark == RelicRecoveryVuMark.UNKNOWN);
+        }
         relicTrackables.deactivate();
         return Thread.currentThread().isInterrupted();
     }

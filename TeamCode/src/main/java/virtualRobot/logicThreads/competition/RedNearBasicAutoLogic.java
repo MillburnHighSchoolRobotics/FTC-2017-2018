@@ -64,7 +64,7 @@ public class RedNearBasicAutoLogic extends AutonomousLogicThread {
         rightBack = robot.getRBMotor();
         colorSensor = robot.getColorSensor();
         jewelArm = robot.getJewelServo();
-        jewelArm.setPosition(0.7);
+        jewelArm.setPosition(0.64);
         int dist = 0;
         int travel = 200;
         double power = 0.5;

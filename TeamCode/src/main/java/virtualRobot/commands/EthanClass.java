@@ -1,13 +1,11 @@
 package virtualRobot.commands;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import org.firstinspires.ftc.teamcode.UpdateThread;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
@@ -53,7 +51,7 @@ public class EthanClass extends Command {
         vuforiaInstance = UpdateThread.vuforiaInstance;
         width = vuforiaInstance.rgb.getBufferWidth();
         height = vuforiaInstance.rgb.getHeight();
-        robot.initCVTelemetry();
+        robot.initCTelemetry();
     }
 
     @Override
@@ -73,7 +71,7 @@ public class EthanClass extends Command {
         Imgproc.cvtColor(img, imgbgr, Imgproc.COLOR_RGB2BGR);
 //        Log.d("EthanClass", Integer.toString(point++));
         try {
-            robot.sendCVTelemetry("Image", imgbgr).execute();
+            robot.getCTelemetry().sendImage("Image", imgbgr).execute();
         } catch (IOException e) {
             robot.addToTelemetry("Image", e.getMessage());
         }
@@ -85,7 +83,7 @@ public class EthanClass extends Command {
         Core.inRange(img, redLower, redUpper, red);
 //        Log.d("EthanClass", Integer.toString(point++));
         try {
-            robot.sendCVTelemetry("Red", red).execute();
+            robot.getCTelemetry().sendImage("Red", red).execute();
         } catch (IOException e) {
             robot.addToTelemetry("RedImage", e.getMessage());
         }
@@ -110,7 +108,7 @@ public class EthanClass extends Command {
         Core.inRange(img, blueLower, blueUpper, blue);
 //        Log.d("EthanClass", Integer.toString(point++));
         try {
-            robot.sendCVTelemetry("Blue", blue).execute();
+            robot.getCTelemetry().sendImage("Blue", blue).execute();
         } catch (IOException e) {
             robot.addToTelemetry("BlueImage", e.getMessage());
         }

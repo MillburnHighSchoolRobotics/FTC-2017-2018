@@ -14,10 +14,9 @@ import java.io.IOException;
 
 import retrofit2.Retrofit;
 import virtualRobot.VuforiaLocalizerImplSubclass;
+import virtualRobot.telemetry.CTelemetry;
 import virtualRobot.utils.BetterLog;
-import virtualRobot.utils.CVTelemetry;
-import virtualRobot.utils.MatConverterFactory;
-import virtualRobot.utils.MatRequestBodyConverter;
+import virtualRobot.telemetry.MatConverterFactory;
 
 /**
  * Created by david on 11/7/17.
@@ -43,11 +42,11 @@ public class OpenCVTelemetryTest extends LinearOpMode {
         params.vuforiaLicenseKey = "AdVGalv/////AAAAGYhiDIdk+UI+ivt0Y7WGvUJnm5cKX/lWesW2pH7gnK3eOLTKThLekYSO1q65ttw7X1FvNhxxhdQl3McS+mzYjO+HkaFNJlHxltsI5+b4giqNQKWhyKjzbYbNw8aWarI5YCYUFnyiPPjH39/CbBzzFk3G2RWIzNB7cy4AYhjwYRKRiL3k33YvXv0ZHRzJRkMpnytgvdv5jEQyWa20DIkriC+ZBaj8dph8/akyYfyD1/U19vowknmzxef3ncefgOZoI9yrK82T4GBWazgWvZkIz7bPy/ApGiwnkVzp44gVGsCJCUFERiPVwfFa0SBLeCrQMrQaMDy3kOIVcWTotFn4m1ridgE5ZP/lvRzEC4/vcuV0";
         vuforiaInstance = new VuforiaLocalizerImplSubclass(params);
 
-        CVTelemetry opencvtel = new Retrofit.Builder()
+        CTelemetry ctel = new Retrofit.Builder()
                 .baseUrl("http://172.20.95.70:8080/")
                 .addConverterFactory(MatConverterFactory.create())
                 .build()
-                .create(CVTelemetry.class);
+                .create(CTelemetry.class);
 
         waitForStart();
 
@@ -67,7 +66,7 @@ public class OpenCVTelemetryTest extends LinearOpMode {
                 firstPress = false;
                 telemetry.addData("ran", "ran");
                 try {
-                    opencvtel.sendImage("Image", img).execute();
+                    ctel.sendImage("Image", img).execute();
                 } catch (IOException err) {
                     telemetry.addData("Error", err.getMessage());
                 }

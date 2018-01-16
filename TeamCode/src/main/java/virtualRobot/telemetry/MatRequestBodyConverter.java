@@ -1,4 +1,4 @@
-package virtualRobot.utils;
+package virtualRobot.telemetry;
 
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.core.Mat;

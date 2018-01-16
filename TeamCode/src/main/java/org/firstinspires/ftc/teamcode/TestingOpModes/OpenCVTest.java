@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import android.graphics.Bitmap;
-import android.graphics.Camera;
-import android.hardware.camera2.CameraDevice;
 import android.util.Log;
 
 import retrofit2.Retrofit;
@@ -10,18 +8,12 @@ import virtualRobot.utils.BetterLog;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.teamcode.R;
-import org.firstinspires.ftc.teamcode.UpdateThread;
-import org.opencv.android.Camera2Renderer;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
@@ -30,10 +22,8 @@ import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.videoio.VideoCapture;
-import org.opencv.videoio.Videoio;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -41,11 +31,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import virtualRobot.VuforiaLocalizerImplSubclass;
-import virtualRobot.exceptions.CameraException;
-import virtualRobot.utils.CVTelemetry;
-import virtualRobot.utils.MatConverterFactory;
-
-import static org.opencv.core.CvType.CV_8UC1;
+import virtualRobot.telemetry.CTelemetry;
+import virtualRobot.telemetry.MatConverterFactory;
 
 /**
  * Created by Ethan Mak on 8/31/2017.
@@ -73,11 +60,11 @@ public class OpenCVTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        CVTelemetry opencvtel = new Retrofit.Builder()
+        CTelemetry ctel = new Retrofit.Builder()
                 .baseUrl("http://172.20.95.207:8080/")
                 .addConverterFactory(MatConverterFactory.create())
                 .build()
-                .create(CVTelemetry.class);
+                .create(CTelemetry.class);
 
         VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName()));
         params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
@@ -100,7 +87,7 @@ public class OpenCVTest extends LinearOpMode {
             Mat bgrimg = new Mat();
             Imgproc.cvtColor(img, bgrimg, Imgproc.COLOR_RGB2BGR);
             try {
-                opencvtel.sendImage("Image", bgrimg).execute();
+                ctel.sendImage("Image", bgrimg).execute();
             } catch (IOException err) {
                 telemetry.addData("ImageError", err.getMessage());
             }
@@ -125,7 +112,7 @@ public class OpenCVTest extends LinearOpMode {
             // -- in this case the two other arrays are redLower and redUpper which will be determined experimentally
             Core.inRange(blur.clone(), redLower, redUpper, red);
             try {
-                opencvtel.sendImage("Red", red).execute();
+                ctel.sendImage("Red", red).execute();
             } catch (IOException err) {
                 telemetry.addData("RedError", err.getMessage());
             }
@@ -179,7 +166,7 @@ public class OpenCVTest extends LinearOpMode {
             Mat blue = new Mat();
             Core.inRange(blur.clone(), blueLower, blueUpper, blue);
             try {
-                opencvtel.sendImage("Blue", blue).execute();
+                ctel.sendImage("Blue", blue).execute();
             } catch (IOException err) {
                 telemetry.addData("BlueError", err.getMessage());
             }

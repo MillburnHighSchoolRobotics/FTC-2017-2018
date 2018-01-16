@@ -1,7 +1,5 @@
 package virtualRobot;
 
-import com.qualcomm.robotcore.hardware.CRServo;
-
 import org.opencv.core.Mat;
 
 import java.io.IOException;
@@ -9,9 +7,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import retrofit2.Call;
-import retrofit2.Response;
 import retrofit2.Retrofit;
-import virtualRobot.hardware.ColorSensor;
 import virtualRobot.hardware.ContinuousRotationServo;
 import virtualRobot.hardware.DumbColorSensor;
 import virtualRobot.hardware.IMU;
@@ -19,8 +15,8 @@ import virtualRobot.hardware.Motor;
 import virtualRobot.hardware.Sensor;
 import virtualRobot.hardware.Servo;
 import virtualRobot.hardware.StateSensor;
-import virtualRobot.utils.CVTelemetry;
-import virtualRobot.utils.MatConverterFactory;
+import virtualRobot.telemetry.CTelemetry;
+import virtualRobot.telemetry.MatConverterFactory;
 
 /**
  * Created by DOSullivan on 9/14/16.
@@ -56,8 +52,8 @@ public class SallyJoeBot {
     private JoystickController joystickController1, joystickController2;
     private StateSensor stateSensor;
 
-    //CVTelemetry
-    private CVTelemetry cvtel;
+    //CTelemetry
+    private CTelemetry ctel;
     private final String ipaddr = "http://172.20.95.207:8080/";
 
     //Motors, sensors, servos instantiated (e.g Motor = new Motor(), some positions can also be set if desired
@@ -199,15 +195,15 @@ public class SallyJoeBot {
         return telemetry;
     }
 
-    public synchronized void initCVTelemetry() {
-        cvtel = new Retrofit.Builder()
+    public synchronized void initCTelemetry() {
+        ctel = new Retrofit.Builder()
                 .baseUrl(ipaddr)
                 .addConverterFactory(MatConverterFactory.create())
                 .build()
-                .create(CVTelemetry.class);
+                .create(CTelemetry.class);
     }
 
-    public synchronized Call<Void> sendCVTelemetry(String windowName, Mat img) throws IOException {
-        return cvtel.sendImage(windowName, img);
+    public synchronized CTelemetry getCTelemetry() {
+        return ctel;
     }
 }

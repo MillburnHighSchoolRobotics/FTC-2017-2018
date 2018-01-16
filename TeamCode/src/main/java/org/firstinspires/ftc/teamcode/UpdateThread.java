@@ -62,6 +62,7 @@ public abstract class  UpdateThread extends OpMode {
 	private LogicThread t;
 	private CreateVuforia cv;
 	boolean tInstantiated= false;
+	boolean colorWorking = false;
 	public static VuforiaLocalizerImplSubclass vuforiaInstance = null;
 	private static ArrayList<Class<? extends LogicThread>> exceptions = new ArrayList<>();
 
@@ -88,7 +89,7 @@ public abstract class  UpdateThread extends OpMode {
 	private Servo jewelServo;
 	private Servo relicArmWrist;
 	private Servo relicArmClaw;
-//	private ColorSensor colorSensor;
+	private ColorSensor colorSensor;
 
 //Now initiate the VIRTUAL componenents (from VirtualRobot!!), e.g. private Motor vDriveRightMotor, private virtualRobot.hardware.Servo ..., private Sensor vDriveRightMotorEncoder, private LocationSensor vLocationSensor
 
@@ -160,6 +161,8 @@ public abstract class  UpdateThread extends OpMode {
 		rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
 		liftLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
+//		jewelServo.setDirection(Servo.Direction.REVERSE);
+
 		relicArmWinch.setDirection(DcMotorSimple.Direction.REVERSE);
 
 		//SET MOTOR MODES
@@ -167,8 +170,8 @@ public abstract class  UpdateThread extends OpMode {
 //		leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //		rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //		rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-		liftLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-		liftRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+		liftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		liftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -178,14 +181,15 @@ public abstract class  UpdateThread extends OpMode {
 		liftRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //SENSOR SETUP e.g. colorSensor = hardwareMap.colorsensor.get("color"), sonar1 = hardwareMap.analogInput.get("sonar1"), liftEndStop1 = hardwareMap.digitalChannel.get("liftEndStop1")
-//		colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
+		colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
+		colorWorking = colorSensor.argb() != 0;
 
 		//FETCH VIRTUAL ROBOT FROM COMMAND INTERFACE
 		robot = Command.ROBOT;
 		robot.initialBattery = getBatteryVoltage();
-		jewelServo.setPosition(0.45);
-		relicArmWrist.setPosition(1);
-		relicArmClaw.setPosition(0);
+		jewelServo.setPosition(0.07);
+		relicArmWrist.setPosition(0); //TODO: Tune init value
+		relicArmClaw.setPosition(0); //TODO Tune init value
 
 		//FETCH CONSTANT COMPONENTS OF VIRTUAL ROBOT (Do not touch)
         vJoystickController1 = robot.getJoystickController1();
@@ -246,6 +250,7 @@ public abstract class  UpdateThread extends OpMode {
 	}
 
 	public void start() {
+		Log.d("colorWorking: ", String.valueOf(colorWorking));
 		//set constants (Do not touch)
 		robot.initialBattery = vVoltageSensor.getRawValue();
 		GlobalUtils.setCurrentActivity((Activity) hardwareMap.appContext);
@@ -264,9 +269,11 @@ public abstract class  UpdateThread extends OpMode {
 		//set sensors e.g. vDriveRightMotorEncoder.setRawValue(-rightFront.getCurrentPosition())
         vVoltageSensor.setRawValue(getBatteryVoltage());
 
-//		vColorSensor.setRed(colorSensor.red());
-//		vColorSensor.setBlue(colorSensor.blue());
-//		vColorSensor.setGreen(colorSensor.green());
+        if (colorWorking) {
+			vColorSensor.setRed(colorSensor.red());
+			vColorSensor.setBlue(colorSensor.blue());
+			vColorSensor.setGreen(colorSensor.green());
+		}
 //		int r = colorSensor.red();
 //		int g = colorSensor.green();
 //		int b = colorSensor.blue();
@@ -345,10 +352,11 @@ public abstract class  UpdateThread extends OpMode {
 		vLiftRight.setPosition(liftRight.getCurrentPosition());
 		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
 //		Log.d("Completed", "virtual encoders");
-
-//		vColorSensor.setRed(colorSensor.red());
-//		vColorSensor.setBlue(colorSensor.blue());
-//		vColorSensor.setGreen(colorSensor.green());
+		if (colorWorking) {
+			vColorSensor.setRed(colorSensor.red());
+			vColorSensor.setBlue(colorSensor.blue());
+			vColorSensor.setGreen(colorSensor.green());
+		}
 //		int r = colorSensor.red();
 //		int g = colorSensor.green();
 //		int b = colorSensor.blue();
