@@ -8,7 +8,6 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.exception.RobotCoreException;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -60,9 +59,8 @@ public abstract class  UpdateThread extends OpMode {
 	private SallyJoeBot robot;
 	protected Class<? extends LogicThread> logicThread = null;
 	private LogicThread t;
-	private CreateVuforia cv;
+//	private CreateVuforia cv;
 	boolean tInstantiated= false;
-	boolean colorWorking = false;
 	public static VuforiaLocalizerImplSubclass vuforiaInstance = null;
 	private static ArrayList<Class<? extends LogicThread>> exceptions = new ArrayList<>();
 
@@ -81,14 +79,9 @@ public abstract class  UpdateThread extends OpMode {
 //	private BNO055 imu;
     private BNO055IMU imu;
 	private DcMotor leftFront, leftBack, rightFront, rightBack;
-	private DcMotor liftLeft, liftRight;
-	private CRServo boxLeft, boxRight;
-	private DcMotor rollerLeft;
-	private CRServo rollerRight;
-	private DcMotor relicArmWinch;
+	private Servo glyphLiftRight, glyphLiftLeft;
+	private Servo clawLeft, clawRight;
 	private Servo jewelServo;
-	private Servo relicArmWrist;
-	private Servo relicArmClaw;
 	private ColorSensor colorSensor;
 
 //Now initiate the VIRTUAL componenents (from VirtualRobot!!), e.g. private Motor vDriveRightMotor, private virtualRobot.hardware.Servo ..., private Sensor vDriveRightMotorEncoder, private LocationSensor vLocationSensor
@@ -100,25 +93,16 @@ public abstract class  UpdateThread extends OpMode {
 	private JoystickController vJoystickController2;
 
 	private Motor vLeftFront, vLeftBack, vRightFront, vRightBack;
-	private Motor vLiftLeft, vLiftRight;
-	private Motor vRollerLeft;
-	private ContinuousRotationServo vRollerRight;
+	private Motor vRollerLeft, vRollerRight;
 	private Motor vRelicArm;
-	private Motor vRelicArmWinch;
+	private ContinuousRotationServo vRelicArmWinch;
 	private virtualRobot.hardware.Servo vJewelServo;
-	private virtualRobot.hardware.Servo vRelicArmWrist;
-	private virtualRobot.hardware.Servo vRelicArmClaw;
-
-
-	private ContinuousRotationServo vBoxLeft, vBoxRight;
+	private virtualRobot.hardware.Servo vClawLeft, vClawRight;
+	private virtualRobot.hardware.Servo vGlyphLiftLeft, vGlyphLiftRight;
 	private DumbColorSensor vColorSensor;
 
     private ElapsedTime runtime = new ElapsedTime();
 
-	public UpdateThread() {
-		//Vuforia work-around
-		super.msStuckDetectInit = Integer.MAX_VALUE;
-	}
 
 	@Override
 	public void init() {
@@ -141,55 +125,45 @@ public abstract class  UpdateThread extends OpMode {
 		rightFront = hardwareMap.dcMotor.get("rightFront");
 		rightBack = hardwareMap.dcMotor.get("rightBack");
 		Log.d("Components ", "Motors Initialized");
-		rollerLeft = hardwareMap.dcMotor.get("rollerLeft");
-		rollerRight = hardwareMap.crservo.get("rollerRight");
-		boxLeft = hardwareMap.crservo.get("boxLeft");
-		boxRight = hardwareMap.crservo.get("boxRight");
-		liftLeft = hardwareMap.dcMotor.get("liftLeft");
-		liftRight = hardwareMap.dcMotor.get("liftRight");
-		relicArmWinch = hardwareMap.dcMotor.get("relicArmWinch");
+//		rollerLeft = hardwareMap.dcMotor.get("rollerLeft");
+//		rollerRight = hardwareMap.dcMotor.get("rollerRight");
+		glyphLiftRight = hardwareMap.servo.get("glyphLiftRight");
+		glyphLiftLeft = hardwareMap.servo.get("glyphLiftLeft");
 //		relicArm = hardwareMap.dcMotor.get("relicArm");
 //
 //        //SERVO SETUP (with physical hardware, e.g. servo = hardwareMap....)
 //		relicArmWinch = hardwareMap.servo.get("relicArmWinch");
 		jewelServo = hardwareMap.servo.get("jewelArm");
-		relicArmWrist = hardwareMap.servo.get("relicArmWrist");
-		relicArmClaw = hardwareMap.servo.get("relicArmClaw");
+		clawLeft = hardwareMap.servo.get("clawLeft");
+		clawRight = hardwareMap.servo.get("clawRight");
 
         //REVERSE ONE SIDE (If needed, e.g. rightFront.setDirection(DcMotor.Direction.REVERSE)
-		rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
-		rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
-		liftLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-
-//		jewelServo.setDirection(Servo.Direction.REVERSE);
-
-		relicArmWinch.setDirection(DcMotorSimple.Direction.REVERSE);
+		leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+		leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
 		//SET MOTOR MODES
 //		leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //		leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //		rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //		rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-		liftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-		liftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-		liftLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-		liftRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
         //SENSOR SETUP e.g. colorSensor = hardwareMap.colorsensor.get("color"), sonar1 = hardwareMap.analogInput.get("sonar1"), liftEndStop1 = hardwareMap.digitalChannel.get("liftEndStop1")
 		colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
-		colorWorking = colorSensor.argb() != 0;
 
 		//FETCH VIRTUAL ROBOT FROM COMMAND INTERFACE
 		robot = Command.ROBOT;
 		robot.initialBattery = getBatteryVoltage();
-		jewelServo.setPosition(0.07);
-		relicArmWrist.setPosition(0); //TODO: Tune init value
-		relicArmClaw.setPosition(0); //TODO Tune init value
+
+
+		clawLeft.setPosition(1);
+		clawRight.setPosition(0);
+		jewelServo.setPosition(0);
+		glyphLiftRight.setPosition(0);
+		glyphLiftLeft.setPosition(1);
 
 		//FETCH CONSTANT COMPONENTS OF VIRTUAL ROBOT (Do not touch)
         vJoystickController1 = robot.getJoystickController1();
@@ -203,17 +177,15 @@ public abstract class  UpdateThread extends OpMode {
 		vLeftBack = robot.getLBMotor();
 		vRightFront = robot.getRFMotor();
 		vRightBack = robot.getRBMotor();
-		vBoxLeft = robot.getBoxLeft();
-		vBoxRight = robot.getBoxRight();
+		vGlyphLiftLeft = robot.getGlyphLiftLeft();
+		vGlyphLiftRight = robot.getGlyphLiftRight();
 		vJewelServo = robot.getJewelServo();
-		vRelicArmWrist = robot.getRelicArmWrist();
-		vRelicArmClaw = robot.getRelicArmClaw();
 		vRelicArm = robot.getRelicArm();
 		vRelicArmWinch = robot.getRelicArmWinch();
 		vRollerLeft = robot.getRollerLeft();
 		vRollerRight = robot.getRollerRight();
-		vLiftLeft = robot.getLiftLeft();
-		vLiftRight = robot.getLiftRight();
+		vClawLeft = robot.getClawLeft();
+		vClawRight = robot.getClawRight();
 
 		//FETCH VIRTUAL SENSORS OF VIRTUAL ROBOT from robot. E.g. vColorSensor = robot.getColorSensor();
 		vColorSensor = robot.getColorSensor();
@@ -223,7 +195,7 @@ public abstract class  UpdateThread extends OpMode {
 		vLeftBack.setMotorType(leftBack.getMotorType());
 		vRightFront.setMotorType(rightFront.getMotorType());
 		vRightBack.setMotorType(rightBack.getMotorType());
-		vRollerLeft.setMotorType(rollerLeft.getMotorType());
+//		vRollerLeft.setMotorType(rollerLeft.getMotorType());
 //		vRollerRight.setMotorType(rollerRight.getMotorType());
 //		vRelicArm.setMotorType(relicArm.getMotorType());
 
@@ -232,12 +204,12 @@ public abstract class  UpdateThread extends OpMode {
         setLogicThread();
 //		cv = new CreateVuforia(LogicThread, vuforiaEverywhere, t);
 //		new Thread (cv).start();
-		if (!exceptions.contains(logicThread)){
-			VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
-			params.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-			params.vuforiaLicenseKey = "AdVGalv/////AAAAGYhiDIdk+UI+ivt0Y7WGvUJnm5cKX/lWesW2pH7gnK3eOLTKThLekYSO1q65ttw7X1FvNhxxhdQl3McS+mzYjO+HkaFNJlHxltsI5+b4giqNQKWhyKjzbYbNw8aWarI5YCYUFnyiPPjH39/CbBzzFk3G2RWIzNB7cy4AYhjwYRKRiL3k33YvXv0ZHRzJRkMpnytgvdv5jEQyWa20DIkriC+ZBaj8dph8/akyYfyD1/U19vowknmzxef3ncefgOZoI9yrK82T4GBWazgWvZkIz7bPy/ApGiwnkVzp44gVGsCJCUFERiPVwfFa0SBLeCrQMrQaMDy3kOIVcWTotFn4m1ridgE5ZP/lvRzEC4/vcuV0";
-			UpdateThread.vuforiaInstance = new VuforiaLocalizerImplSubclass(params);
-		}
+//		if (!exceptions.contains(logicThread)){
+//			VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
+//			params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+//			params.vuforiaLicenseKey = "AdVGalv/////AAAAGYhiDIdk+UI+ivt0Y7WGvUJnm5cKX/lWesW2pH7gnK3eOLTKThLekYSO1q65ttw7X1FvNhxxhdQl3McS+mzYjO+HkaFNJlHxltsI5+b4giqNQKWhyKjzbYbNw8aWarI5YCYUFnyiPPjH39/CbBzzFk3G2RWIzNB7cy4AYhjwYRKRiL3k33YvXv0ZHRzJRkMpnytgvdv5jEQyWa20DIkriC+ZBaj8dph8/akyYfyD1/U19vowknmzxef3ncefgOZoI9yrK82T4GBWazgWvZkIz7bPy/ApGiwnkVzp44gVGsCJCUFERiPVwfFa0SBLeCrQMrQaMDy3kOIVcWTotFn4m1ridgE5ZP/lvRzEC4/vcuV0";
+//			UpdateThread.vuforiaInstance = new VuforiaLocalizerImplSubclass(params);
+//		}
 	}
 
 	public void init_loop () {
@@ -250,7 +222,6 @@ public abstract class  UpdateThread extends OpMode {
 	}
 
 	public void start() {
-		Log.d("colorWorking: ", String.valueOf(colorWorking));
 		//set constants (Do not touch)
 		robot.initialBattery = vVoltageSensor.getRawValue();
 		GlobalUtils.setCurrentActivity((Activity) hardwareMap.appContext);
@@ -263,27 +234,28 @@ public abstract class  UpdateThread extends OpMode {
 
 		//Copy positions to virtualRobot
 //		vRelicArmWinch.setSpeed(relicArmWinch.getPosition());
+		vClawLeft.setPosition(clawLeft.getPosition());
+		vClawRight.setPosition(clawRight.getPosition());
+		vGlyphLiftLeft.setPosition(glyphLiftLeft.getPosition());
+		vGlyphLiftRight.setPosition(glyphLiftRight.getPosition());
 		vJewelServo.setPosition(jewelServo.getPosition());
-		vRelicArmWrist.setPosition(relicArmWrist.getPosition());
-		vRelicArmClaw.setPosition(relicArmClaw.getPosition());
+
 		//set sensors e.g. vDriveRightMotorEncoder.setRawValue(-rightFront.getCurrentPosition())
         vVoltageSensor.setRawValue(getBatteryVoltage());
 
-        if (colorWorking) {
-			vColorSensor.setRed(colorSensor.red());
-			vColorSensor.setBlue(colorSensor.blue());
-			vColorSensor.setGreen(colorSensor.green());
-		}
-//		int r = colorSensor.red();
-//		int g = colorSensor.green();
-//		int b = colorSensor.blue();
-//		System.out.println(r + g + b);
+//		vColorSensor.setRed(colorSensor.red());
+//		vColorSensor.setBlue(colorSensor.blue());
+//		vColorSensor.setGreen(colorSensor.green());
+		int r = colorSensor.red();
+		int g = colorSensor.green();
+		int b = colorSensor.blue();
+		System.out.println(r + g + b);
 
 		vLeftFront.setPosition(leftFront.getCurrentPosition());
 		vLeftBack.setPosition(leftBack.getCurrentPosition());
 		vRightFront.setPosition(rightFront.getCurrentPosition());
 		vRightBack.setPosition(rightBack.getCurrentPosition());
-		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
+//		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
 //		vRollerRight.setPosition(rollerRight.getCurrentPosition());
 //		vRelicArm.setPosition(relicArm.getCurrentPosition());
 
@@ -348,15 +320,11 @@ public abstract class  UpdateThread extends OpMode {
 		vLeftBack.setPosition(leftBack.getCurrentPosition());
 		vRightFront.setPosition(rightFront.getCurrentPosition());
 		vRightBack.setPosition(rightBack.getCurrentPosition());
-		vLiftLeft.setPosition(liftLeft.getCurrentPosition());
-		vLiftRight.setPosition(liftRight.getCurrentPosition());
-		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
-//		Log.d("Completed", "virtual encoders");
-		if (colorWorking) {
-			vColorSensor.setRed(colorSensor.red());
-			vColorSensor.setBlue(colorSensor.blue());
-			vColorSensor.setGreen(colorSensor.green());
-		}
+		Log.d("Completed", "virtual encoders");
+
+		vColorSensor.setRed(colorSensor.red());
+		vColorSensor.setBlue(colorSensor.blue());
+		vColorSensor.setGreen(colorSensor.green());
 //		int r = colorSensor.red();
 //		int g = colorSensor.green();
 //		int b = colorSensor.blue();
@@ -369,12 +337,12 @@ public abstract class  UpdateThread extends OpMode {
 
 		//Copy Servo Positions
 //		relicArmWinch.setPosition(vRelicArmWinch.getSpeed());
-		boxLeft.setPower(vBoxLeft.getSpeed());
-		boxRight.setPower(vBoxRight.getSpeed());
+		clawLeft.setPosition(vClawLeft.getPosition());
+		clawRight.setPosition(vClawRight.getPosition());
+		glyphLiftLeft.setPosition(vGlyphLiftLeft.getPosition());
+		glyphLiftRight.setPosition(vGlyphLiftRight.getPosition());
 		jewelServo.setPosition(vJewelServo.getPosition());
-		relicArmWrist.setPosition(vRelicArmWrist.getPosition());
-		relicArmClaw.setPosition(vRelicArmClaw.getPosition());
-//		Log.d("Completed", "servos");
+		Log.d("Completed", "servos");
 
 		// Capture Motor Powers,E.g. double leftPower = vDriveLeftMotore.getPower();
 		double leftFrontPower = vLeftFront.getPower();
@@ -383,23 +351,15 @@ public abstract class  UpdateThread extends OpMode {
         double rightBackPower = vRightBack.getPower();
         double relicArmPower = vRelicArm.getPower();
 		double rollerLeftPower = vRollerLeft.getPower();
-		double rollerRightPower = vRollerRight.getSpeed();
-		double relicArmWinchPower = vRelicArmWinch.getPower();
-		double liftLeftPower = vLiftLeft.getPower();
-		double liftRightPower = vLiftRight.getPower();
-//		Log.d("Completed", "powers");
+		double rollerRightPower = vRollerRight.getPower();
+		Log.d("Completed", "powers");
 
 		// Copy State of Motors and Servos E.g. leftFront.setPower(leftPower), Servo.setPosition(vServo.getPosition());
 		leftFront.setPower(leftFrontPower);
 		leftBack.setPower(leftBackPower);
 		rightFront.setPower(rightFrontPower);
 		rightBack.setPower(rightBackPower);
-		rollerLeft.setPower(rollerLeftPower);
-		rollerRight.setPower(rollerRightPower);
-		liftLeft.setPower(liftLeftPower);
-		liftRight.setPower(liftRightPower);
-		relicArmWinch.setPower(relicArmWinchPower);
-//		Log.d("Completed", "motor powers");
+		Log.d("Completed", "motor powers");
 //		relicArm.setPower(relicArmPower);
 //		rollerLeft.setPower(rollerLeftPower);
 //		rollerRight.setPower(rollerRightPower);
@@ -407,7 +367,7 @@ public abstract class  UpdateThread extends OpMode {
 		for (Map.Entry<String,Object> e: robot.getTelemetry().entrySet()) {
 			telemetry.addData(e.getKey(),e.getValue());
 		}
-//		Log.d("Completed", "telemetry");
+		Log.d("Completed", "telemetry");
 
 		for (int i = 0; i < robot.getProgress().size(); i++) {
 			telemetry.addData("robot progress " + i, robot.getProgress().get(i));
@@ -423,7 +383,7 @@ public abstract class  UpdateThread extends OpMode {
 	public void stop() {
 //        imu.stopAccelerationIntegration();
 //		imu.close();
-		vuforiaInstance = null;
+//		vuforiaInstance = null;
 		if (tInstantiated)
 			t.interrupt();
 		System.gc();
