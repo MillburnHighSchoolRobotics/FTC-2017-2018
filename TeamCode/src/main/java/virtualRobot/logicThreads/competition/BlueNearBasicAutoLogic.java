@@ -39,7 +39,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         robot.addToTelemetry("Red ", red);
         robot.addToTelemetry("Blue ", blue);
 //        blue = Math.max(1, blue);
-        if (red != 0 || blue != 0) {
+        if (false &&( red != 0 || blue != 0)) {
             blue = Math.max(1, blue);
             double rat = red/(double)blue;
             if (rat >= 1.5) {
@@ -84,7 +84,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
             currentVuMark = RelicRecoveryVuMark.LEFT;
         switch(currentVuMark){
             case LEFT:
-                dist = 1211;
+                dist = 963;
                 break;
             case CENTER:
                 dist = 1311;
@@ -110,7 +110,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         rightFront.setPower(-power);
         rightBack.setPower(-power);
 
-        while ((leftFront.getPosition() - startPosition) < 900 && !Thread.interrupted()) {}
+        while ((leftFront.getPosition() - startPosition) < 870 && !Thread.interrupted()) {}
 
         robot.stopMotors();
 
@@ -121,7 +121,13 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         rightFront.setPower(power);
         rightBack.setPower(power);
 
-        while ((leftFront.getPosition() - startPosition) < 250 && !Thread.interrupted()) {}
+
+        Thread.sleep(1500);
+        robot.getBoxLeft().setSpeed(-1);
+        robot.getBoxRight().setSpeed(1);
+        Thread.sleep(2000);
+
+        while ((leftFront.getPosition() - startPosition) < 0 && !Thread.interrupted()) {}
         robot.stopMotors();
 
         startPosition = leftFront.getPosition();
