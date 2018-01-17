@@ -9,7 +9,7 @@ import virtualRobot.hardware.Motor;
 
 public class Rotate90 extends Command {
     int power;
-    public static int NINETY_DEG_ENCODER = 920;
+    public static int NINETY_DEG_ENCODER = 900;
     SallyJoeBot robot;
     Motor LF, RF, LB, RB;
 
