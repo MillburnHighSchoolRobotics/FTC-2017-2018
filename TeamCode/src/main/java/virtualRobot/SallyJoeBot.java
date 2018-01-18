@@ -57,7 +57,7 @@ public class SallyJoeBot {
             direction = DcMotorSimple.Direction.REVERSE)    private Motor relicArmWinch;
     @UpdateServo(name = "relicArmWrist")                    private Servo relicArmWrist;
     @UpdateServo(name = "relicArmClaw")                     private Servo relicArmClaw;
-    @UpdateServo(name = "jewelArm", initpos = 0.45)                         private Servo jewelServo;
+    @UpdateServo(name = "jewelArm", initpos = 0.45)         private Servo jewelServo;
     @UpdateColorSensor(name = "colorSensor")                private DumbColorSensor colorSensor;
 
     //Sensors
