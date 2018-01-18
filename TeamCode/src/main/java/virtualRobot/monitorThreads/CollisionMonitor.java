@@ -27,10 +27,7 @@ public class CollisionMonitor extends MonitorThread {
         double currentJerkY = curr_world_linear_accel_y - lastAccel.y;
         lastAccel.y = curr_world_linear_accel_y;
 
-        if ( ( Math.abs(currentJerkX) > COLLISION_THRESHOLD_DELTA_G ) ||
-                ( Math.abs(currentJerkY) > COLLISION_THRESHOLD_DELTA_G) ) {
-            return false;
-        }
-        return true;
+        return !((Math.abs(currentJerkX) > COLLISION_THRESHOLD_DELTA_G) ||
+                (Math.abs(currentJerkY) > COLLISION_THRESHOLD_DELTA_G));
     }
 }

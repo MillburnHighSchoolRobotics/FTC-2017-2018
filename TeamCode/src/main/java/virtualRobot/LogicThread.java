@@ -249,7 +249,7 @@ public abstract class LogicThread extends Thread {
     /**
      * Used to delegate monitorThreads and attach interrupts
      */
-    protected void addPresets() {};
+    protected void addPresets() {}
 
     /**
      * Attaches intterupt to the ISR with a certain procedure

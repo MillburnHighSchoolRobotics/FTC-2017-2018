@@ -1,5 +1,8 @@
 package virtualRobot.hardware;
 
+import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+
 /**
  * Created by shant on 10/8/2015.
  *
@@ -30,9 +33,17 @@ public class Sensor {
     public synchronized double getRawValue() {
     	return hardValue;
     }
-    
+
     public synchronized void incrementRawValue(double delta) {
     		this.hardValue += delta;
+    }
+
+    public synchronized void copyFrom(HardwareDevice sensor) {
+        if (sensor instanceof com.qualcomm.robotcore.hardware.ColorSensor) {
+            ColorSensor cs = (ColorSensor)sensor;
+            this.hardValue = (((((cs.alpha() << 8) | cs.red()) << 8) | cs.green()) << 8) | cs.blue();
+            return;
+        }
     }
 
 }

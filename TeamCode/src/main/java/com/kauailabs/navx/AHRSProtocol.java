@@ -96,20 +96,20 @@ public class AHRSProtocol extends IMUProtocol {
         public static final byte YAW_STABLE_THRESHOLD =         2; /* In Degrees */
         public static final byte MAG_DISTURBANCE_THRESHOLD =    3; /* Ratio */
         public static final byte SEA_LEVEL_PRESSURE =           4; /* Millibars */
-    };    
-    
+    }
+
     public class AHRS_DATA_TYPE
     {
         public static final byte TUNING_VARIABLE =  0;
         public static final byte MAG_CALIBRATION =  1;
         public static final byte BOARD_IDENTITY =   2;
-    };
+    }
 
     public class AHRS_DATA_ACTION
     {
         public static final byte DATA_GET = 0;
         public static final byte DATA_SET = 1;
-    };    
+    }
 
     public final static char BINARY_PACKET_INDICATOR_CHAR = '#';
 
@@ -343,14 +343,14 @@ public class AHRSProtocol extends IMUProtocol {
         public byte data_type;
         public byte var_id;       /* If type = TUNING_VARIABLE */
         public byte status;
-    };
-    
+    }
+
     static public class IntegrationControl
     {
     	public byte action;
     	public int  parameter;
-    };
-    
+    }
+
     static public class MagCalData
     {
         byte action;
@@ -362,15 +362,15 @@ public class AHRSProtocol extends IMUProtocol {
             mag_bias = new short[3];
             mag_xform = new float[3][3];
         }
-    };
-    
+    }
+
     static public class TuningVar
     {
         public byte action;
         public byte var_id;       /* If type = TUNING_VARIABLE */
         float value;
-    };
-    
+    }
+
     static public class BoardID
     {
         public byte type;
@@ -383,8 +383,8 @@ public class AHRSProtocol extends IMUProtocol {
         {
             unique_id = new byte[12];
         }
-    };
-    
+    }
+
     public static int decodeAHRSUpdate( byte[] buffer, 
                                         int offset, 
                                         int length, 
@@ -731,11 +731,11 @@ public class AHRSProtocol extends IMUProtocol {
     }
 
     public static float encodeRatioFloat(float input_ratio) {
-        return (float)(input_ratio *= 32768);
+        return input_ratio *= 32768;
     }
     
     public static float encodeSignedThousandthsFloat(float input) {
-        return (float)(input * 1000);
+        return input * 1000;
     }
 
     /* 0 to 655.35 */
@@ -796,7 +796,7 @@ public class AHRSProtocol extends IMUProtocol {
 
       for (i = 0; i < length; i++)
       {
-        crc ^= (int)(0x00ff & buffer[i]);
+        crc ^= 0x00ff & buffer[i];
         for (j = 0; j < 8; j++)
         {
           if ((crc & 0x0001)!=0) {

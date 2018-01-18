@@ -55,6 +55,6 @@ public class FTCTakePicture extends Command{
 
     public enum Mode{
        TAKING_PICTURE,
-        CHECKING_PICTURE;
+        CHECKING_PICTURE
     }
 }

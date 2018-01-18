@@ -122,11 +122,7 @@ public class JoystickEvent {
             }
         }
 
-        if (dpad_up != other.dpad_up && dpad_down != other.dpad_down && dpad_left != other.dpad_left && dpad_right && other.dpad_left) {
-            return false;
-        }
-
-        return true;
+        return !(dpad_up != other.dpad_up && dpad_down != other.dpad_down && dpad_left != other.dpad_left && dpad_right && other.dpad_left);
     }
 
     public static int BUTTON_X = 0;

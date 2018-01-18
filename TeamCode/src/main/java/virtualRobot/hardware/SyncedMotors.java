@@ -165,11 +165,11 @@ public class SyncedMotors{
         }
     }
 
-    static enum SyncMode {
+    enum SyncMode {
         MOTORS, SIDES
     }
 
-    public static enum SyncAlgo {
+    public enum SyncAlgo {
         POSITION, SPEED
     }
 }

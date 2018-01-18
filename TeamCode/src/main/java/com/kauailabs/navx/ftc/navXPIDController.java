@@ -63,9 +63,9 @@ import java.security.Timestamp;
 
 public class navXPIDController implements IDataArrivalSubscriber {
 
-    public enum TimestampType {SENSOR, SYSTEM};
+    public enum TimestampType {SENSOR, SYSTEM}
 
-	 /**
+    /**
      * The PIDResult class encapsulates the data used by the navXPIDController to
 	 * communicate current state to a client of the navXPIDController.  The client
 	 * creates the instance of the PIDResult, and continually provides it to the
