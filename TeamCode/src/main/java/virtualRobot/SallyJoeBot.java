@@ -47,7 +47,8 @@ public class SallyJoeBot {
     @UpdateMotor(name = "rollerLeft")                       private Motor rollerLeft;
     @UpdateCRServo(name = "boxLeft")                        private ContinuousRotationServo boxLeft;
     @UpdateCRServo(name = "boxRight")                       private ContinuousRotationServo boxRight;
-    @UpdateMotor(name = "relicArm", enabled = false)        private Motor relicArm;
+    @UpdateMotor(name = "relicArm",
+            enabled = false)                                private Motor relicArm;
     @UpdateMotor(name = "liftLeft",
             direction = DcMotorSimple.Direction.REVERSE,
             mode = DcMotor.RunMode.RUN_USING_ENCODER)       private Motor liftLeft;
@@ -57,8 +58,9 @@ public class SallyJoeBot {
             direction = DcMotorSimple.Direction.REVERSE)    private Motor relicArmWinch;
     @UpdateServo(name = "relicArmWrist")                    private Servo relicArmWrist;
     @UpdateServo(name = "relicArmClaw")                     private Servo relicArmClaw;
-    @UpdateServo(name = "jewelArm", initpos = 0.45)         private Servo jewelServo;
-    @UpdateColorSensor(name = "colorSensor")                private DumbColorSensor colorSensor;
+    @UpdateServo(name = "jewelArm", initpos = 0.07)         private Servo jewelServo;
+    @UpdateColorSensor(name = "colorSensor",
+            enabled = false)                                private DumbColorSensor colorSensor;
 
     //Sensors
     private IMU imu;
