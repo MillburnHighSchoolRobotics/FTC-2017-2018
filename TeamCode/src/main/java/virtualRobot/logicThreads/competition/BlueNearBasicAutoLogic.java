@@ -123,8 +123,8 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
 
 
         Thread.sleep(1500);
-        robot.getBoxLeft().setSpeed(-1);
-        robot.getBoxRight().setSpeed(1);
+//        robot.getBoxLeft().setSpeed(-1);
+//        robot.getBoxRight().setSpeed(1);
         Thread.sleep(2000);
 
         while ((leftFront.getPosition() - startPosition) < 0 && !Thread.interrupted()) {}

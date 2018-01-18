@@ -168,6 +168,11 @@ public class SallyJoeBot {
         RBMotor.setPower(0);
     }
 
+    public synchronized void moveClaw(boolean isOpen) {
+        clawLeft.setPosition(isOpen ? 0 : 1);
+        clawRight.setPosition(isOpen ? 1 : 0);
+    }
+
     public synchronized JoystickController getJoystickController1() {
         return joystickController1;
     }

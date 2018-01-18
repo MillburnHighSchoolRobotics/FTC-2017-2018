@@ -148,11 +148,9 @@ public class TeleOpCustomLogic extends LogicThread {
             }
 
             if (controller2.isDown(JoystickController.BUTTON_A)) {
-                robot.getClawLeft().setPosition(0);
-                robot.getClawRight().setPosition(1);
+                robot.moveClaw(false);
             } else if (controller2.isDown(JoystickController.BUTTON_B)) {
-                robot.getClawLeft().setPosition(1);
-                robot.getClawRight().setPosition(0);
+                robot.moveClaw(true);
             }
 
             if (Thread.currentThread().isInterrupted())

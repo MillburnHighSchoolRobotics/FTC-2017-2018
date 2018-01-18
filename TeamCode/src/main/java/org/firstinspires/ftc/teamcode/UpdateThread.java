@@ -203,17 +203,17 @@ public abstract class  UpdateThread extends OpMode {
 		vLeftBack = robot.getLBMotor();
 		vRightFront = robot.getRFMotor();
 		vRightBack = robot.getRBMotor();
-		vBoxLeft = robot.getBoxLeft();
-		vBoxRight = robot.getBoxRight();
+//		vBoxLeft = robot.getBoxLeft();
+//		vBoxRight = robot.getBoxRight();
 		vJewelServo = robot.getJewelServo();
 		vRelicArmWrist = robot.getRelicArmWrist();
 		vRelicArmClaw = robot.getRelicArmClaw();
-		vRelicArm = robot.getRelicArm();
+//		vRelicArm = robot.getRelicArm();
 		vRelicArmWinch = robot.getRelicArmWinch();
-		vRollerLeft = robot.getRollerLeft();
-		vRollerRight = robot.getRollerRight();
-		vLiftLeft = robot.getLiftLeft();
-		vLiftRight = robot.getLiftRight();
+//		vRollerLeft = robot.getRollerLeft();
+//		vRollerRight = robot.getRollerRight();
+//		vLiftLeft = robot.getLiftLeft();
+//		vLiftRight = robot.getLiftRight();
 
 		//FETCH VIRTUAL SENSORS OF VIRTUAL ROBOT from robot. E.g. vColorSensor = robot.getColorSensor();
 		vColorSensor = robot.getColorSensor();
