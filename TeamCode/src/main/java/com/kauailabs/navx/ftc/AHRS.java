@@ -77,13 +77,13 @@ public class AHRS {
 
         private int value;
 
-        private BoardAxis(int value) {
+        BoardAxis(int value) {
             this.value = value;
         }
         public int getValue() {
             return this.value;
         }
-    };
+    }
 
     /**
      * Indicates which sensor board axis is used as the "yaw" (gravity) axis.
@@ -95,7 +95,7 @@ public class AHRS {
     {
         public BoardAxis board_axis;
         public boolean up;
-    };
+    }
 
     /**
      * The DeviceDataType specifies the
@@ -125,18 +125,18 @@ public class AHRS {
 
         private int value;
 
-        private DeviceDataType(int value){
+        DeviceDataType(int value){
             this.value = value;
         }
 
         public int getValue(){
             return this.value;
         }
-    };
+    }
 
     interface IoCallback {
-        public boolean ioComplete( boolean read, int address, int len, byte[] data);
-    };
+        boolean ioComplete(boolean read, int address, int len, byte[] data);
+    }
 
     private class BoardState {
         public short capability_flags;
@@ -1410,7 +1410,7 @@ public class AHRS {
         public DimState getState() {
             return this.state;
         }
-    };
+    }
 
     public class DimI2cDeviceWriter {
         private final I2cDevice device;

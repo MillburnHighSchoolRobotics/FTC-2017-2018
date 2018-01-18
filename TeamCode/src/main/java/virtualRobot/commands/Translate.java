@@ -919,7 +919,7 @@ public class Translate extends Command {
         private final int code;
         private final int angle;
 
-        private Direction(int code, int angle) {
+        Direction(int code, int angle) {
             this.code = code;
             this.angle = angle;
         }

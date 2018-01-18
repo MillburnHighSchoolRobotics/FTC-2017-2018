@@ -6,12 +6,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by DAVID on 1/13/18.
- * TODO: Implement initial value
+ * Created by david on 1/17/18.
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface UpdateServo {
+public @interface UpdateCRServo {
     String name();
     boolean enabled() default true;
 }

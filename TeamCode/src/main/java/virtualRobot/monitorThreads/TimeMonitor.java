@@ -22,11 +22,8 @@ public class TimeMonitor extends MonitorThread {
     public boolean setStatus() {
         double curTime = System.currentTimeMillis() - startingTime;
         BetterLog.d("roboTime", Double.toString(curTime));
-        if (curTime < endTime) {
-            return true;
-        }
+        return curTime < endTime;
 
-        return false;
     }
 
 

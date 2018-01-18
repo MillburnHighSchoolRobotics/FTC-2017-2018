@@ -9,12 +9,15 @@ import com.qualcomm.robotcore.exception.RobotCoreException;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Hardware;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Map;
@@ -22,12 +25,16 @@ import java.util.Map;
 import virtualRobot.JoystickController;
 import virtualRobot.LogicThread;
 import virtualRobot.SallyJoeBot;
+import virtualRobot.UpdateCRServo;
+import virtualRobot.UpdateColorSensor;
 import virtualRobot.UpdateMotor;
+import virtualRobot.UpdateSensor;
 import virtualRobot.UpdateServo;
 import virtualRobot.VuforiaLocalizerImplSubclass;
 import virtualRobot.commands.Command;
 import virtualRobot.commands.Rotate;
 import virtualRobot.commands.Translate;
+import virtualRobot.hardware.ColorSensor;
 import virtualRobot.hardware.ContinuousRotationServo;
 import virtualRobot.hardware.DumbColorSensor;
 import virtualRobot.hardware.IMU;
@@ -58,6 +65,12 @@ public abstract class ReflectionUpdateThread extends OpMode {
 	private ArrayList<DcMotor> motors = new ArrayList<>();
 	private ArrayList<virtualRobot.hardware.Servo> vServos = new ArrayList<>();
 	private ArrayList<Servo> servos = new ArrayList<>();
+	private ArrayList<Sensor> vSensors = new ArrayList<>();
+	private ArrayList<HardwareDevice> sensors = new ArrayList<>();
+	private ArrayList<DumbColorSensor> vDumbColorSensors = new ArrayList<>(); //This is so stupid lmao
+	private ArrayList<com.qualcomm.robotcore.hardware.ColorSensor> dumbColorSensors = new ArrayList<>();
+	private ArrayList<ContinuousRotationServo> vCRServos = new ArrayList<>();
+	private ArrayList<CRServo> CRServos = new ArrayList<>();
 
 	//Here we add all the exception logic threads that are exempt from vuforia initialization
 	//This just helps to lessen the time needed to test
@@ -133,7 +146,7 @@ public abstract class ReflectionUpdateThread extends OpMode {
 		Field[] fields = r.getDeclaredFields();
 		for (Field f : fields) {
 			String getter = "get" + f.getName().substring(0,1).toUpperCase() + f.getName().substring(1);
-			if (f.getClass().equals(Motor.class)) {
+			if (f.getType().equals(Motor.class)) {
 				UpdateMotor metadata = f.getAnnotation(UpdateMotor.class);
 				if (metadata != null) {
 					try {
@@ -154,7 +167,7 @@ public abstract class ReflectionUpdateThread extends OpMode {
 				} else {
 					Log.d("Motor Load", "Motor " + f.getName() + " lacks annotation");
 				}
-			} else if (f.getClass().equals(virtualRobot.hardware.Servo.class)) {
+			} else if (f.getType().equals(virtualRobot.hardware.Servo.class)) {
 				UpdateServo metadata = f.getAnnotation(UpdateServo.class);
 				if (metadata != null) {
 					try {
@@ -163,12 +176,60 @@ public abstract class ReflectionUpdateThread extends OpMode {
 						Servo servo = hardwareMap.servo.get(metadata.name());
 						vServos.add(vServo);
 						servos.add(servo);
-						Log.d("Motor Servo", "Successfully loaded servo " + f.getName());
+						Log.d("Servo Load", "Successfully loaded servo " + f.getName());
 					} catch (Exception e) {
 						Log.d("Servo Load", "Failed to load servo " + f.getName() + ": " + e.getMessage());
 					}
 				} else {
 					Log.d("Servo Load", "Servo " + f.getName() + " lacks annotation");
+				}
+			} else if (f.getType().equals(ContinuousRotationServo.class)) {
+				UpdateCRServo metadata = f.getAnnotation(UpdateCRServo.class);
+				if (metadata != null) {
+					try {
+						if (metadata != null) throw new Exception("Not enabled");
+						ContinuousRotationServo vCRServo = (ContinuousRotationServo) r.getDeclaredMethod(getter).invoke(robot);
+						CRServo CRServo = hardwareMap.crservo.get(metadata.name());
+						vCRServos.add(vCRServo);
+						CRServos.add(CRServo);
+						Log.d("CRServo Load", "Successfully loaded crservo " + f.getName());
+					} catch (Exception e) {
+						Log.d("CRServo Load", "Failed to load crservo " + f.getName() + ": " + e.getMessage());
+					}
+				} else {
+					Log.d("CRServo Load", "CRServo " + f.getName() + "lacks annotation");
+				}
+			} else if (!f.getType().equals(DumbColorSensor.class) && f.getClass().isAssignableFrom(Sensor.class)) {
+				UpdateSensor metadata = f.getAnnotation(UpdateSensor.class);
+				if (metadata != null) {
+					try {
+						if (!metadata.enabled()) throw new Exception("Not enabled");
+						Sensor vSensor = (Sensor) r.getDeclaredMethod(getter).invoke(robot);
+						HardwareDevice sensor = hardwareMap.get(metadata.type(), metadata.name());
+						vSensors.add(vSensor);
+						sensors.add(sensor);
+						Log.d("Sensor Load", "Successfully loaded sensor " + f.getName());
+					} catch (Exception e) {
+						Log.d("Sensor Load", "Failed to load sensor " + f.getName() + ": " + e.getMessage());
+					}
+				} else {
+					Log.d("Sensor Load", "Sensor " + f.getName() + " lacks annotation");
+				}
+			} else if (f.getType().equals(DumbColorSensor.class)) {
+				UpdateColorSensor metadata = f.getAnnotation(UpdateColorSensor.class);
+				if (metadata != null) {
+					try {
+						if (!metadata.enabled()) throw new Exception("Not enabled");
+						DumbColorSensor vDCS = (DumbColorSensor) r.getDeclaredMethod(getter).invoke(robot);
+						com.qualcomm.robotcore.hardware.ColorSensor CS = hardwareMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, metadata.name());
+						vDumbColorSensors.add(vDCS);
+						dumbColorSensors.add(CS);
+						Log.d("DCS Load", "Successfully loaded DCS " + f.getName());
+					} catch (Exception e) {
+						Log.d("DCS Load", "Failed to load DCS " + f.getName() + ": " + e.getMessage());
+					}
+				} else {
+					Log.d("DCS Load", "DCS " + f.getName() + " lacks annotation");
 				}
 			}
 		}
@@ -303,7 +364,16 @@ public abstract class ReflectionUpdateThread extends OpMode {
 		vRelicArmClaw.setPosition(relicArmClaw.getPosition());
 		//set sensors e.g. vDriveRightMotorEncoder.setRawValue(-rightFront.getCurrentPosition())
         vVoltageSensor.setRawValue(getBatteryVoltage());
-
+		for (int i = 0; i < sensors.size(); i++) {
+			vSensors.get(i).copyFrom(sensors.get(i));
+		}
+		for (int i = 0; i < dumbColorSensors.size(); i++) {
+			DumbColorSensor dcs = vDumbColorSensors.get(i);
+			com.qualcomm.robotcore.hardware.ColorSensor cs = dumbColorSensors.get(i);
+			dcs.setRed(cs.red());
+			dcs.setGreen(cs.green());
+			dcs.setBlue(cs.blue());
+		}
 //		vColorSensor.setRed(colorSensor.red());
 //		vColorSensor.setBlue(colorSensor.blue());
 //		vColorSensor.setGreen(colorSensor.green());
@@ -394,6 +464,16 @@ public abstract class ReflectionUpdateThread extends OpMode {
 		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
 //		Log.d("Completed", "virtual encoders");
 
+		for (int i = 0; i < sensors.size(); i++) {
+			vSensors.get(i).copyFrom(sensors.get(i));
+		}
+		for (int i = 0; i < dumbColorSensors.size(); i++) {
+			DumbColorSensor dcs = vDumbColorSensors.get(i);
+			com.qualcomm.robotcore.hardware.ColorSensor cs = dumbColorSensors.get(i);
+			dcs.setRed(cs.red());
+			dcs.setGreen(cs.green());
+			dcs.setBlue(cs.blue());
+		}
 //		vColorSensor.setRed(colorSensor.red());
 //		vColorSensor.setBlue(colorSensor.blue());
 //		vColorSensor.setGreen(colorSensor.green());
@@ -421,6 +501,9 @@ public abstract class ReflectionUpdateThread extends OpMode {
 
 		for (int i = 0; i < motors.size(); i++) {
 			motors.get(i).setPower(vMotors.get(i).getPower());
+		}
+		for (int i = 0; i < CRServos.size(); i++) {
+			CRServos.get(i).setPower(vCRServos.get(i).getSpeed());
 		}
 
 		// Capture Motor Powers,E.g. double leftPower = vDriveLeftMotore.getPower();
