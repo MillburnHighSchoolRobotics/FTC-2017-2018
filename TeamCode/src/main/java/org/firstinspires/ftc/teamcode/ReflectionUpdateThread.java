@@ -156,7 +156,7 @@ public abstract class ReflectionUpdateThread extends OpMode {
 						if (metadata.zero() != DcMotor.ZeroPowerBehavior.UNKNOWN) motor.setZeroPowerBehavior(metadata.zero());
 						motor.setMode(metadata.mode());
 						motor.setDirection(metadata.direction());
-						vLeftFront.setMotorType(motor.getMotorType());
+						vMotor.setMotorType(motor.getMotorType());
 						vMotors.add(vMotor);
 						motors.add(motor);
 						Log.d("Motor Load", "Successfully loaded motor " + f.getName());
