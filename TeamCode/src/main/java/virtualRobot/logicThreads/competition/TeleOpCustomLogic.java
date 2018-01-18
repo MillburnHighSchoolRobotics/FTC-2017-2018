@@ -39,9 +39,8 @@ public class TeleOpCustomLogic extends LogicThread {
                 {-1, 1, 1, -1},
                 {0, 1, 1, 0}
         };
-        double intakeDirectionSensitivity = 1; //TODO: tune speed
-        double liftSpeed = 1; //TODO: tune speed
-        double relicArmSpeed = 1; //TODO: tune speed
+        double liftSpeed = 1;
+        double relicArmSpeed = 0.5;
         double gearCoefficient = 0.666;
 //        Translate headingMovement = null;
 //        int lastAction = 0; //0 for stopped, 1 for translating, 2 for rotating
@@ -114,15 +113,6 @@ public class TeleOpCustomLogic extends LogicThread {
                 robot.stopMotors();
             }
 
-
-//            if (controller1.isDpadUp()) {
-//                robot.getRelicArm().setPower(relicArmSpeed);
-//            } else if (controller1.isDpadDown()) {
-//                robot.getRelicArm().setPower(-relicArmSpeed);
-//            } else {
-//                robot.getRelicArm().setPower(0);
-//            }
-
             if (controller1.isPressed(JoystickController.BUTTON_LB)) {
                 //Grasp Relic
                 robot.getRelicArmClaw().setPosition(0);
@@ -133,10 +123,10 @@ public class TeleOpCustomLogic extends LogicThread {
 
             if (controller1.isDown(JoystickController.BUTTON_Y)) {
                 //Extend arm
-                robot.getRelicArmWinch().setPower(0.5);
+                robot.getRelicArmWinch().setPower(relicArmSpeed);
             } else if (controller1.isDown(JoystickController.BUTTON_A)) {
                 //Retract arm
-                robot.getRelicArmWinch().setPower(-0.5);
+                robot.getRelicArmWinch().setPower(-relicArmSpeed);
             } else {
                 robot.getRelicArmWinch().setPower(0);
             }
@@ -149,75 +139,21 @@ public class TeleOpCustomLogic extends LogicThread {
                 robot.getRelicArmWrist().setPosition(0);
             }
 
-//            if (controller2.isPressed(JoystickController.BUTTON_A)) robot.moveClaw(false);
-//            else if (controller2.isPressed(JoystickController.BUTTON_B)) robot.moveClaw(true);
-//
-//            double intakeDirectionY = controller2.getValue(JoystickController.Y_1);
-//            double intakeElevationY = controller2.getValue(JoystickController.Y_2);
-//
-//            if (!MathUtils.equals(intakeDirectionY, 0, 0.1)) {
-//                robot.getRollerLeft().setSpeed(intakeDirectionY * intakeDirectionSensitivity);
-//                robot.getRollerRight().setSpeed(-intakeDirectionY * intakeDirectionSensitivity);
-//            } else {
-//                robot.getRollerLeft().setSpeed(0);
-//                robot.getRollerRight().setSpeed(0);
-//            }
-//
-//            if (!MathUtils.equals(intakeElevationY, 0, 0.1)) {
-//                robot.getLiftLeft().setPower(intakeElevationY * intakeElevationSensitivity);
-//                robot.getLiftRight().setPower(intakeElevationY * intakeElevationSensitivity);
-//            } else {
-//                robot.getLiftLeft().setPower(0);
-//                robot.getLiftRight().setPower(0);
-//            }
-
-            double boxDirection = controller2.getValue(JoystickController.Y_1);
-            double intakeDirection = controller2.getValue(JoystickController.Y_2);
-            double intakeRotation = controller2.getValue(JoystickController.X_2);
-
-            if (!MathUtils.equals(intakeDirection, 0, 0.1)) {
-                robot.getRollerLeft().setPower(intakeDirection * 0.25 * intakeDirectionSensitivity);
-                robot.getRollerRight().setSpeed(-intakeDirection * intakeDirectionSensitivity);
-            } else {
-                robot.getRollerLeft().setPower(0);
-                robot.getRollerRight().setSpeed(0);
-            }
-
-
-//            if (!MathUtils.equals(intakeRotation, 0, 0.1)) {
-//                robot.getClawLeft().setPosition(intakeRotation);
-//                robot.getClawRight().setPosition(1 - intakeRotation);
-//            }
-
-            if (!MathUtils.equals(boxDirection, 0, 0.1)) {
-                robot.getBoxLeft().setSpeed(boxDirection * intakeDirectionSensitivity);
-                robot.getBoxRight().setSpeed(-boxDirection * intakeDirectionSensitivity);
-            } else {
-                robot.getBoxLeft().setSpeed(0);
-                robot.getBoxRight().setSpeed(0);
-            }
-
-//            if (controller2.isDown(JoystickController.BUTTON_RB) && System.currentTimeMillis() - lastIntakePosChange > 50) {
-//                intakePos = MathUtils.clamp(intakePos + 0.05, 0, 1);
-//                lastIntakePosChange = System.currentTimeMillis();
-//            } else if (controller2.isDown(JoystickController.BUTTON_LB) && System.currentTimeMillis() - lastIntakePosChange > 50) {
-//                intakePos = MathUtils.clamp(intakePos - 0.05, 0, 1);
-//                lastIntakePosChange = System.currentTimeMillis();
-//            }
-//            robot.getClawLeft().setPosition(intakePos);
-
             if (controller2.isDpadUp()) {
-                robot.getLiftLeft().setPower(liftSpeed);
-                robot.getLiftRight().setPower(liftSpeed);
+                robot.getLift().setPower(liftSpeed);
             } else if (controller2.isDpadDown()) {
-                robot.getLiftLeft().setPower(-liftSpeed);
-                robot.getLiftRight().setPower(-liftSpeed);
+                robot.getLift().setPower(-liftSpeed);
             } else {
-                robot.getLiftLeft().setPower(0);
-                robot.getLiftRight().setPower(0);
+                robot.getLift().setPower(0);
             }
 
-            robot.addToTelemetry("liftEncoders", robot.getLiftLeft().getPosition() + ", " + robot.getLiftRight().getPosition());
+            if (controller2.isDown(JoystickController.BUTTON_A)) {
+                robot.getClawLeft().setPosition(0);
+                robot.getClawRight().setPosition(1);
+            } else if (controller2.isDown(JoystickController.BUTTON_B)) {
+                robot.getClawLeft().setPosition(1);
+                robot.getClawRight().setPosition(0);
+            }
 
             if (Thread.currentThread().isInterrupted())
                 throw new InterruptedException();
