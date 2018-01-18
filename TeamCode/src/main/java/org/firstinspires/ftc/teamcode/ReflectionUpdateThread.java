@@ -54,7 +54,7 @@ import virtualRobot.utils.GlobalUtils;
 	But then, a HERO emerged! Loyal subject of the house of Millburn FTC, ReflectionUpdateThread!
 	Save us, RUT! You're our only hope! Wield your powerful blade of dynamic method invocation!
 	Slay the evil spirits that cause such despair across the kingdom, verbosity and hardcoding!
-	O ReflectionUpdateThread, prevail for the good of King Farrell, and humanity itself!
+	O ReflectionUpdateThread, prevail for the glory of King Farrell and the good of humanity itself!
  */
 public abstract class ReflectionUpdateThread extends OpMode {
 	private SallyJoeBot robot;
