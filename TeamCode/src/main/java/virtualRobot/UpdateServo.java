@@ -13,5 +13,5 @@ import java.lang.annotation.Target;
 public @interface UpdateServo {
     String name();
     boolean enabled() default true;
-    int initpos() default 0;
+    double initpos() default 0;
 }
