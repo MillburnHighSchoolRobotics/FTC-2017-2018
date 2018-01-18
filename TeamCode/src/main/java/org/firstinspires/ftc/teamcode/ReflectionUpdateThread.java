@@ -174,6 +174,7 @@ public abstract class ReflectionUpdateThread extends OpMode {
 						if (!metadata.enabled()) throw new Exception("Not enabled");
 						virtualRobot.hardware.Servo vServo = (virtualRobot.hardware.Servo) r.getDeclaredMethod(getter).invoke(robot);
 						Servo servo = hardwareMap.servo.get(metadata.name());
+						vServo.setPosition(metadata.initpos());
 						vServos.add(vServo);
 						servos.add(servo);
 						Log.d("Servo Load", "Successfully loaded servo " + f.getName());
