@@ -37,31 +37,30 @@ public class SallyJoeBot {
     private ConcurrentHashMap<String, Object> telemetry;
 
     //Motors and Servos
-    @UpdateMotor(name = "leftFront")                        private Motor LFMotor;
-    @UpdateMotor(name = "leftBack")                         private Motor LBMotor;
-    @UpdateMotor(name = "rightFront",
-            direction = DcMotorSimple.Direction.REVERSE)    private Motor RFMotor;
-    @UpdateMotor(name = "rightBack",
-            direction = DcMotorSimple.Direction.REVERSE)    private Motor RBMotor;
-    @UpdateCRServo(name = "rollerRight")                    private ContinuousRotationServo rollerRight;
-    @UpdateMotor(name = "rollerLeft")                       private Motor rollerLeft;
-    @UpdateCRServo(name = "boxLeft")                        private ContinuousRotationServo boxLeft;
-    @UpdateCRServo(name = "boxRight")                       private ContinuousRotationServo boxRight;
-    @UpdateMotor(name = "relicArm",
-            enabled = false)                                private Motor relicArm;
-    @UpdateMotor(name = "liftLeft",
-            direction = DcMotorSimple.Direction.REVERSE,
-            mode = DcMotor.RunMode.RUN_USING_ENCODER)       private Motor liftLeft;
-    @UpdateMotor(name = "liftRight",
-            mode = DcMotor.RunMode.RUN_USING_ENCODER)       private Motor liftRight;
-    @UpdateMotor(name = "relicArmWinch",
-            direction = DcMotorSimple.Direction.REVERSE)    private Motor relicArmWinch;
-    @UpdateServo(name = "relicArmWrist")                    private Servo relicArmWrist;
-    @UpdateServo(name = "relicArmClaw")                     private Servo relicArmClaw;
-    @UpdateServo(name = "jewelArm", initpos = 0.07)         private Servo jewelServo;
-    @UpdateColorSensor(name = "colorSensor",
-            enabled = false)                                private DumbColorSensor colorSensor;
-
+    @UpdateMotor(name = "leftFront")
+    private Motor LFMotor;
+    @UpdateMotor(name = "leftBack")
+    private Motor LBMotor;
+    @UpdateMotor(name = "rightFront", direction = DcMotorSimple.Direction.REVERSE)
+    private Motor RFMotor;
+    @UpdateMotor(name = "rightBack", direction = DcMotorSimple.Direction.REVERSE)
+    private Motor RBMotor;
+    @UpdateMotor(name = "lift")
+    private Motor lift;
+    @UpdateServo(name = "clawLeft")
+    private Servo clawLeft;
+    @UpdateServo(name = "clawRight")
+    private Servo clawRight;
+    @UpdateMotor(name = "relicArmWinch", enabled = false)
+    private Motor relicArmWinch;
+    @UpdateServo(name = "relicArmWrist", enabled = false)
+    private Servo relicArmWrist;
+    @UpdateServo(name = "relicArmClaw", enabled = false)
+    private Servo relicArmClaw;
+    @UpdateColorSensor(name = "jewelColorSensor", enabled = false)
+    private DumbColorSensor colorSensor;
+    @UpdateServo(name = "jewelArm", enabled = false)
+    private Servo jewelServo;
     //Sensors
     private IMU imu;
     private Sensor voltageSensor;
@@ -86,16 +85,14 @@ public class SallyJoeBot {
         LBMotor = new Motor();
         RFMotor = new Motor();
         RBMotor = new Motor();
-        rollerLeft = new Motor();
-        rollerRight = new ContinuousRotationServo();
-        boxLeft = new ContinuousRotationServo();
-        boxRight = new ContinuousRotationServo();
-        relicArm = new Motor();
-        liftLeft = new Motor();
-        liftRight = new Motor();
+        lift = new Motor();
+        clawLeft = new Servo();
+        clawRight = new Servo();
+
         relicArmWinch = new Motor();
         relicArmWrist = new Servo();
         relicArmClaw = new Servo();
+
         jewelServo = new Servo();
         colorSensor = new DumbColorSensor();
         //capLift = new SyncedMotors(LiftLeftMotor, LiftRightMotor, LiftLeftEncoder, LiftRightEncoder, KP, KI, KD, SyncedMotors.SyncAlgo.POSITION);
@@ -132,24 +129,16 @@ public class SallyJoeBot {
         return RBMotor;
     }
 
-    public synchronized Motor getLiftLeft() {
-        return liftLeft;
+    public Motor getLift() {
+        return lift;
     }
 
-    public synchronized Motor getLiftRight() {
-        return liftRight;
+    public Servo getClawLeft() {
+        return clawLeft;
     }
 
-    public synchronized ContinuousRotationServo getBoxLeft() {
-        return boxLeft;
-    }
-
-    public synchronized ContinuousRotationServo getBoxRight() {
-        return boxRight;
-    }
-
-    public synchronized Motor getRelicArm() {
-        return relicArm;
+    public Servo getClawRight() {
+        return clawRight;
     }
 
     public synchronized Motor getRelicArmWinch() {
@@ -162,14 +151,6 @@ public class SallyJoeBot {
 
     public synchronized Servo getRelicArmClaw() {
         return relicArmClaw;
-    }
-
-    public synchronized Motor getRollerLeft() {
-        return rollerLeft;
-    }
-
-    public synchronized ContinuousRotationServo getRollerRight() {
-        return rollerRight;
     }
 
     public synchronized Servo getJewelServo() {
