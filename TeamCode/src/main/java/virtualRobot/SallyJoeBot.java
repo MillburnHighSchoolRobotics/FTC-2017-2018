@@ -1,5 +1,8 @@
 package virtualRobot;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
 import org.opencv.core.Mat;
 
 import java.io.IOException;
@@ -34,17 +37,28 @@ public class SallyJoeBot {
     private ConcurrentHashMap<String, Object> telemetry;
 
     //Motors and Servos
-    private Motor LFMotor, LBMotor, RFMotor, RBMotor;
-    private ContinuousRotationServo rollerRight;
-    private Motor rollerLeft;
-    private ContinuousRotationServo boxLeft, boxRight;
-    private Motor relicArm;
-    private Motor liftLeft, liftRight;
-    private Motor relicArmWinch;
-    private Servo relicArmWrist;
-    private Servo relicArmClaw;
-    private Servo jewelServo;
-    private DumbColorSensor colorSensor;
+    @UpdateMotor(name = "leftFront")                        private Motor LFMotor;
+    @UpdateMotor(name = "leftBack")                         private Motor LBMotor;
+    @UpdateMotor(name = "rightFront",
+            direction = DcMotorSimple.Direction.REVERSE)    private Motor RFMotor;
+    @UpdateMotor(name = "rightBack",
+            direction = DcMotorSimple.Direction.REVERSE)    private Motor RBMotor;
+    @UpdateCRServo(name = "rollerRight")                    private ContinuousRotationServo rollerRight;
+    @UpdateMotor(name = "rollerLeft")                       private Motor rollerLeft;
+    @UpdateCRServo(name = "boxLeft")                        private ContinuousRotationServo boxLeft;
+    @UpdateCRServo(name = "boxRight")                       private ContinuousRotationServo boxRight;
+    @UpdateMotor(name = "relicArm", enabled = false)        private Motor relicArm;
+    @UpdateMotor(name = "liftLeft",
+            direction = DcMotorSimple.Direction.REVERSE,
+            mode = DcMotor.RunMode.RUN_USING_ENCODER)       private Motor liftLeft;
+    @UpdateMotor(name = "liftRight",
+            mode = DcMotor.RunMode.RUN_USING_ENCODER)       private Motor liftRight;
+    @UpdateMotor(name = "relicArmWinch",
+            direction = DcMotorSimple.Direction.REVERSE)    private Motor relicArmWinch;
+    @UpdateServo(name = "relicArmWrist")                    private Servo relicArmWrist;
+    @UpdateServo(name = "relicArmClaw")                     private Servo relicArmClaw;
+    @UpdateServo(name = "jewelArm", initpos = 0.45)                         private Servo jewelServo;
+    @UpdateColorSensor(name = "colorSensor")                private DumbColorSensor colorSensor;
 
     //Sensors
     private IMU imu;
