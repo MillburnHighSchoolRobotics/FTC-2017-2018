@@ -49,8 +49,12 @@ import virtualRobot.utils.GlobalUtils;
 
 
 /*
-Updates Virtual sensors etc to corresponds to their real hardware.
-Updates Real hardware (e.g. motors) to correspond to the values of their virtual componennts
+	In days of yore, forsaken souls were forced to make hundreds of thousands of line additions
+	in UpdateThread to add a single motor.
+	But then, a HERO emerged! Loyal subject of the house of Millburn FTC, ReflectionUpdateThread!
+	Save us, RUT! You're our only hope! Wield your powerful blade of dynamic method invocation!
+	Slay the evil spirits that cause such despair across the kingdom, verbosity and hardcoding!
+	O ReflectionUpdateThread, prevail for the good of King Farrell, and humanity itself!
  */
 public abstract class ReflectionUpdateThread extends OpMode {
 	private SallyJoeBot robot;
