@@ -139,17 +139,17 @@ public class TeleOpCustomLogic extends LogicThread {
 //                robot.getRelicArmWrist().setPosition(0);
 //            }
 
-            if (controller2.isDpadUp()) {
+            if (controller1.isDpadUp()) {
                 robot.getLift().setPower(liftSpeed);
-            } else if (controller2.isDpadDown()) {
+            } else if (controller1.isDpadDown()) {
                 robot.getLift().setPower(-liftSpeed);
             } else {
                 robot.getLift().setPower(0);
             }
 
-            if (controller2.isDown(JoystickController.BUTTON_A)) {
+            if (controller1.isDown(JoystickController.BUTTON_A)) {
                 robot.moveClaw(false);
-            } else if (controller2.isDown(JoystickController.BUTTON_B)) {
+            } else if (controller1.isDown(JoystickController.BUTTON_B)) {
                 robot.moveClaw(true);
             }
 
