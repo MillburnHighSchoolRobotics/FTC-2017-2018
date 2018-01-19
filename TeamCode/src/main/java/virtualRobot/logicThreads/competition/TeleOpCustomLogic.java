@@ -149,6 +149,15 @@ public class TeleOpCustomLogic extends LogicThread {
                 robot.getRelicArmWrist().setPosition(0);
             }
 
+
+            if (controller1.isDpadLeft()) {
+                //Raise wrist
+                robot.getRelicArmWrist().setPosition( Math.min(robot.getRelicArmWrist().getPosition() +0.01,1));
+            } else if (controller1.isDpadRight()) {
+                //Lower wrist
+                robot.getRelicArmWrist().setPosition(Math.max(robot.getRelicArmWrist().getPosition() -0.01,-1));
+            }
+
 //            if (controller2.isPressed(JoystickController.BUTTON_A)) robot.moveClaw(false);
 //            else if (controller2.isPressed(JoystickController.BUTTON_B)) robot.moveClaw(true);
 //
@@ -212,6 +221,12 @@ public class TeleOpCustomLogic extends LogicThread {
             } else if (controller2.isDpadDown()) {
                 robot.getLiftLeft().setPower(-liftSpeed);
                 robot.getLiftRight().setPower(-liftSpeed);
+            }else if (controller2.isDpadLeft()) {
+                robot.getLiftLeft().setPower(liftSpeed);
+
+            }else if (controller2.isDpadRight()) {
+
+                robot.getLiftRight().setPower(liftSpeed);
             } else {
                 robot.getLiftLeft().setPower(0);
                 robot.getLiftRight().setPower(0);
