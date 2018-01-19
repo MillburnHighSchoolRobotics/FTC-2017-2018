@@ -24,10 +24,10 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         rightBack = robot.getRBMotor();
         colorSensor = robot.getColorSensor();
         jewelArm = robot.getJewelServo();
-        jewelArm.setPosition(0.66);
+        jewelArm.setPosition(0.67);
         Thread.sleep(500);
         int dist = 0;
-        int travel = 200;
+        int travel = 400;
         double power = 0.35;
         int startPosition;
 //        Thread.sleep(1000);
@@ -77,7 +77,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         }
         robot.stopMotors();
         jewelArm.setPosition(0.07);
-//        Thread.sleep(2000);
+        Thread.sleep(500);
 
         dist = 0;
 
@@ -88,10 +88,10 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
                 dist = 963;
                 break;
             case CENTER:
-                dist = 1311;
+                dist = 1063;
                 break;
             case RIGHT:
-                dist = 1411;
+                dist = 1163;
                 break;
         }
 
@@ -122,14 +122,13 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         rightFront.setPower(power);
         rightBack.setPower(power);
 
+        while ((leftFront.getPosition() - startPosition) < 300 && !Thread.interrupted()) {}
+        robot.stopMotors();
 
         Thread.sleep(1500);
         robot.getBoxLeft().setSpeed(-1);
         robot.getBoxRight().setSpeed(1);
         Thread.sleep(2000);
-
-        while ((leftFront.getPosition() - startPosition) < 0 && !Thread.interrupted()) {}
-        robot.stopMotors();
 
         startPosition = leftFront.getPosition();
 
@@ -139,7 +138,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         rightFront.setPower(-power);
         rightBack.setPower(-power);
 
-        while ((leftFront.getPosition() - startPosition) > -250 && !Thread.interrupted()) {}
+        while ((leftFront.getPosition() - startPosition) > -300 && !Thread.interrupted()) {}
         robot.stopMotors();
     }
 }
