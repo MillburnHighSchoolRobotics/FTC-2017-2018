@@ -1,20 +1,19 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
-import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 
 /**
- * Created by Ethan Mak on 12/16/2017.
+ * Created by Ethan Mak on 1/18/2018.
  */
 
-@Autonomous(name="Sensor: Adafruit Color Sensor", group = "Sensor")
-public class AdafruitTest extends OpMode {
-    AdafruitI2cColorSensor sensor;
+@Autonomous(name="Sensor: Color Sensor Test No Backend", group = "Sensor")
+public class ColorSensorTestOp extends OpMode {
+    ColorSensor sensor;
     @Override
     public void init() {
-        sensor = sensor.getClass().cast(hardwareMap.get("colorSensor"));
-        sensor.initialize();
+        sensor = (ColorSensor) hardwareMap.get("colorSensor");
     }
 
     @Override
@@ -25,7 +24,8 @@ public class AdafruitTest extends OpMode {
         telemetry.addData("ALPHA: ", sensor.alpha());
     }
 
-    public void stop(){
+    @Override
+    public void stop() {
         sensor.close();
     }
 }

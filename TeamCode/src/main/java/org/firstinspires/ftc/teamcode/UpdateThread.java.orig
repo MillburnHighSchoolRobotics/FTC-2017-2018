@@ -137,9 +137,17 @@ public abstract class  UpdateThread extends OpMode {
 
         //MOTOR SETUP (with physical componenents, e.g. leftBack = hardwareMap.dcMotor.get("leftBack")
 		leftFront = hardwareMap.dcMotor.get("leftFront");
+		leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		leftBack = hardwareMap.dcMotor.get("leftBack");
+		leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		rightFront = hardwareMap.dcMotor.get("rightFront");
+		rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		rightBack = hardwareMap.dcMotor.get("rightBack");
+		rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+		rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		Log.d("Components ", "Motors Initialized");
 		rollerLeft = hardwareMap.dcMotor.get("rollerLeft");
 		rollerRight = hardwareMap.crservo.get("rollerRight");
@@ -170,12 +178,15 @@ public abstract class  UpdateThread extends OpMode {
 //		leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //		rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //		rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+<<<<<<< HEAD
 		liftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		liftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+=======
+>>>>>>> parent of 04be2af... We fixed it??? #themysteriousi2cbug
 
 		liftLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		liftRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -234,7 +245,7 @@ public abstract class  UpdateThread extends OpMode {
 //		new Thread (cv).start();
 		if (!exceptions.contains(logicThread)){
 			VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
-			params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+			params.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
 			params.vuforiaLicenseKey = "AdVGalv/////AAAAGYhiDIdk+UI+ivt0Y7WGvUJnm5cKX/lWesW2pH7gnK3eOLTKThLekYSO1q65ttw7X1FvNhxxhdQl3McS+mzYjO+HkaFNJlHxltsI5+b4giqNQKWhyKjzbYbNw8aWarI5YCYUFnyiPPjH39/CbBzzFk3G2RWIzNB7cy4AYhjwYRKRiL3k33YvXv0ZHRzJRkMpnytgvdv5jEQyWa20DIkriC+ZBaj8dph8/akyYfyD1/U19vowknmzxef3ncefgOZoI9yrK82T4GBWazgWvZkIz7bPy/ApGiwnkVzp44gVGsCJCUFERiPVwfFa0SBLeCrQMrQaMDy3kOIVcWTotFn4m1ridgE5ZP/lvRzEC4/vcuV0";
 			UpdateThread.vuforiaInstance = new VuforiaLocalizerImplSubclass(params);
 		}
@@ -348,6 +359,7 @@ public abstract class  UpdateThread extends OpMode {
 		vLeftBack.setPosition(leftBack.getCurrentPosition());
 		vRightFront.setPosition(rightFront.getCurrentPosition());
 		vRightBack.setPosition(rightBack.getCurrentPosition());
+<<<<<<< HEAD
 		vLiftLeft.setPosition(liftLeft.getCurrentPosition());
 		vLiftRight.setPosition(liftRight.getCurrentPosition());
 		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
@@ -362,6 +374,18 @@ public abstract class  UpdateThread extends OpMode {
 //		int b = colorSensor.blue();
 //		System.out.println(r + g + b);
 //		Log.d("Completed", "color sensor");
+=======
+		Log.d("Completed", "virtual encoders");
+
+//		vColorSensor.setRed(colorSensor.red());
+//		vColorSensor.setBlue(colorSensor.blue());
+//		vColorSensor.setGreen(colorSensor.green());
+		int r = colorSensor.red();
+		int g = colorSensor.green();
+		int b = colorSensor.blue();
+		System.out.println(r + g + b);
+		Log.d("Completed", "color sensor");
+>>>>>>> parent of 04be2af... We fixed it??? #themysteriousi2cbug
 
 //		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
 //		vRollerRight.setPosition(rollerRight.getCurrentPosition());

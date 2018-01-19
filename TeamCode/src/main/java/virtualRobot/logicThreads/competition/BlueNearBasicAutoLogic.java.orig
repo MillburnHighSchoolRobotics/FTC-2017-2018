@@ -24,8 +24,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         rightBack = robot.getRBMotor();
         colorSensor = robot.getColorSensor();
         jewelArm = robot.getJewelServo();
-        jewelArm.setPosition(0.66);
-        Thread.sleep(500);
+        jewelArm.setPosition(0.64);
         int dist = 0;
         int travel = 200;
         double power = 0.35;
@@ -40,26 +39,26 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         robot.addToTelemetry("Red ", red);
         robot.addToTelemetry("Blue ", blue);
 //        blue = Math.max(1, blue);
-        if (false &&( red != 0 || blue != 0)) {
+        if (red != 0 || blue != 0) {
             blue = Math.max(1, blue);
             double rat = red/(double)blue;
-            if (rat >= 1.2) {
-                startPosition = rightFront.getPosition();
-                leftFront.setPower(-power);
-                leftBack.setPower(-power);
+            if (rat >= 1.5) {
+                startPosition = leftFront.getPosition();
+                leftFront.setPower(power);
+                leftBack.setPower(power);
                 rightFront.setPower(power);
                 rightBack.setPower(power);
                 while (rightFront.getPosition() - startPosition < travel*0.5) {
                 }
-                leftFront.setPower(power);
-                leftBack.setPower(power);
+                leftFront.setPower(-power);
+                leftBack.setPower(-power);
                 rightFront.setPower(-power);
                 rightBack.setPower(-power);
                 while (rightFront.getPosition() - startPosition > -travel*0.5) {
                 }
 //                dist = travel;
-            } else if (rat <= 0.8) {
-                startPosition = rightFront.getPosition();
+            } else if (rat <= 0.5) {
+                startPosition = leftFront.getPosition();
                 leftFront.setPower(power);
                 leftBack.setPower(power);
                 rightFront.setPower(-power);
@@ -85,7 +84,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
             currentVuMark = RelicRecoveryVuMark.LEFT;
         switch(currentVuMark){
             case LEFT:
-                dist = 963;
+                dist = 1211;
                 break;
             case CENTER:
                 dist = 1311;
@@ -100,6 +99,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         leftBack.setPower(power);
         rightFront.setPower(power);
         rightBack.setPower(power);
+<<<<<<< HEAD
 
         while ((leftFront.getPosition() - startPosition) < dist && !Thread.interrupted()) {}
         robot.stopMotors();
@@ -111,7 +111,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         rightFront.setPower(-power);
         rightBack.setPower(-power);
 
-        while ((leftFront.getPosition() - startPosition) < 870 && !Thread.interrupted()) {}
+        while ((leftFront.getPosition() - startPosition) < 900 && !Thread.interrupted()) {}
 
         robot.stopMotors();
 
@@ -122,13 +122,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         rightFront.setPower(power);
         rightBack.setPower(power);
 
-
-        Thread.sleep(1500);
-        robot.getBoxLeft().setSpeed(-1);
-        robot.getBoxRight().setSpeed(1);
-        Thread.sleep(2000);
-
-        while ((leftFront.getPosition() - startPosition) < 0 && !Thread.interrupted()) {}
+        while ((leftFront.getPosition() - startPosition) < 250 && !Thread.interrupted()) {}
         robot.stopMotors();
 
         startPosition = leftFront.getPosition();
@@ -140,6 +134,9 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         rightBack.setPower(-power);
 
         while ((leftFront.getPosition() - startPosition) > -250 && !Thread.interrupted()) {}
+=======
+        while ((leftFront.getPosition() - startPosition) + dist < 1440*1 && !Thread.interrupted()) {}
+>>>>>>> parent of 04be2af... We fixed it??? #themysteriousi2cbug
         robot.stopMotors();
     }
 }
