@@ -129,15 +129,15 @@ public class SallyJoeBot {
         return RBMotor;
     }
 
-    public Motor getLift() {
+    public synchronized Motor getLift() {
         return lift;
     }
 
-    public Servo getClawLeft() {
+    public synchronized Servo getClawLeft() {
         return clawLeft;
     }
 
-    public Servo getClawRight() {
+    public synchronized Servo getClawRight() {
         return clawRight;
     }
 
