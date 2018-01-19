@@ -47,7 +47,7 @@ public class SallyJoeBot {
     private Motor RBMotor;
     @UpdateMotor(name = "lift")
     private Motor lift;
-    @UpdateServo(name = "clawLeft")
+    @UpdateServo(name = "clawLeft", initpos = 1)
     private Servo clawLeft;
     @UpdateServo(name = "clawRight")
     private Servo clawRight;
@@ -169,8 +169,8 @@ public class SallyJoeBot {
     }
 
     public synchronized void moveClaw(boolean isOpen) {
-        clawLeft.setPosition(isOpen ? 0 : 1);
-        clawRight.setPosition(isOpen ? 1 : 0);
+        clawLeft.setPosition(isOpen ? 0.6 : 1);
+        clawRight.setPosition(isOpen ? 0.4 : 0);
     }
 
     public synchronized JoystickController getJoystickController1() {
