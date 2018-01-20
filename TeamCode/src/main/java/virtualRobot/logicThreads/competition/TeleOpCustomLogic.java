@@ -113,31 +113,31 @@ public class TeleOpCustomLogic extends LogicThread {
                 robot.stopMotors();
             }
 
-//            if (controller1.isPressed(JoystickController.BUTTON_LB)) {
-//                //Grasp Relic
-//                robot.getRelicArmClaw().setPosition(0);
-//            } else if (controller1.isPressed(JoystickController.BUTTON_RB)) {
-//                //Release Relic
-//                robot.getRelicArmClaw().setPosition(1);
-//            }
+            if (controller1.isPressed(JoystickController.BUTTON_RB)) {
+                //Grasp Relic
+                robot.getRelicArmClaw().setPosition(0);
+            } else if (controller1.isPressed(JoystickController.BUTTON_LB)) {
+                //Release Relic
+                robot.getRelicArmClaw().setPosition(1);
+            }
 
-//            if (controller1.isDown(JoystickController.BUTTON_Y)) {
-//                //Extend arm
-//                robot.getRelicArmWinch().setPower(relicArmSpeed);
-//            } else if (controller1.isDown(JoystickController.BUTTON_A)) {
-//                //Retract arm
-//                robot.getRelicArmWinch().setPower(-relicArmSpeed);
-//            } else {
-//                robot.getRelicArmWinch().setPower(0);
-//            }
+            if (controller1.isDpadRight()) {
+                //Extend arm
+                robot.getRelicArmWinch().setPower(relicArmSpeed);
+            } else if (controller1.isDpadLeft()) {
+                //Retract arm
+                robot.getRelicArmWinch().setPower(-relicArmSpeed);
+            } else {
+                robot.getRelicArmWinch().setPower(0);
+            }
 
-//            if (controller1.isDown(JoystickController.BUTTON_B)) {
-//                //Raise wrist
-//                robot.getRelicArmWrist().setPosition(0.5);
-//            } else if (controller1.isDown(JoystickController.BUTTON_X)) {
-//                //Lower wrist
-//                robot.getRelicArmWrist().setPosition(0);
-//            }
+            if (controller1.isDown(JoystickController.BUTTON_RT)) {
+                //Raise wrist
+                robot.getRelicArmWrist().setPosition(0.5);
+            } else if (controller1.isDown(JoystickController.BUTTON_LT)) {
+                //Lower wrist
+                robot.getRelicArmWrist().setPosition(0);
+            }
 
             if (controller1.isDpadUp()) {
                 robot.getLift().setPower(liftSpeed);
