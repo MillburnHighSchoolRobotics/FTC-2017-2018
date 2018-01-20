@@ -56,9 +56,9 @@ public class TeleOpCustomLogic extends LogicThread {
             double RF = 0, RB = 0, LF = 0, LB = 0;
             robot.addToTelemetry("mag", translateMag);
 
-            if (controller1.isDpadUp()) {
+            if (controller1.isDpadLeft()) {
                 gearCoefficient = 1;
-            } else if (controller1.isDpadDown()) {
+            } else if (controller1.isDpadRight()) {
                 gearCoefficient = 0.5;
             }
             if (!MathUtils.equals(rotateX, 0, 0.05)) {
