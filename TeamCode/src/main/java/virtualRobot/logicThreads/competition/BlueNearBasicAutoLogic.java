@@ -85,13 +85,13 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
             currentVuMark = RelicRecoveryVuMark.LEFT;
         switch(currentVuMark){
             case LEFT:
-                dist = 963;
+                dist = 1926;
                 break;
             case CENTER:
-                dist = 1063;
+                dist = 2126;
                 break;
             case RIGHT:
-                dist = 1163;
+                dist = 2326;
                 break;
         }
 
@@ -111,7 +111,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         rightFront.setPower(-power);
         rightBack.setPower(-power);
 
-        while ((leftFront.getPosition() - startPosition) < 870 && !Thread.interrupted()) {}
+        while ((leftFront.getPosition() - startPosition) < 1740 && !Thread.interrupted()) {}
 
         robot.stopMotors();
 
@@ -122,7 +122,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         rightFront.setPower(power);
         rightBack.setPower(power);
 
-        while ((leftFront.getPosition() - startPosition) < 300 && !Thread.interrupted()) {}
+        while ((leftFront.getPosition() - startPosition) < 600 && !Thread.interrupted()) {}
         robot.stopMotors();
 
         Thread.sleep(1500);
@@ -137,7 +137,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         rightFront.setPower(-power);
         rightBack.setPower(-power);
 
-        while ((leftFront.getPosition() - startPosition) > -300 && !Thread.interrupted()) {}
+        while ((leftFront.getPosition() - startPosition) > -600 && !Thread.interrupted()) {}
         robot.stopMotors();
     }
 }
