@@ -81,10 +81,8 @@ public abstract class  UpdateThread extends OpMode {
 //	private BNO055 imu;
     private BNO055IMU imu;
 	private DcMotor leftFront, leftBack, rightFront, rightBack;
-	private DcMotor liftLeft, liftRight;
-	private CRServo boxLeft, boxRight;
-	private DcMotor rollerLeft;
-	private CRServo rollerRight;
+	private DcMotor lift;
+	private Servo clawLeft, clawRight;
 	private DcMotor relicArmWinch;
 	private Servo jewelServo;
 	private Servo relicArmWrist;
@@ -100,14 +98,13 @@ public abstract class  UpdateThread extends OpMode {
 	private JoystickController vJoystickController2;
 
 	private Motor vLeftFront, vLeftBack, vRightFront, vRightBack;
-	private Motor vLiftLeft, vLiftRight;
-	private Motor vRollerLeft;
-	private ContinuousRotationServo vRollerRight;
+	private Motor vLift;
 	private Motor vRelicArm;
 	private Motor vRelicArmWinch;
 	private virtualRobot.hardware.Servo vJewelServo;
 	private virtualRobot.hardware.Servo vRelicArmWrist;
 	private virtualRobot.hardware.Servo vRelicArmClaw;
+	private virtualRobot.hardware.Servo vClawLeft, vClawRight;
 
 
 	private ContinuousRotationServo vBoxLeft, vBoxRight;
@@ -141,12 +138,7 @@ public abstract class  UpdateThread extends OpMode {
 		rightFront = hardwareMap.dcMotor.get("rightFront");
 		rightBack = hardwareMap.dcMotor.get("rightBack");
 		Log.d("Components ", "Motors Initialized");
-		rollerLeft = hardwareMap.dcMotor.get("rollerLeft");
-		rollerRight = hardwareMap.crservo.get("rollerRight");
-		boxLeft = hardwareMap.crservo.get("boxLeft");
-		boxRight = hardwareMap.crservo.get("boxRight");
-		liftLeft = hardwareMap.dcMotor.get("liftLeft");
-		liftRight = hardwareMap.dcMotor.get("liftRight");
+		lift = hardwareMap.dcMotor.get("lift");
 		relicArmWinch = hardwareMap.dcMotor.get("relicArmWinch");
 //		relicArm = hardwareMap.dcMotor.get("relicArm");
 //
@@ -156,11 +148,12 @@ public abstract class  UpdateThread extends OpMode {
 		relicArmWrist = hardwareMap.servo.get("relicArmWrist");
 		relicArmClaw = hardwareMap.servo.get("relicArmClaw");
 
+		clawLeft = hardwareMap.servo.get("clawLeft");
+		clawRight = hardwareMap.servo.get("clawRight");
+
         //REVERSE ONE SIDE (If needed, e.g. rightFront.setDirection(DcMotor.Direction.REVERSE)
 		rightFront.setDirection(DcMotorSimple.Direction.REVERSE);
 		rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
-		liftLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-
 //		jewelServo.setDirection(Servo.Direction.REVERSE);
 
 		relicArmWinch.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -170,15 +163,12 @@ public abstract class  UpdateThread extends OpMode {
 //		leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //		rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //		rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-		liftLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-		liftRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 		leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-		liftLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-		liftRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+		lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //SENSOR SETUP e.g. colorSensor = hardwareMap.colorsensor.get("color"), sonar1 = hardwareMap.analogInput.get("sonar1"), liftEndStop1 = hardwareMap.digitalChannel.get("liftEndStop1")
 		colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
@@ -205,9 +195,12 @@ public abstract class  UpdateThread extends OpMode {
 		vRightBack = robot.getRBMotor();
 //		vBoxLeft = robot.getBoxLeft();
 //		vBoxRight = robot.getBoxRight();
+		vLift = robot.getLift();
 		vJewelServo = robot.getJewelServo();
 		vRelicArmWrist = robot.getRelicArmWrist();
 		vRelicArmClaw = robot.getRelicArmClaw();
+		vClawLeft = robot.getClawLeft();
+		vClawRight = robot.getClawRight();
 //		vRelicArm = robot.getRelicArm();
 		vRelicArmWinch = robot.getRelicArmWinch();
 //		vRollerLeft = robot.getRollerLeft();
@@ -223,9 +216,7 @@ public abstract class  UpdateThread extends OpMode {
 		vLeftBack.setMotorType(leftBack.getMotorType());
 		vRightFront.setMotorType(rightFront.getMotorType());
 		vRightBack.setMotorType(rightBack.getMotorType());
-		vRollerLeft.setMotorType(rollerLeft.getMotorType());
-//		vRollerRight.setMotorType(rollerRight.getMotorType());
-//		vRelicArm.setMotorType(relicArm.getMotorType());
+		vLift.setMotorType(lift.getMotorType());
 
         //Setup constant components (Do not touch)
 		addPresets();
@@ -258,8 +249,8 @@ public abstract class  UpdateThread extends OpMode {
 
 		//Set initial servo positions
 //		relicArmWinch.setPosition(0.5);
-//		clawLeft.setPosition(0);
-//		clawRight.setPosition(0);
+		clawLeft.setPosition(0);
+		clawRight.setPosition(0);
 
 		//Copy positions to virtualRobot
 //		vRelicArmWinch.setSpeed(relicArmWinch.getPosition());
@@ -283,7 +274,9 @@ public abstract class  UpdateThread extends OpMode {
 		vLeftBack.setPosition(leftBack.getCurrentPosition());
 		vRightFront.setPosition(rightFront.getCurrentPosition());
 		vRightBack.setPosition(rightBack.getCurrentPosition());
-		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
+		vClawLeft.setPosition(clawLeft.getPosition());
+		vClawRight.setPosition(clawRight.getPosition());
+//		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
 //		vRollerRight.setPosition(rollerRight.getCurrentPosition());
 //		vRelicArm.setPosition(relicArm.getCurrentPosition());
 
@@ -348,9 +341,6 @@ public abstract class  UpdateThread extends OpMode {
 		vLeftBack.setPosition(leftBack.getCurrentPosition());
 		vRightFront.setPosition(rightFront.getCurrentPosition());
 		vRightBack.setPosition(rightBack.getCurrentPosition());
-		vLiftLeft.setPosition(liftLeft.getCurrentPosition());
-		vLiftRight.setPosition(liftRight.getCurrentPosition());
-		vRollerLeft.setPosition(rollerLeft.getCurrentPosition());
 //		Log.d("Completed", "virtual encoders");
 		if (colorWorking) {
 			vColorSensor.setRed(colorSensor.red());
@@ -369,11 +359,11 @@ public abstract class  UpdateThread extends OpMode {
 
 		//Copy Servo Positions
 //		relicArmWinch.setPosition(vRelicArmWinch.getSpeed());
-		boxLeft.setPower(vBoxLeft.getSpeed());
-		boxRight.setPower(vBoxRight.getSpeed());
 		jewelServo.setPosition(vJewelServo.getPosition());
 		relicArmWrist.setPosition(vRelicArmWrist.getPosition());
 		relicArmClaw.setPosition(vRelicArmClaw.getPosition());
+		clawLeft.setPosition(vClawLeft.getPosition());
+		clawRight.setPosition(vClawRight.getPosition());
 //		Log.d("Completed", "servos");
 
 		// Capture Motor Powers,E.g. double leftPower = vDriveLeftMotore.getPower();
@@ -382,11 +372,8 @@ public abstract class  UpdateThread extends OpMode {
         double rightFrontPower = vRightFront.getPower();
         double rightBackPower = vRightBack.getPower();
         double relicArmPower = vRelicArm.getPower();
-		double rollerLeftPower = vRollerLeft.getPower();
-		double rollerRightPower = vRollerRight.getSpeed();
 		double relicArmWinchPower = vRelicArmWinch.getPower();
-		double liftLeftPower = vLiftLeft.getPower();
-		double liftRightPower = vLiftRight.getPower();
+		double liftPower = vLift.getPower();
 //		Log.d("Completed", "powers");
 
 		// Copy State of Motors and Servos E.g. leftFront.setPower(leftPower), Servo.setPosition(vServo.getPosition());
@@ -394,10 +381,7 @@ public abstract class  UpdateThread extends OpMode {
 		leftBack.setPower(leftBackPower);
 		rightFront.setPower(rightFrontPower);
 		rightBack.setPower(rightBackPower);
-		rollerLeft.setPower(rollerLeftPower);
-		rollerRight.setPower(rollerRightPower);
-		liftLeft.setPower(liftLeftPower);
-		liftRight.setPower(liftRightPower);
+		lift.setPower(liftPower);
 		relicArmWinch.setPower(relicArmWinchPower);
 //		Log.d("Completed", "motor powers");
 //		relicArm.setPower(relicArmPower);

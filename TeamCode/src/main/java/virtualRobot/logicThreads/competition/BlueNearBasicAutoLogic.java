@@ -49,13 +49,13 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
                 leftBack.setPower(-power);
                 rightFront.setPower(power);
                 rightBack.setPower(power);
-                while (rightFront.getPosition() - startPosition < travel*0.5) {
+                while (rightFront.getPosition() - startPosition < travel) {
                 }
                 leftFront.setPower(power);
                 leftBack.setPower(power);
                 rightFront.setPower(-power);
                 rightBack.setPower(-power);
-                while (rightFront.getPosition() - startPosition > -travel*0.5) {
+                while (rightFront.getPosition() - startPosition > -travel) {
                 }
 //                dist = travel;
             } else if (rat <= 0.8) {
@@ -64,13 +64,13 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
                 leftBack.setPower(power);
                 rightFront.setPower(-power);
                 rightBack.setPower(-power);
-                while (rightFront.getPosition() - startPosition > -travel*0.5) {
+                while (rightFront.getPosition() - startPosition > -travel) {
                 }
                 leftFront.setPower(-power);
                 leftBack.setPower(-power);
                 rightFront.setPower(power);
                 rightBack.setPower(power);
-                while (rightFront.getPosition() - startPosition < travel*0.5) {
+                while (rightFront.getPosition() - startPosition < travel) {
                 }
 //                dist = -travel;
             }
