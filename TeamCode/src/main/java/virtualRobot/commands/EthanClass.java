@@ -24,6 +24,7 @@ import virtualRobot.SallyJoeBot;
 import virtualRobot.VuforiaLocalizerImplSubclass;
 import virtualRobot.logicThreads.AutonomousLogicThread;
 import virtualRobot.utils.BetterLog;
+import virtualRobot.utils.GlobalUtils;
 
 /**
  * Created by ethan on 9/22/17.
@@ -48,7 +49,7 @@ public class EthanClass extends Command {
         }
     }
     public EthanClass() {
-        vuforiaInstance = UpdateThread.vuforiaInstance;
+        vuforiaInstance = GlobalUtils.vuforiaInstance;
         width = vuforiaInstance.rgb.getBufferWidth();
         height = vuforiaInstance.rgb.getHeight();
         robot.initCTelemetry();

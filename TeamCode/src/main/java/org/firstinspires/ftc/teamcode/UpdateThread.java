@@ -63,7 +63,6 @@ public abstract class  UpdateThread extends OpMode {
 	private CreateVuforia cv;
 	boolean tInstantiated= false;
 	boolean colorWorking = false;
-	public static VuforiaLocalizerImplSubclass vuforiaInstance = null;
 	private static ArrayList<Class<? extends LogicThread>> exceptions = new ArrayList<>();
 
 	//Here we add all the exception logic threads that are exempt from vuforia initialization
@@ -227,7 +226,7 @@ public abstract class  UpdateThread extends OpMode {
 			VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
 			params.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
 			params.vuforiaLicenseKey = "AdVGalv/////AAAAGYhiDIdk+UI+ivt0Y7WGvUJnm5cKX/lWesW2pH7gnK3eOLTKThLekYSO1q65ttw7X1FvNhxxhdQl3McS+mzYjO+HkaFNJlHxltsI5+b4giqNQKWhyKjzbYbNw8aWarI5YCYUFnyiPPjH39/CbBzzFk3G2RWIzNB7cy4AYhjwYRKRiL3k33YvXv0ZHRzJRkMpnytgvdv5jEQyWa20DIkriC+ZBaj8dph8/akyYfyD1/U19vowknmzxef3ncefgOZoI9yrK82T4GBWazgWvZkIz7bPy/ApGiwnkVzp44gVGsCJCUFERiPVwfFa0SBLeCrQMrQaMDy3kOIVcWTotFn4m1ridgE5ZP/lvRzEC4/vcuV0";
-			UpdateThread.vuforiaInstance = new VuforiaLocalizerImplSubclass(params);
+			GlobalUtils.vuforiaInstance = new VuforiaLocalizerImplSubclass(params);
 		}
 	}
 
@@ -283,6 +282,7 @@ public abstract class  UpdateThread extends OpMode {
 
 		try {
 			t = logicThread.newInstance();
+			t.currentUpdateThread = this;
 			tInstantiated = true;
 		} catch (InstantiationException e) {
 			tInstantiated = false;
@@ -408,7 +408,6 @@ public abstract class  UpdateThread extends OpMode {
 	public void stop() {
 //        imu.stopAccelerationIntegration();
 //		imu.close();
-		vuforiaInstance = null;
 		if (tInstantiated)
 			t.interrupt();
 		System.gc();

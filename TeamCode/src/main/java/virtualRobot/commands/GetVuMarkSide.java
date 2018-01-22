@@ -1,5 +1,7 @@
 package virtualRobot.commands;
 
+import android.provider.Settings;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
@@ -9,13 +11,14 @@ import org.firstinspires.ftc.teamcode.UpdateThread;
 
 import virtualRobot.VuforiaLocalizerImplSubclass;
 import virtualRobot.logicThreads.AutonomousLogicThread;
+import virtualRobot.utils.GlobalUtils;
 
 /**
  * Created by Ethan Mak on 9/9/2017.
  */
 
 public class GetVuMarkSide extends Command {
-    VuforiaLocalizerImplSubclass vuforia = UpdateThread.vuforiaInstance;
+    VuforiaLocalizerImplSubclass vuforia = GlobalUtils.vuforiaInstance;
     VuforiaTrackables relicTrackables;
     VuforiaTrackable relicTemplate;
 
