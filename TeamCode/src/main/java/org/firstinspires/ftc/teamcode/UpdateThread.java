@@ -242,6 +242,7 @@ public abstract class  UpdateThread extends OpMode {
 
 	public void start() {
 		Log.d("colorWorking: ", String.valueOf(colorWorking));
+		telemetry.addData("colorWorking: ", String.valueOf(colorWorking));
 		//set constants (Do not touch)
 		robot.initialBattery = vVoltageSensor.getRawValue();
 		GlobalUtils.setCurrentActivity((Activity) hardwareMap.appContext);

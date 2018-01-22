@@ -12,7 +12,7 @@ import virtualRobot.logicThreads.competition.BlueNearBasicAutoLogic;
  */
 
 @Autonomous(name = "Autonomous: Blue Near Basic", group = "Competition")
-public class BlueNearBasicAutoUpdate extends UpdateThread {
+public class BlueNearBasicAutoUpdate extends ReflectionUpdateThread {
     @Override
     public void setLogicThread() {
         logicThread = BlueNearBasicAutoLogic.class;

@@ -80,20 +80,31 @@ public class BlueFarBasicAutoLogic extends AutonomousLogicThread {
         Thread.sleep(500);
 
         dist = 0;
-
+        int rot = 0;
         if (currentVuMark == RelicRecoveryVuMark.UNKNOWN)
             currentVuMark = RelicRecoveryVuMark.LEFT;
         switch(currentVuMark){
             case LEFT:
                 dist = 1926;
+                rot = 200;
                 break;
             case CENTER:
                 dist = 2126;
+                rot = 300;
                 break;
             case RIGHT:
                 dist = 2326;
+                rot = 450;
                 break;
         }
+
+        startPosition = leftFront.getPosition();
+        leftFront.setPower(power);
+        leftBack.setPower(power);
+        rightFront.setPower(-power);
+        rightBack.setPower(-power);
+        while ((leftFront.getPosition() - startPosition) < rot && !Thread.interrupted()) {}
+        robot.stopMotors();
 
         startPosition = leftFront.getPosition();
         leftFront.setPower(power);
@@ -102,27 +113,6 @@ public class BlueFarBasicAutoLogic extends AutonomousLogicThread {
         rightBack.setPower(power);
 
         while ((leftFront.getPosition() - startPosition) < dist && !Thread.interrupted()) {}
-        robot.stopMotors();
-
-        Thread.sleep(1000);
-        startPosition = leftFront.getPosition();
-        leftFront.setPower(power);
-        leftBack.setPower(power);
-        rightFront.setPower(-power);
-        rightBack.setPower(-power);
-
-        while ((leftFront.getPosition() - startPosition) < 1740 && !Thread.interrupted()) {}
-
-        robot.stopMotors();
-
-        Thread.sleep(1000);
-        startPosition = leftFront.getPosition();
-        leftFront.setPower(power);
-        leftBack.setPower(power);
-        rightFront.setPower(power);
-        rightBack.setPower(power);
-
-        while ((leftFront.getPosition() - startPosition) < 600 && !Thread.interrupted()) {}
         robot.stopMotors();
 
         Thread.sleep(1500);
