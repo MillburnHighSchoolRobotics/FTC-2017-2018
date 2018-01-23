@@ -28,7 +28,8 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         Thread.sleep(500);
         int dist = 0;
         int travel = 400;
-        double power = 0.35;
+        double power = - 0.35;
+        double turn = Math.abs(power);
         int startPosition;
 //        Thread.sleep(1000);
 
@@ -45,31 +46,31 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
             double rat = red/(double)blue;
             if (rat >= 1.2) {
                 startPosition = rightFront.getPosition();
-                leftFront.setPower(-power);
-                leftBack.setPower(-power);
-                rightFront.setPower(power);
-                rightBack.setPower(power);
+                leftFront.setPower(-turn);
+                leftBack.setPower(-turn);
+                rightFront.setPower(turn);
+                rightBack.setPower(turn);
                 while (rightFront.getPosition() - startPosition < travel) {
                 }
-                leftFront.setPower(power);
-                leftBack.setPower(power);
-                rightFront.setPower(-power);
-                rightBack.setPower(-power);
+                leftFront.setPower(turn);
+                leftBack.setPower(turn);
+                rightFront.setPower(-turn);
+                rightBack.setPower(-turn);
                 while (rightFront.getPosition() - startPosition > -travel) {
                 }
 //                dist = travel;
             } else if (rat <= 0.8) {
                 startPosition = rightFront.getPosition();
-                leftFront.setPower(power);
-                leftBack.setPower(power);
-                rightFront.setPower(-power);
-                rightBack.setPower(-power);
+                leftFront.setPower(turn);
+                leftBack.setPower(turn);
+                rightFront.setPower(-turn);
+                rightBack.setPower(-turn);
                 while (rightFront.getPosition() - startPosition > -travel) {
                 }
-                leftFront.setPower(-power);
-                leftBack.setPower(-power);
-                rightFront.setPower(power);
-                rightBack.setPower(power);
+                leftFront.setPower(-turn);
+                leftBack.setPower(-turn);
+                rightFront.setPower(turn);
+                rightBack.setPower(turn);
                 while (rightFront.getPosition() - startPosition < travel) {
                 }
 //                dist = -travel;
@@ -101,7 +102,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         rightFront.setPower(power);
         rightBack.setPower(power);
 
-        while ((leftFront.getPosition() - startPosition) < dist && !Thread.interrupted()) {}
+        while (Math.abs(leftFront.getPosition() - startPosition) < dist && !Thread.interrupted()) {}
         robot.stopMotors();
 
         Thread.sleep(1000);
@@ -111,7 +112,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         rightFront.setPower(-power);
         rightBack.setPower(-power);
 
-        while ((leftFront.getPosition() - startPosition) < 1740 && !Thread.interrupted()) {}
+        while (Math.abs(leftFront.getPosition() - startPosition) < 1740 && !Thread.interrupted()) {}
 
         robot.stopMotors();
 
@@ -122,7 +123,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         rightFront.setPower(power);
         rightBack.setPower(power);
 
-        while ((leftFront.getPosition() - startPosition) < 600 && !Thread.interrupted()) {}
+        while (Math.abs(leftFront.getPosition() - startPosition) < 600 && !Thread.interrupted()) {}
         robot.stopMotors();
 
         Thread.sleep(1500);
@@ -137,7 +138,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         rightFront.setPower(-power);
         rightBack.setPower(-power);
 
-        while ((leftFront.getPosition() - startPosition) > -600 && !Thread.interrupted()) {}
+        while (Math.abs(leftFront.getPosition() - startPosition) < 600 && !Thread.interrupted()) {}
         robot.stopMotors();
     }
 }

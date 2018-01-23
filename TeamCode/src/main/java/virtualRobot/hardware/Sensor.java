@@ -29,7 +29,7 @@ public class Sensor {
     public synchronized void setRawValue(double hardValue) {
     	this.hardValue = hardValue;
     }
-    
+
     public synchronized double getRawValue() {
     	return hardValue;
     }
@@ -41,7 +41,7 @@ public class Sensor {
     public synchronized void copyFrom(HardwareDevice sensor) {
         if (sensor instanceof com.qualcomm.robotcore.hardware.ColorSensor) {
             ColorSensor cs = (ColorSensor)sensor;
-            this.hardValue = (((((cs.alpha() << 8) | cs.red()) << 8) | cs.green()) << 8) | cs.blue();
+            this.hardValue = cs.argb();
             return;
         }
     }

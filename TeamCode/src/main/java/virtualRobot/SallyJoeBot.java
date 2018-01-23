@@ -57,9 +57,9 @@ public class SallyJoeBot {
     private Servo relicArmWrist;
     @UpdateServo(name = "relicArmClaw")
     private Servo relicArmClaw;
-    @UpdateColorSensor(name = "jewelColorSensor", enabled = false)
+    @UpdateColorSensor(name = "jewelColorSensor")
     private DumbColorSensor colorSensor;
-    @UpdateServo(name = "jewelArm", enabled = false)
+    @UpdateServo(name = "jewelArm")
     private Servo jewelServo;
     //Sensors
     private IMU imu;
