@@ -19,4 +19,5 @@ public @interface UpdateMotor {
     DcMotor.RunMode mode() default DcMotor.RunMode.RUN_WITHOUT_ENCODER;
     DcMotor.ZeroPowerBehavior zero() default DcMotor.ZeroPowerBehavior.BRAKE;
     DcMotor.Direction direction() default DcMotorSimple.Direction.FORWARD;
+    boolean encoderReversed() default false;
 }

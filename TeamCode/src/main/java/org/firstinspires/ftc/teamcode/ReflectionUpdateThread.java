@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import android.app.Activity;
 import android.util.Log;
+import android.util.Pair;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -64,7 +65,7 @@ public abstract class ReflectionUpdateThread extends OpMode {
 	boolean tInstantiated= false;
 	private static ArrayList<Class<? extends LogicThread>> exceptions = new ArrayList<>();
 
-	private ArrayList<Motor> vMotors = new ArrayList<>();
+	private ArrayList<Pair<String, Motor>> vMotors = new ArrayList<>();
 	private ArrayList<DcMotor> motors = new ArrayList<>();
 	private ArrayList<virtualRobot.hardware.Servo> vServos = new ArrayList<>();
 	private ArrayList<Servo> servos = new ArrayList<>();
@@ -123,6 +124,8 @@ public abstract class ReflectionUpdateThread extends OpMode {
 		//FETCH VIRTUAL ROBOT FROM COMMAND INTERFACE
 		robot = Command.ROBOT;
 		robot.initialBattery = getBatteryVoltage();
+		robot.getTelemetry().clear();
+		robot.getProgress().clear();
 
         //MOTOR SETUP (with physical componenents, e.g. leftBack = hardwareMap.dcMotor.get("leftBack")
 		Class<SallyJoeBot> r = SallyJoeBot.class;
@@ -140,7 +143,8 @@ public abstract class ReflectionUpdateThread extends OpMode {
 						motor.setMode(metadata.mode());
 						motor.setDirection(metadata.direction());
 						vMotor.setMotorType(motor.getMotorType());
-						vMotors.add(vMotor);
+						vMotor.setPositionReversed(metadata.encoderReversed());
+						vMotors.add(new Pair(metadata.name(), vMotor));
 						motors.add(motor);
 						Log.d("Motor Load", "Successfully loaded motor " + f.getName());
 					} catch (Exception e) {
@@ -239,7 +243,7 @@ public abstract class ReflectionUpdateThread extends OpMode {
 	}
 
 	public void init_loop () {
-		telemetry.addData("Is Running Version: ", Translate.KPt + " 3.0");
+		telemetry.addData("Is Running Version: ", Translate.KPt + " 3.1p9");
         telemetry.addData("Init Loop Time", runtime.toString());
 		telemetry.addData("Battery Voltage: ", getBatteryVoltage());
 //        telemetry.addData("IMU Status", imu.getSystemStatus().toShortString());
@@ -277,7 +281,7 @@ public abstract class ReflectionUpdateThread extends OpMode {
 
 		//Copy to virtual motor encoders
 		for (int i = 0; i < motors.size(); i++) {
-			vMotors.get(i).setPosition(motors.get(i).getCurrentPosition());
+			vMotors.get(i).second.setPosition(motors.get(i).getCurrentPosition());
 		}
 
 		try {
@@ -339,7 +343,7 @@ public abstract class ReflectionUpdateThread extends OpMode {
 
         //Copy to virtual motor encoders
         for (int i = 0; i < motors.size(); i++) {
-			vMotors.get(i).setPosition(motors.get(i).getCurrentPosition());
+			vMotors.get(i).second.setPosition(motors.get(i).getCurrentPosition());
 		}
 
 		//Copy to virtual sensors
@@ -363,7 +367,7 @@ public abstract class ReflectionUpdateThread extends OpMode {
 
 		//Set real motor speeds
 		for (int i = 0; i < motors.size(); i++) {
-			motors.get(i).setPower(vMotors.get(i).getPower());
+			motors.get(i).setPower(vMotors.get(i).second.getPower());
 		}
 
 		//Set real CRServo speeds
@@ -380,6 +384,11 @@ public abstract class ReflectionUpdateThread extends OpMode {
 		//Send robot progress
 		for (int i = 0; i < robot.getProgress().size(); i++) {
 			telemetry.addData("robot progress " + i, robot.getProgress().get(i));
+		}
+
+		for (Pair<String, Motor> pair : vMotors) {
+        	robot.addToTelemetry(pair.first + ": ", pair.second.getPosition());
+        	Log.d(pair.first + ": ", String.valueOf(pair.second.getPosition()));
 		}
 
 //		telemetry.addData("Gamepad"gamepad1.atRest());

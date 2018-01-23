@@ -34,6 +34,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         jewelArm.setPosition(0.67);
         Thread.sleep(5000);
         robot.addToTelemetry("Time Difference:", System.currentTimeMillis() - timeS);
+        Log.d("Progress", "Time Difference:" + String.valueOf(System.currentTimeMillis() - timeS));
         int dist = 0;
         int travel = 200;
         double power = - 0.35;
@@ -51,28 +52,11 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         robot.addToTelemetry("Blue ", blue);
 //        blue = Math.max(1, blue);
         if (red != 0 || blue != 0) {
-            Log.d("Jewel", "Beginning");
+            Log.d("Progress", "Jewel Beginning");
             blue = Math.max(1, blue);
             double rat = red/(double)blue;
             if (rat >= 1.2) {
-                Log.d("Choice", "Red");
-                startPosition = rightFront.getPosition();
-                leftFront.setPower(-turn);
-                leftBack.setPower(-turn);
-                rightFront.setPower(turn);
-                rightBack.setPower(turn);
-                while (rightFront.getPosition() - startPosition < travel) {
-                }
-                jewelArm.setPosition(0.07);
-                leftFront.setPower(turn);
-                leftBack.setPower(turn);
-                rightFront.setPower(-turn);
-                rightBack.setPower(-turn);
-                while (rightFront.getPosition() - startPosition > 0) {
-                }
-//                dist = travel;
-            } else if (rat <= 0.8) {
-                Log.d("Choice", "Blue");
+                Log.d("Progress", "Jewel Red");
                 startPosition = rightFront.getPosition();
                 leftFront.setPower(turn);
                 leftBack.setPower(turn);
@@ -87,10 +71,27 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
                 rightBack.setPower(turn);
                 while (rightFront.getPosition() - startPosition < 0) {
                 }
+//                dist = travel;
+            } else if (rat <= 0.8) {
+                Log.d("Progress", "Jewel Blue");
+                startPosition = rightFront.getPosition();
+                leftFront.setPower(-turn);
+                leftBack.setPower(-turn);
+                rightFront.setPower(turn);
+                rightBack.setPower(turn);
+                while (rightFront.getPosition() - startPosition < travel) {
+                }
+                jewelArm.setPosition(0.07);
+                leftFront.setPower(turn);
+                leftBack.setPower(turn);
+                rightFront.setPower(-turn);
+                rightBack.setPower(-turn);
+                while (rightFront.getPosition() - startPosition > 0) {
+                }
 //                dist = -travel;
             }
         }
-        Log.d("Jewel", "Completed");
+        Log.d("Progress", "Jewel Completed");
         robot.stopMotors();
         jewelArm.setPosition(0.07);
         Thread.sleep(500);
@@ -110,7 +111,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
                 break;
         }
 
-        Log.d("VuMark", currentVuMark == UNKNOWN ? "Unknown" : (currentVuMark == LEFT ? "Left" : (currentVuMark == RIGHT ? "Right" : "Center")));
+        Log.d("Progress", "Vumark " + currentVuMark.name());
 
         startPosition = leftFront.getPosition();
         leftFront.setPower(power);
