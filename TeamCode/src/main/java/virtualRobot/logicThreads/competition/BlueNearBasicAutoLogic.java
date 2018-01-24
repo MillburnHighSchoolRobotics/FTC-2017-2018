@@ -4,12 +4,14 @@ import android.util.Log;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
+import virtualRobot.commands.Command;
 import virtualRobot.commands.GetVuMarkSide;
 import virtualRobot.hardware.DumbColorSensor;
 import virtualRobot.hardware.Motor;
 import virtualRobot.hardware.Servo;
 import virtualRobot.logicThreads.AutonomousLogicThread;
 
+import static org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark.CENTER;
 import static org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark.LEFT;
 import static org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark.RIGHT;
 import static org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark.UNKNOWN;
@@ -25,6 +27,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
     @Override
     protected void realRun() throws InterruptedException {
         double timeS = System.currentTimeMillis();
+        Log.d("Begin", "Began");
         leftFront = robot.getLFMotor();
         leftBack = robot.getLBMotor();
         rightFront = robot.getRFMotor();
@@ -32,18 +35,21 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         colorSensor = robot.getColorSensor();
         jewelArm = robot.getJewelServo();
         jewelArm.setPosition(0.67);
-        Thread.sleep(5000);
+        Thread.sleep(2000);
         robot.addToTelemetry("Time Difference:", System.currentTimeMillis() - timeS);
         Log.d("Progress", "Time Difference:" + String.valueOf(System.currentTimeMillis() - timeS));
         int dist = 0;
         int travel = 200;
         double power = - 0.35;
-        double turn = power;
+        double turn = power*2;
         int startPosition;
 //        Thread.sleep(1000);
 
-        runCommand(new GetVuMarkSide());
-        robot.addToTelemetry("Current Vumark: ", currentVuMark);
+//        runCommand(new GetVuMarkSide());
+        int choice = (int)Math.floor(Math.random() * 3);
+//        int choice = 1;
+        currentVuMark = new RelicRecoveryVuMark[] {LEFT, CENTER, RIGHT}[choice]; //lmao why does this work
+        robot.addToTelemetry("Current VuMark: ", currentVuMark);
 
         int red = colorSensor.getRed();
         int blue = colorSensor.getBlue();
@@ -58,34 +64,39 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
             if (rat >= 1.2) {
                 Log.d("Progress", "Jewel Red");
                 startPosition = rightFront.getPosition();
-                leftFront.setPower(turn);
-                leftBack.setPower(turn);
-                rightFront.setPower(-turn);
-                rightBack.setPower(-turn);
+                leftFront.setPower(power);
+                leftBack.setPower(power);
+                rightFront.setPower(-power);
+                rightBack.setPower(-power);
                 while (rightFront.getPosition() - startPosition > -travel) {
+//                    Log.d("Ultimate Meme", Integer.toString(rightFront.getPosition() - startPosition));
                 }
                 jewelArm.setPosition(0.07);
-                leftFront.setPower(-turn);
-                leftBack.setPower(-turn);
-                rightFront.setPower(turn);
-                rightBack.setPower(turn);
+                robot.stopMotors();
+                Thread.sleep(5000);
+                leftFront.setPower(-power);
+                leftBack.setPower(-power);
+                rightFront.setPower(power);
+                rightBack.setPower(power);
                 while (rightFront.getPosition() - startPosition < 0) {
                 }
 //                dist = travel;
             } else if (rat <= 0.8) {
                 Log.d("Progress", "Jewel Blue");
                 startPosition = rightFront.getPosition();
-                leftFront.setPower(-turn);
-                leftBack.setPower(-turn);
-                rightFront.setPower(turn);
-                rightBack.setPower(turn);
+                leftFront.setPower(-power);
+                leftBack.setPower(-power);
+                rightFront.setPower(power);
+                rightBack.setPower(power);
                 while (rightFront.getPosition() - startPosition < travel) {
                 }
+                robot.stopMotors();
                 jewelArm.setPosition(0.07);
-                leftFront.setPower(turn);
-                leftBack.setPower(turn);
-                rightFront.setPower(-turn);
-                rightBack.setPower(-turn);
+                Thread.sleep(5000);
+                leftFront.setPower(power);
+                leftBack.setPower(power);
+                rightFront.setPower(-power);
+                rightBack.setPower(-power);
                 while (rightFront.getPosition() - startPosition > 0) {
                 }
 //                dist = -travel;
@@ -94,20 +105,20 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         Log.d("Progress", "Jewel Completed");
         robot.stopMotors();
         jewelArm.setPosition(0.07);
-        Thread.sleep(500);
+        Thread.sleep(5000);
 
         dist = 0;
         if (currentVuMark == UNKNOWN)
             currentVuMark = LEFT;
         switch(currentVuMark){
             case LEFT:
-                dist = 1926;
+                dist = 1600; //1926
                 break;
             case CENTER:
-                dist = 2126;
+                dist = 2000; //2126
                 break;
             case RIGHT:
-                dist = 2326;
+                dist = 2400; //2326
                 break;
         }
 
@@ -119,28 +130,28 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         rightFront.setPower(power);
         rightBack.setPower(power);
 
-        while (Math.abs(leftFront.getPosition() - startPosition) < dist && !Thread.interrupted()) {}
+        while (leftFront.getPosition() - startPosition < dist && !Thread.interrupted()) {}
         robot.stopMotors();
 
         Thread.sleep(1000);
         startPosition = leftFront.getPosition();
-        leftFront.setPower(power);
-        leftBack.setPower(power);
-        rightFront.setPower(-power);
-        rightBack.setPower(-power);
+        leftFront.setPower(-power*1.5);
+        leftBack.setPower(-power*1.5);
+        rightFront.setPower(power*1.5);
+        rightBack.setPower(power*1.5);
 
-        while (Math.abs(leftFront.getPosition() - startPosition) < 1740 && !Thread.interrupted()) {}
+        while (leftFront.getPosition() - startPosition > -1350 && !Thread.interrupted()) {}
 
         robot.stopMotors();
 
         Thread.sleep(1000);
         startPosition = leftFront.getPosition();
-        leftFront.setPower(power);
-        leftBack.setPower(power);
-        rightFront.setPower(power);
-        rightBack.setPower(power);
+        leftFront.setPower(power*1.5);
+        leftBack.setPower(power*1.5);
+        rightFront.setPower(power*1.5);
+        rightBack.setPower(power*1.5);
 
-        while (Math.abs(leftFront.getPosition() - startPosition) < 600 && !Thread.interrupted()) {}
+        while (leftFront.getPosition() - startPosition < 3000 && !Thread.interrupted()) {}
         robot.stopMotors();
 
         Thread.sleep(1500);
@@ -155,7 +166,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         rightFront.setPower(-power);
         rightBack.setPower(-power);
 
-        while (Math.abs(leftFront.getPosition() - startPosition) < 600 && !Thread.interrupted()) {}
+        while (leftFront.getPosition() - startPosition > -600 && !Thread.interrupted()) {}
         robot.stopMotors();
     }
 }
