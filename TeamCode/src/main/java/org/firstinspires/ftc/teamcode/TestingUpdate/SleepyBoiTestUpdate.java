@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.TestingUpdate;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.UpdateThread;
+import org.firstinspires.ftc.teamcode.ReflectionUpdateThread;
 
 import virtualRobot.logicThreads.testing.SleepyBoiTestLogic;
 
@@ -11,7 +11,7 @@ import virtualRobot.logicThreads.testing.SleepyBoiTestLogic;
  */
 
 @Autonomous( name="Sleepy Boi Test", group = "Testing" )
-public class SleepyBoiTestUpdate extends UpdateThread {
+public class SleepyBoiTestUpdate extends ReflectionUpdateThread {
     @Override
     public void setLogicThread() {
         logicThread = SleepyBoiTestLogic.class;

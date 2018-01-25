@@ -56,6 +56,7 @@ import virtualRobot.utils.Vector3f;
 Updates Virtual sensors etc to corresponds to their real hardware.
 Updates Real hardware (e.g. motors) to correspond to the values of their virtual componennts
  */
+@Deprecated
 public abstract class  UpdateThread extends OpMode {
 	private SallyJoeBot robot;
 	protected Class<? extends LogicThread> logicThread = null;
@@ -282,7 +283,7 @@ public abstract class  UpdateThread extends OpMode {
 
 		try {
 			t = logicThread.newInstance();
-			t.currentUpdateThread = this;
+//			t.currentUpdateThread = this;
 			tInstantiated = true;
 		} catch (InstantiationException e) {
 			tInstantiated = false;

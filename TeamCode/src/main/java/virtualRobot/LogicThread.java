@@ -1,7 +1,7 @@
 package virtualRobot;
 
 
-import org.firstinspires.ftc.teamcode.UpdateThread;
+import org.firstinspires.ftc.teamcode.ReflectionUpdateThread;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,7 +36,7 @@ public abstract class LogicThread extends Thread {
     protected AtomicBoolean isPaused = new AtomicBoolean(false);
     protected boolean shouldStartISR = true;
 
-    public UpdateThread currentUpdateThread = null;
+    public ReflectionUpdateThread currentUpdateThread = null;
 
     //The thread to check all monitorThreads and put data in HashMap and check for interrupts
     private Thread interruptHandler = new Thread() {

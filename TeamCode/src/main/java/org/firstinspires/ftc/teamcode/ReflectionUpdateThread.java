@@ -286,6 +286,7 @@ public abstract class ReflectionUpdateThread extends OpMode {
 
 		try {
 			t = logicThread.newInstance();
+			t.currentUpdateThread = this;
 			tInstantiated = true;
 		} catch (InstantiationException e) {
 			tInstantiated = false;

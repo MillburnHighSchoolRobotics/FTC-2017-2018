@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.TestingUpdate;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.UpdateThread;
+import org.firstinspires.ftc.teamcode.ReflectionUpdateThread;
 
 import virtualRobot.logicThreads.testing.ColorSensorTestLogic;
 
@@ -11,7 +11,7 @@ import virtualRobot.logicThreads.testing.ColorSensorTestLogic;
  */
 
 @Autonomous( name="Color Sensor Test", group="Testing" )
-public class ColorSensorTestUpdate extends UpdateThread {
+public class ColorSensorTestUpdate extends ReflectionUpdateThread {
     @Override
     public void setLogicThread() {
         logicThread = ColorSensorTestLogic.class;

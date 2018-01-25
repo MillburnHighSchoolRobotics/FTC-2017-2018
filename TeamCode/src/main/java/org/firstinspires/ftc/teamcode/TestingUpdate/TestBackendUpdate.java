@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.TestingUpdate;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.UpdateThread;
+import org.firstinspires.ftc.teamcode.ReflectionUpdateThread;
 
 import virtualRobot.logicThreads.testing.TestBackendLogic;
 
@@ -11,7 +11,7 @@ import virtualRobot.logicThreads.testing.TestBackendLogic;
  */
 
 @Autonomous(name="Testing: Test Backend", group="Testing")
-public class TestBackendUpdate extends UpdateThread {
+public class TestBackendUpdate extends ReflectionUpdateThread {
     @Override
     public void setLogicThread() {
         logicThread = TestBackendLogic.class;

@@ -1,14 +1,8 @@
 package virtualRobot.commands;
 
-import android.provider.Settings;
-import android.util.Log;
-
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.teamcode.UpdateThread;
 
 import virtualRobot.VuforiaLocalizerImplSubclass;
 import virtualRobot.logicThreads.AutonomousLogicThread;

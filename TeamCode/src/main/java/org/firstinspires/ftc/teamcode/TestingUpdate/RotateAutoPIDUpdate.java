@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.TestingUpdate;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.UpdateThread;
+import org.firstinspires.ftc.teamcode.ReflectionUpdateThread;
 
 import virtualRobot.logicThreads.testing.RotateAutoPIDLogic;
 
@@ -11,7 +11,7 @@ import virtualRobot.logicThreads.testing.RotateAutoPIDLogic;
  */
 
 @Autonomous(name = "Testing: Rotate AutoPID", group = "Testing")
-public class RotateAutoPIDUpdate extends UpdateThread {
+public class RotateAutoPIDUpdate extends ReflectionUpdateThread {
     @Override
     public void setLogicThread() {
         logicThread = RotateAutoPIDLogic.class;

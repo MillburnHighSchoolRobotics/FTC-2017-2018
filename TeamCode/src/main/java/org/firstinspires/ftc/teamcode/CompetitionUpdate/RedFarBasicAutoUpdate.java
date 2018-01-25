@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.CompetitionUpdate;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.UpdateThread;
+import org.firstinspires.ftc.teamcode.ReflectionUpdateThread;
 
 import virtualRobot.logicThreads.competition.RedFarBasicAutoLogic;
 
@@ -11,7 +11,7 @@ import virtualRobot.logicThreads.competition.RedFarBasicAutoLogic;
  */
 
 @Autonomous(name = "Autonomous: Red 2 Basic", group = "Competition")
-public class RedFarBasicAutoUpdate extends UpdateThread {
+public class RedFarBasicAutoUpdate extends ReflectionUpdateThread {
     @Override
     public void setLogicThread() {
         logicThread = RedFarBasicAutoLogic.class;

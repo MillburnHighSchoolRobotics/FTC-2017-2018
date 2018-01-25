@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.TestingUpdate;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.UpdateThread;
+import org.firstinspires.ftc.teamcode.ReflectionUpdateThread;
 
 import virtualRobot.logicThreads.testing.JoystickTelemetryLogic;
 
@@ -11,7 +11,7 @@ import virtualRobot.logicThreads.testing.JoystickTelemetryLogic;
  */
 
 @TeleOp( name = "Testing: Joystick", group = "Testing")
-public class JoystickUpdate extends UpdateThread {
+public class JoystickUpdate extends ReflectionUpdateThread {
     @Override
     public void setLogicThread() {
         logicThread = JoystickTelemetryLogic.class;

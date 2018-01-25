@@ -2,7 +2,6 @@ package virtualRobot.commands;
 
 import android.graphics.Bitmap;
 
-import org.firstinspires.ftc.teamcode.UpdateThread;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;

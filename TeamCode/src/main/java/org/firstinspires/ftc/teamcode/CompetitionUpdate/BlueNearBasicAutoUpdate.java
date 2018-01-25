@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.CompetitionUpdate;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.ReflectionUpdateThread;
-import org.firstinspires.ftc.teamcode.UpdateThread;
 
 import virtualRobot.logicThreads.competition.BlueNearBasicAutoLogic;
 
