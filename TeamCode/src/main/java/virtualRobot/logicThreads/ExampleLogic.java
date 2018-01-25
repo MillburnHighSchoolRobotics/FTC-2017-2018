@@ -21,5 +21,10 @@ public class ExampleLogic extends LogicThread {
     @Override
     protected void realRun() throws InterruptedException {
 //        runCommand(new Rotate(90));
+        int meme = -1;
+        while (true) {
+            robot.getJewelHitter().setSpeed(meme *= -1);
+            Thread.sleep(500);
+        }
     }
 }

@@ -15,6 +15,8 @@ public class TeleOpCustomLogic extends LogicThread {
         shouldStartISR = false;
     }
 
+
+
     @Override
     protected void realRun() throws InterruptedException {
         robot.getJewelServo().setPosition(0.07);
@@ -39,9 +41,8 @@ public class TeleOpCustomLogic extends LogicThread {
                 {-1, 1, 1, -1},
                 {0, 1, 1, 0}
         };
-        double intakeDirectionSensitivity = 1; //TODO: tune speed
-        double liftSpeed = 1; //TODO: tune speed
-        double relicArmSpeed = 1; //TODO: tune speed
+        double liftSpeed = 1;
+        double relicArmSpeed = 0.5;
         double gearCoefficient = 0.666;
 //        Translate headingMovement = null;
 //        int lastAction = 0; //0 for stopped, 1 for translating, 2 for rotating
@@ -57,9 +58,9 @@ public class TeleOpCustomLogic extends LogicThread {
             double RF = 0, RB = 0, LF = 0, LB = 0;
             robot.addToTelemetry("mag", translateMag);
 
-            if (controller1.isDpadUp()) {
+            if (controller1.isDown(JoystickController.BUTTON_X)) {
                 gearCoefficient = 1;
-            } else if (controller1.isDpadDown()) {
+            } else if (controller1.isDown(JoystickController.BUTTON_Y)) {
                 gearCoefficient = 0.5;
             }
             if (!MathUtils.equals(rotateX, 0, 0.05)) {
@@ -114,129 +115,48 @@ public class TeleOpCustomLogic extends LogicThread {
                 robot.stopMotors();
             }
 
-
-//            if (controller1.isDpadUp()) {
-//                robot.getRelicArm().setPower(relicArmSpeed);
-//            } else if (controller1.isDpadDown()) {
-//                robot.getRelicArm().setPower(-relicArmSpeed);
-//            } else {
-//                robot.getRelicArm().setPower(0);
-//            }
-
-            if (controller1.isPressed(JoystickController.BUTTON_LB)) {
+            if (controller1.isPressed(JoystickController.BUTTON_RB)) {
                 //Grasp Relic
                 robot.getRelicArmClaw().setPosition(0);
-            } else if (controller1.isPressed(JoystickController.BUTTON_RB)) {
+            } else if (controller1.isPressed(JoystickController.BUTTON_LB)) {
                 //Release Relic
                 robot.getRelicArmClaw().setPosition(1);
             }
 
-            if (controller1.isDown(JoystickController.BUTTON_Y)) {
+            if (controller1.isDpadRight()) {
                 //Extend arm
-                robot.getRelicArmWinch().setPower(0.5);
-            } else if (controller1.isDown(JoystickController.BUTTON_A)) {
+                robot.getRelicArmWinch().setPower(relicArmSpeed);
+            } else if (controller1.isDpadLeft()) {
                 //Retract arm
-                robot.getRelicArmWinch().setPower(-0.5);
+                robot.getRelicArmWinch().setPower(-relicArmSpeed);
             } else {
                 robot.getRelicArmWinch().setPower(0);
             }
 
-            if (controller1.isDown(JoystickController.BUTTON_B)) {
-                //Raise wrist
-                robot.getRelicArmWrist().setPosition(0.5);
-            } else if (controller1.isDown(JoystickController.BUTTON_X)) {
+            if (controller1.isDown(JoystickController.BUTTON_RT)) {
+                robot.getRelicArmWrist().setPosition(robot.getRelicArmWrist().getPosition() + 0.01);
+            } else if (controller1.isDown(JoystickController.BUTTON_LT)) {
                 //Lower wrist
-                robot.getRelicArmWrist().setPosition(0);
+                robot.getRelicArmWrist().setPosition(robot.getRelicArmWrist().getPosition() - 0.01);
             }
 
-
-            if (controller1.isDpadLeft()) {
-                //Raise wrist
-                robot.getRelicArmWrist().setPosition( Math.min(robot.getRelicArmWrist().getPosition() +0.01,1));
-            } else if (controller1.isDpadRight()) {
-                //Lower wrist
-                robot.getRelicArmWrist().setPosition(Math.max(robot.getRelicArmWrist().getPosition() -0.01,-1));
-            }
-
-//            if (controller2.isPressed(JoystickController.BUTTON_A)) robot.moveClaw(false);
-//            else if (controller2.isPressed(JoystickController.BUTTON_B)) robot.moveClaw(true);
-//
-//            double intakeDirectionY = controller2.getValue(JoystickController.Y_1);
-//            double intakeElevationY = controller2.getValue(JoystickController.Y_2);
-//
-//            if (!MathUtils.equals(intakeDirectionY, 0, 0.1)) {
-//                robot.getRollerLeft().setSpeed(intakeDirectionY * intakeDirectionSensitivity);
-//                robot.getRollerRight().setSpeed(-intakeDirectionY * intakeDirectionSensitivity);
-//            } else {
-//                robot.getRollerLeft().setSpeed(0);
-//                robot.getRollerRight().setSpeed(0);
-//            }
-//
-//            if (!MathUtils.equals(intakeElevationY, 0, 0.1)) {
-//                robot.getLiftLeft().setPower(intakeElevationY * intakeElevationSensitivity);
-//                robot.getLiftRight().setPower(intakeElevationY * intakeElevationSensitivity);
-//            } else {
-//                robot.getLiftLeft().setPower(0);
-//                robot.getLiftRight().setPower(0);
-//            }
-
-            double boxDirection = controller2.getValue(JoystickController.Y_1);
-            double intakeDirection = controller2.getValue(JoystickController.Y_2);
-            double intakeRotation = controller2.getValue(JoystickController.X_2);
-
-            if (!MathUtils.equals(intakeDirection, 0, 0.1)) {
-                robot.getRollerLeft().setPower(intakeDirection * 0.25 * intakeDirectionSensitivity);
-                robot.getRollerRight().setSpeed(-intakeDirection * intakeDirectionSensitivity);
+            if (controller1.isDpadUp()) {
+                robot.getLift().setPower(liftSpeed);
+            } else if (controller1.isDpadDown()) {
+                robot.getLift().setPower(-liftSpeed);
             } else {
-                robot.getRollerLeft().setPower(0);
-                robot.getRollerRight().setSpeed(0);
+                robot.getLift().setPower(0);
             }
 
-
-//            if (!MathUtils.equals(intakeRotation, 0, 0.1)) {
-//                robot.getClawLeft().setPosition(intakeRotation);
-//                robot.getClawRight().setPosition(1 - intakeRotation);
-//            }
-
-            if (!MathUtils.equals(boxDirection, 0, 0.1)) {
-                robot.getBoxLeft().setSpeed(boxDirection * intakeDirectionSensitivity);
-                robot.getBoxRight().setSpeed(-boxDirection * intakeDirectionSensitivity);
-            } else {
-                robot.getBoxLeft().setSpeed(0);
-                robot.getBoxRight().setSpeed(0);
+            if (controller1.isDown(JoystickController.BUTTON_A)) {
+                robot.moveClaw(false);
+            } else if (controller1.isDown(JoystickController.BUTTON_B)) {
+                robot.moveClaw(true);
             }
-
-//            if (controller2.isDown(JoystickController.BUTTON_RB) && System.currentTimeMillis() - lastIntakePosChange > 50) {
-//                intakePos = MathUtils.clamp(intakePos + 0.05, 0, 1);
-//                lastIntakePosChange = System.currentTimeMillis();
-//            } else if (controller2.isDown(JoystickController.BUTTON_LB) && System.currentTimeMillis() - lastIntakePosChange > 50) {
-//                intakePos = MathUtils.clamp(intakePos - 0.05, 0, 1);
-//                lastIntakePosChange = System.currentTimeMillis();
-//            }
-//            robot.getClawLeft().setPosition(intakePos);
-
-            if (controller2.isDpadUp()) {
-                robot.getLiftLeft().setPower(liftSpeed);
-                robot.getLiftRight().setPower(liftSpeed);
-            } else if (controller2.isDpadDown()) {
-                robot.getLiftLeft().setPower(-liftSpeed);
-                robot.getLiftRight().setPower(-liftSpeed);
-            }else if (controller2.isDpadLeft()) {
-                robot.getLiftLeft().setPower(liftSpeed);
-
-            }else if (controller2.isDpadRight()) {
-
-                robot.getLiftRight().setPower(liftSpeed);
-            } else {
-                robot.getLiftLeft().setPower(0);
-                robot.getLiftRight().setPower(0);
-            }
-
-            robot.addToTelemetry("liftEncoders", robot.getLiftLeft().getPosition() + ", " + robot.getLiftRight().getPosition());
 
             if (Thread.currentThread().isInterrupted())
                 throw new InterruptedException();
-            Thread.sleep(10);
+            Thread.sleep(5);
         }
     }
 }

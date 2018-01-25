@@ -3,12 +3,15 @@ package virtualRobot.utils;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 
+import virtualRobot.VuforiaLocalizerImplSubclass;
+
 /**
  * Created by ethan on 9/20/17.
  */
 
 public class GlobalUtils {
     private static Activity currentActivity = null;
+    public static VuforiaLocalizerImplSubclass vuforiaInstance = null;
 
     public static Activity getCurrentActivity() {
         if (currentActivity == null)

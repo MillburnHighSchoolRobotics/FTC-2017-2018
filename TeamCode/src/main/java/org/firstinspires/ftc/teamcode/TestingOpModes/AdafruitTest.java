@@ -13,7 +13,7 @@ public class AdafruitTest extends OpMode {
     AdafruitI2cColorSensor sensor;
     @Override
     public void init() {
-        sensor = sensor.getClass().cast(hardwareMap.get("colorSensor"));
+        sensor = (AdafruitI2cColorSensor) hardwareMap.get("colorSensor");
         sensor.initialize();
     }
 

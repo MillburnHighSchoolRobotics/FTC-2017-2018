@@ -13,6 +13,7 @@ public class Motor {
 	public static final double MAX_POWER = 1;
 	public static final double STATIONARY = 0;
 	Sensor position;
+	boolean positionReverse;
 	MotorConfigurationType motorType;
 
 
@@ -22,6 +23,7 @@ public class Motor {
     public Motor() {
         power = 0;
 		position = new Sensor();
+		positionReverse = false;
     }
 
     public synchronized double getPower () {
@@ -50,7 +52,15 @@ public class Motor {
 	public synchronized MotorConfigurationType getMotorType() { return motorType; }
 
 	public synchronized void setPosition(int position) {
-		this.position.setRawValue(position);
+		this.position.setRawValue((positionReverse ? -1 : 1) * position);
+	}
+
+	public synchronized void setPositionReversed(boolean isRev) {
+    	positionReverse = isRev;
+	}
+
+	public synchronized boolean isPositionReversed() {
+    	return positionReverse;
 	}
 
 	public synchronized int getPosition() {
