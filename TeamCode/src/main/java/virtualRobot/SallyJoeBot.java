@@ -61,8 +61,8 @@ public class SallyJoeBot {
     private DumbColorSensor colorSensor;
     @UpdateServo(name = "jewelArm")
     private Servo jewelServo;
-    @UpdateServo(name = "jewelHitter")
-    private Servo jewelHitter;
+    @UpdateCRServo(name = "jewelHitter")
+    private ContinuousRotationServo jewelHitter;
     //Sensors
     private IMU imu;
     private Sensor voltageSensor;
@@ -96,7 +96,7 @@ public class SallyJoeBot {
         relicArmClaw = new Servo();
 
         jewelServo = new Servo();
-        jewelHitter = new Servo();
+        jewelHitter = new ContinuousRotationServo();
         colorSensor = new DumbColorSensor();
         //capLift = new SyncedMotors(LiftLeftMotor, LiftRightMotor, LiftLeftEncoder, LiftRightEncoder, KP, KI, KD, SyncedMotors.SyncAlgo.POSITION);
         //capLift.setRatio(1);
@@ -212,7 +212,7 @@ public class SallyJoeBot {
         return ctel;
     }
 
-    public Servo getJewelHitter() {
+    public ContinuousRotationServo getJewelHitter() {
         return jewelHitter;
     }
 

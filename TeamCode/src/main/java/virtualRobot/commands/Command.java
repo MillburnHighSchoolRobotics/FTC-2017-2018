@@ -62,6 +62,10 @@ public abstract class Command  {
     public synchronized void setParentThread(LogicThread parentThread) {
         this.parentThread = parentThread;
     }
+    public synchronized Command setParentThreadThis(LogicThread parentThread) {
+        this.parentThread = parentThread;
+        return this;
+    }
 
     /**
      * Changes the SallyJoeBot itself

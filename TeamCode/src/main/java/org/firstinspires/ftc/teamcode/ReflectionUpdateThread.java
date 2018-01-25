@@ -175,7 +175,7 @@ public abstract class ReflectionUpdateThread extends OpMode {
 				UpdateCRServo metadata = f.getAnnotation(UpdateCRServo.class);
 				if (metadata != null) {
 					try {
-						if (metadata != null) throw new Exception("Not enabled");
+						if (!metadata.enabled()) throw new Exception("Not enabled");
 						ContinuousRotationServo vCRServo = (ContinuousRotationServo) r.getDeclaredMethod(getter).invoke(robot);
 						CRServo CRServo = hardwareMap.crservo.get(metadata.name());
 						vCRServos.add(vCRServo);
@@ -236,7 +236,7 @@ public abstract class ReflectionUpdateThread extends OpMode {
 //		new Thread (cv).start();
 		if (!exceptions.contains(logicThread)){
 			VuforiaLocalizer.Parameters params = new VuforiaLocalizer.Parameters(R.id.cameraMonitorViewId);
-			params.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+			params.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
 			params.vuforiaLicenseKey = "AdVGalv/////AAAAGYhiDIdk+UI+ivt0Y7WGvUJnm5cKX/lWesW2pH7gnK3eOLTKThLekYSO1q65ttw7X1FvNhxxhdQl3McS+mzYjO+HkaFNJlHxltsI5+b4giqNQKWhyKjzbYbNw8aWarI5YCYUFnyiPPjH39/CbBzzFk3G2RWIzNB7cy4AYhjwYRKRiL3k33YvXv0ZHRzJRkMpnytgvdv5jEQyWa20DIkriC+ZBaj8dph8/akyYfyD1/U19vowknmzxef3ncefgOZoI9yrK82T4GBWazgWvZkIz7bPy/ApGiwnkVzp44gVGsCJCUFERiPVwfFa0SBLeCrQMrQaMDy3kOIVcWTotFn4m1ridgE5ZP/lvRzEC4/vcuV0";
 			GlobalUtils.vuforiaInstance = new VuforiaLocalizerImplSubclass(params);
 		}

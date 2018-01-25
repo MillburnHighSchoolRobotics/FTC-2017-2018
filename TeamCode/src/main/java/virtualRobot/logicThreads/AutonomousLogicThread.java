@@ -12,7 +12,7 @@ import virtualRobot.commands.Translate;
  */
 
 public abstract class AutonomousLogicThread extends LogicThread {
-    public RelicRecoveryVuMark currentVuMark = RelicRecoveryVuMark.UNKNOWN;
+    public volatile RelicRecoveryVuMark currentVuMark = RelicRecoveryVuMark.UNKNOWN;
     public AtomicBoolean redIsLeft = new AtomicBoolean(false);
 
 

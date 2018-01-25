@@ -1,6 +1,7 @@
 package virtualRobot.commands;
 
 import android.provider.Settings;
+import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -21,19 +22,27 @@ public class GetVuMarkSide extends Command {
     VuforiaLocalizerImplSubclass vuforia = GlobalUtils.vuforiaInstance;
     VuforiaTrackables relicTrackables;
     VuforiaTrackable relicTemplate;
+    int timeout;
 
     public GetVuMarkSide() {
+        this(1000);
+    }
+
+    public GetVuMarkSide(int timeout) {
         relicTrackables = vuforia.loadTrackablesFromAsset("RelicVuMark");
         relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicTestTemplate");
+        this.timeout = timeout;
     }
 
     @Override
     public boolean changeRobotState() throws InterruptedException {
         relicTrackables.activate();
         RelicRecoveryVuMark mark = RelicRecoveryVuMark.UNKNOWN;
-        for(int  i = 0; i < 10 && mark == RelicRecoveryVuMark.UNKNOWN; i++) {
+        long oldTime = System.currentTimeMillis();
+        for(int  i = 0; System.currentTimeMillis() - oldTime < timeout && mark == RelicRecoveryVuMark.UNKNOWN; i++) {
             mark = RelicRecoveryVuMark.from(relicTemplate);
+//            Log.d("VuMeme", mark.name() + " " + i);
             if (mark != RelicRecoveryVuMark.UNKNOWN) {
                 if (parentThread instanceof AutonomousLogicThread)
                     ((AutonomousLogicThread) parentThread).currentVuMark = mark;

@@ -1,6 +1,7 @@
 package virtualRobot.commands;
 
 import virtualRobot.SallyJoeBot;
+import virtualRobot.hardware.ContinuousRotationServo;
 import virtualRobot.hardware.DumbColorSensor;
 import virtualRobot.hardware.Servo;
 
@@ -12,7 +13,7 @@ public class HitJewel extends Command {
 
     private static SallyJoeBot robot = ROBOT;
     private SallyJoeBot.Team team;
-    private static final double RIGHTPOS = 0, LEFTPOS = 1, CENTERPOS = 0.5;
+    private static final double RIGHTPOS = -1, LEFTPOS = 1, CENTERPOS = 0;
 
     public HitJewel(SallyJoeBot.Team team) {
         this.team = team;
@@ -20,9 +21,10 @@ public class HitJewel extends Command {
 
     @Override
     public boolean changeRobotState() throws InterruptedException {
+        robot.addToProgress("Begin Jewel Servo");
         Servo arm = robot.getJewelServo();
-        Servo hitter = robot.getJewelHitter();
-        arm.setPosition(0.67);
+        ContinuousRotationServo hitter = robot.getJewelHitter();
+        arm.setPosition(0.6);
         Thread.sleep(1000);
         DumbColorSensor cs = robot.getColorSensor();
         int red = cs.getRed();
@@ -30,38 +32,47 @@ public class HitJewel extends Command {
         if (red != 0 || blue != 0) {
             blue = Math.max(1, blue);
             double rat = red/(double)blue;
+            robot.addToTelemetry("CS", red + " " + blue + " " + rat);
             if (rat >= 1.2) {
                 switch (team) {
                     case RED:
-                        hitter.setPosition(LEFTPOS);
+                        hitter.setSpeed(LEFTPOS);
                         Thread.sleep(500);
-                        hitter.setPosition(CENTERPOS);
+                        hitter.setSpeed(RIGHTPOS);
                         Thread.sleep(500);
+                        hitter.setSpeed(CENTERPOS);
                         Thread.sleep(500);
                         break;
                     case BLUE:
-                        hitter.setPosition(RIGHTPOS);
+                        hitter.setSpeed(RIGHTPOS);
                         Thread.sleep(500);
-                        hitter.setPosition(CENTERPOS);
+                        hitter.setSpeed(LEFTPOS);
+                        Thread.sleep(500);
+                        hitter.setSpeed(CENTERPOS);
                         Thread.sleep(500);
                         break;
                 }
             } else if (rat <= 0.8) {
                 switch (team) {
                     case RED:
-                        hitter.setPosition(RIGHTPOS);
+                        hitter.setSpeed(RIGHTPOS);
                         Thread.sleep(500);
-                        hitter.setPosition(CENTERPOS);
+                        hitter.setSpeed(LEFTPOS);
+                        Thread.sleep(500);
+                        hitter.setSpeed(CENTERPOS);
                         Thread.sleep(500);
                         break;
                     case BLUE:
-                        hitter.setPosition(LEFTPOS);
+                        hitter.setSpeed(LEFTPOS);
                         Thread.sleep(500);
-                        hitter.setPosition(CENTERPOS);
+                        hitter.setSpeed(RIGHTPOS);
+                        Thread.sleep(500);
+                        hitter.setSpeed(CENTERPOS);
                         Thread.sleep(500);
                         break;
                 }
             }
+            robot.addToProgress("Complete Jewel Servo");
             arm.setPosition(0.07);
         }
         return false;

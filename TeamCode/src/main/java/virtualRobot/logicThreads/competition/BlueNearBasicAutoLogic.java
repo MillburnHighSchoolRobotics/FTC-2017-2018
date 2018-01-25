@@ -30,6 +30,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
     protected void realRun() throws InterruptedException {
         double timeS = System.currentTimeMillis();
         Log.d("Begin", "Began");
+        robot.getJewelHitter().setSpeed(0);
         leftFront = robot.getLFMotor();
         leftBack = robot.getLBMotor();
         rightFront = robot.getRFMotor();
@@ -47,10 +48,10 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         int startPosition;
 //        Thread.sleep(1000);
 
-//        runCommand(new GetVuMarkSide());
-        int choice = (int)Math.floor(Math.random() * 3);
+        runCommand(new GetVuMarkSide().setParentThreadThis(this));
+//        int choice = (int)Math.floor(Math.random() * 3);
 //        int choice = 1;
-        currentVuMark = new RelicRecoveryVuMark[] {LEFT, CENTER, RIGHT}[choice]; //lmao why does this work
+//        currentVuMark = new RelicRecoveryVuMark[] {LEFT, CENTER, RIGHT}[choice]; //lmao why does this work
         robot.addToTelemetry("Current VuMark: ", currentVuMark);
 
         runCommand(new HitJewel(BLUE));
