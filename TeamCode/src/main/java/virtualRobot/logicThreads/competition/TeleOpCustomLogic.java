@@ -15,6 +15,8 @@ public class TeleOpCustomLogic extends LogicThread {
         shouldStartISR = false;
     }
 
+
+
     @Override
     protected void realRun() throws InterruptedException {
         robot.getJewelServo().setPosition(0.07);
@@ -56,9 +58,9 @@ public class TeleOpCustomLogic extends LogicThread {
             double RF = 0, RB = 0, LF = 0, LB = 0;
             robot.addToTelemetry("mag", translateMag);
 
-            if (controller1.isDpadLeft()) {
+            if (controller1.isDown(JoystickController.BUTTON_X)) {
                 gearCoefficient = 1;
-            } else if (controller1.isDpadRight()) {
+            } else if (controller1.isDown(JoystickController.BUTTON_Y)) {
                 gearCoefficient = 0.5;
             }
             if (!MathUtils.equals(rotateX, 0, 0.05)) {
@@ -132,11 +134,10 @@ public class TeleOpCustomLogic extends LogicThread {
             }
 
             if (controller1.isDown(JoystickController.BUTTON_RT)) {
-                //Raise wrist
-                robot.getRelicArmWrist().setPosition(0.5);
+                robot.getRelicArmWrist().setPosition(robot.getRelicArmWrist().getPosition() + 0.01);
             } else if (controller1.isDown(JoystickController.BUTTON_LT)) {
                 //Lower wrist
-                robot.getRelicArmWrist().setPosition(0);
+                robot.getRelicArmWrist().setPosition(robot.getRelicArmWrist().getPosition() - 0.01);
             }
 
             if (controller1.isDpadUp()) {
@@ -155,7 +156,7 @@ public class TeleOpCustomLogic extends LogicThread {
 
             if (Thread.currentThread().isInterrupted())
                 throw new InterruptedException();
-            Thread.sleep(10);
+            Thread.sleep(5);
         }
     }
 }
