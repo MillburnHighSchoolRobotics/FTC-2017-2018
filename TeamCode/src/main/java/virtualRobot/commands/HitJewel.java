@@ -33,7 +33,7 @@ public class HitJewel extends Command {
             blue = Math.max(1, blue);
             double rat = red/(double)blue;
             robot.addToTelemetry("CS", red + " " + blue + " " + rat);
-            if (rat >= 1.2) {
+            if (rat >= 1.5) {
                 switch (team) {
                     case RED:
                         hitter.setSpeed(LEFTPOS);
@@ -52,7 +52,7 @@ public class HitJewel extends Command {
                         Thread.sleep(500);
                         break;
                 }
-            } else if (rat <= 0.8) {
+            } else if (rat <= 0.6) {
                 switch (team) {
                     case RED:
                         hitter.setSpeed(RIGHTPOS);
