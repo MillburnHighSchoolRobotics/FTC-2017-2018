@@ -6,6 +6,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 import virtualRobot.commands.Command;
 import virtualRobot.commands.GetVuMarkSide;
+import virtualRobot.commands.HitJewel;
 import virtualRobot.hardware.DumbColorSensor;
 import virtualRobot.hardware.Motor;
 import virtualRobot.hardware.Servo;
@@ -15,6 +16,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryV
 import static org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark.LEFT;
 import static org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark.RIGHT;
 import static org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark.UNKNOWN;
+import static virtualRobot.SallyJoeBot.Team.BLUE;
 
 /**
  * Created by ethan on 9/22/17.
@@ -51,60 +53,8 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         currentVuMark = new RelicRecoveryVuMark[] {LEFT, CENTER, RIGHT}[choice]; //lmao why does this work
         robot.addToTelemetry("Current VuMark: ", currentVuMark);
 
-        int red = colorSensor.getRed();
-        int blue = colorSensor.getBlue();
-        Log.d("Red Blue", red + " " + blue);
-        robot.addToTelemetry("Red ", red);
-        robot.addToTelemetry("Blue ", blue);
-//        blue = Math.max(1, blue);
-        if (red != 0 || blue != 0) {
-            Log.d("Progress", "Jewel Beginning");
-            blue = Math.max(1, blue);
-            double rat = red/(double)blue;
-            if (rat >= 1.2) {
-                Log.d("Progress", "Jewel Red");
-                startPosition = rightFront.getPosition();
-                leftFront.setPower(power);
-                leftBack.setPower(power);
-                rightFront.setPower(-power);
-                rightBack.setPower(-power);
-                while (rightFront.getPosition() - startPosition > -travel) {
-//                    Log.d("Ultimate Meme", Integer.toString(rightFront.getPosition() - startPosition));
-                }
-                jewelArm.setPosition(0.07);
-                robot.stopMotors();
-                Thread.sleep(5000);
-                leftFront.setPower(-power);
-                leftBack.setPower(-power);
-                rightFront.setPower(power);
-                rightBack.setPower(power);
-                while (rightFront.getPosition() - startPosition < 0) {
-                }
-//                dist = travel;
-            } else if (rat <= 0.8) {
-                Log.d("Progress", "Jewel Blue");
-                startPosition = rightFront.getPosition();
-                leftFront.setPower(-power);
-                leftBack.setPower(-power);
-                rightFront.setPower(power);
-                rightBack.setPower(power);
-                while (rightFront.getPosition() - startPosition < travel) {
-                }
-                robot.stopMotors();
-                jewelArm.setPosition(0.07);
-                Thread.sleep(5000);
-                leftFront.setPower(power);
-                leftBack.setPower(power);
-                rightFront.setPower(-power);
-                rightBack.setPower(-power);
-                while (rightFront.getPosition() - startPosition > 0) {
-                }
-//                dist = -travel;
-            }
-        }
+        runCommand(new HitJewel(BLUE));
         Log.d("Progress", "Jewel Completed");
-        robot.stopMotors();
-        jewelArm.setPosition(0.07);
         Thread.sleep(5000);
 
         dist = 0;

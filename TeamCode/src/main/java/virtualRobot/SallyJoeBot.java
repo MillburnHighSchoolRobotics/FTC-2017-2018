@@ -215,4 +215,8 @@ public class SallyJoeBot {
     public Servo getJewelHitter() {
         return jewelHitter;
     }
+
+    public enum Team {
+        BLUE, RED
+    }
 }
