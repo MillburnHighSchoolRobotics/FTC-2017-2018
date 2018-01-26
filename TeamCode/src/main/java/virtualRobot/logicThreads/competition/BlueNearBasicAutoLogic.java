@@ -50,16 +50,16 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         int startPosition;
 //        Thread.sleep(1000);
 
-//        runCommand(new GetVuMarkSide());
-        int choice = (int)Math.floor(Math.random() * 3);
+        runCommand(new GetVuMarkSide());
+//        int choice = (int)Math.floor(Math.random() * 3);
 //        int choice = 1;
-        currentVuMark = new RelicRecoveryVuMark[] {LEFT, CENTER, RIGHT}[choice]; //lmao why does this work
+//        currentVuMark = new RelicRecoveryVuMark[] {LEFT, CENTER, RIGHT}[choice]; //lmao why does this work
         robot.addToTelemetry("Current VuMark: ", currentVuMark);
-        if (false) {
+        if (true) {
             Servo arm = robot.getJewelServo();
             Servo hitter = robot.getJewelHitter();
             hitter.setPosition(CENTERPOS);
-            arm.setPosition(0.6);
+            arm.setPosition(0.67);
             Thread.sleep(200);
             Thread.sleep(1000);
             DumbColorSensor cs = robot.getColorSensor();
@@ -81,8 +81,9 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
                     Thread.sleep(500);
                 }
                 robot.addToProgress("Complete Jewel Servo");
-                arm.setPosition(0.07);
             }
+
+            arm.setPosition(0.07);
             Log.d("Progress", "Jewel Completed");
             Thread.sleep(5000);
         }
