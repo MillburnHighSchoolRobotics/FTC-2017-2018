@@ -23,7 +23,7 @@ public class HitJewel extends Command {
     public boolean changeRobotState() throws InterruptedException {
         robot.addToProgress("Begin Jewel Servo");
         Servo arm = robot.getJewelServo();
-        ContinuousRotationServo hitter = robot.getJewelHitter();
+        Servo hitter = robot.getJewelHitter();
         arm.setPosition(0.6);
         Thread.sleep(1000);
         DumbColorSensor cs = robot.getColorSensor();
@@ -36,38 +36,38 @@ public class HitJewel extends Command {
             if (rat >= 1.5) {
                 switch (team) {
                     case RED:
-                        hitter.setSpeed(LEFTPOS);
+                        hitter.setPosition(LEFTPOS);
                         Thread.sleep(500);
-                        hitter.setSpeed(RIGHTPOS);
+                        hitter.setPosition(RIGHTPOS);
                         Thread.sleep(500);
-                        hitter.setSpeed(CENTERPOS);
+                        hitter.setPosition(CENTERPOS);
                         Thread.sleep(500);
                         break;
                     case BLUE:
-                        hitter.setSpeed(RIGHTPOS);
+                        hitter.setPosition(RIGHTPOS);
                         Thread.sleep(500);
-                        hitter.setSpeed(LEFTPOS);
+                        hitter.setPosition(LEFTPOS);
                         Thread.sleep(500);
-                        hitter.setSpeed(CENTERPOS);
+                        hitter.setPosition(CENTERPOS);
                         Thread.sleep(500);
                         break;
                 }
             } else if (rat <= 0.6) {
                 switch (team) {
                     case RED:
-                        hitter.setSpeed(RIGHTPOS);
+                        hitter.setPosition(RIGHTPOS);
                         Thread.sleep(500);
-                        hitter.setSpeed(LEFTPOS);
+                        hitter.setPosition(LEFTPOS);
                         Thread.sleep(500);
-                        hitter.setSpeed(CENTERPOS);
+                        hitter.setPosition(CENTERPOS);
                         Thread.sleep(500);
                         break;
                     case BLUE:
-                        hitter.setSpeed(LEFTPOS);
+                        hitter.setPosition(LEFTPOS);
                         Thread.sleep(500);
-                        hitter.setSpeed(RIGHTPOS);
+                        hitter.setPosition(RIGHTPOS);
                         Thread.sleep(500);
-                        hitter.setSpeed(CENTERPOS);
+                        hitter.setPosition(CENTERPOS);
                         Thread.sleep(500);
                         break;
                 }

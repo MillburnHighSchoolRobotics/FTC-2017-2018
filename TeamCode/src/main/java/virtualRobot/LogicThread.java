@@ -1,6 +1,8 @@
 package virtualRobot;
 
 
+import android.support.annotation.NonNull;
+
 import org.firstinspires.ftc.teamcode.ReflectionUpdateThread;
 
 import java.util.ArrayList;
@@ -113,10 +115,12 @@ public abstract class LogicThread extends Thread {
      * @param c Command to run
      * @return Whether command stopped by interrupt
      */
-    protected synchronized void runCommand(Command c) throws InterruptedException{
+    protected synchronized void runCommand(@NonNull Command c) throws InterruptedException{
         boolean isInterrupted = false;
         boolean stopByIH = false;
         lastRunCommand = c;
+
+        c.setParentThread(this);
 
         if (isPaused.get()){
             if (waitForNotify())

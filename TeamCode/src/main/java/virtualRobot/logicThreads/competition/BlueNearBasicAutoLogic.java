@@ -26,19 +26,21 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
     private Motor leftFront, leftBack, rightFront, rightBack;
     private Servo jewelArm;
     private DumbColorSensor colorSensor;
+    private static final double RIGHTPOS = 0, LEFTPOS = 1, CENTERPOS = 0.5;
+
     @Override
     protected void realRun() throws InterruptedException {
         double timeS = System.currentTimeMillis();
         Log.d("Begin", "Began");
-        robot.getJewelHitter().setSpeed(0);
+        robot.getJewelHitter().setPosition(RIGHTPOS);
         leftFront = robot.getLFMotor();
         leftBack = robot.getLBMotor();
         rightFront = robot.getRFMotor();
         rightBack = robot.getRBMotor();
         colorSensor = robot.getColorSensor();
         jewelArm = robot.getJewelServo();
-        jewelArm.setPosition(0.67);
-        Thread.sleep(2000);
+//        jewelArm.setPosition(0.67);
+//        Thread.sleep(2000);
         robot.addToTelemetry("Time Difference:", System.currentTimeMillis() - timeS);
         Log.d("Progress", "Time Difference:" + String.valueOf(System.currentTimeMillis() - timeS));
         int dist = 0;
@@ -48,28 +50,58 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         int startPosition;
 //        Thread.sleep(1000);
 
-        runCommand(new GetVuMarkSide().setParentThreadThis(this));
-//        int choice = (int)Math.floor(Math.random() * 3);
+//        runCommand(new GetVuMarkSide());
+        int choice = (int)Math.floor(Math.random() * 3);
 //        int choice = 1;
-//        currentVuMark = new RelicRecoveryVuMark[] {LEFT, CENTER, RIGHT}[choice]; //lmao why does this work
+        currentVuMark = new RelicRecoveryVuMark[] {LEFT, CENTER, RIGHT}[choice]; //lmao why does this work
         robot.addToTelemetry("Current VuMark: ", currentVuMark);
-
-        runCommand(new HitJewel(BLUE));
-        Log.d("Progress", "Jewel Completed");
-        Thread.sleep(5000);
+        if (false) {
+            Servo arm = robot.getJewelServo();
+            Servo hitter = robot.getJewelHitter();
+            hitter.setPosition(CENTERPOS);
+            arm.setPosition(0.6);
+            Thread.sleep(200);
+            Thread.sleep(1000);
+            DumbColorSensor cs = robot.getColorSensor();
+            int red = cs.getRed();
+            int blue = cs.getBlue();
+            if ((red != 0 || blue != 0)) {
+                blue = Math.max(1, blue);
+                double rat = red / (double) blue;
+                robot.addToTelemetry("CS", red + " " + blue + " " + rat);
+                if (rat >= 1.5) {
+                    hitter.setPosition(RIGHTPOS);
+                    Thread.sleep(500);
+                    hitter.setPosition(CENTERPOS);
+                    Thread.sleep(500);
+                } else if (rat <= 0.6) {
+                    hitter.setPosition(LEFTPOS);
+                    Thread.sleep(500);
+                    hitter.setPosition(CENTERPOS);
+                    Thread.sleep(500);
+                }
+                robot.addToProgress("Complete Jewel Servo");
+                arm.setPosition(0.07);
+            }
+            Log.d("Progress", "Jewel Completed");
+            Thread.sleep(5000);
+        }
 
         dist = 0;
+        int rot = 950;
         if (currentVuMark == UNKNOWN)
             currentVuMark = LEFT;
         switch(currentVuMark){
             case LEFT:
-                dist = 1600; //1926
+                dist = 1400; //1926
+                rot += 100; //rotate more
                 break;
             case CENTER:
-                dist = 2000; //2126
+                dist = 1700; //2126
+                rot -= 100;
                 break;
             case RIGHT:
-                dist = 2400; //2326
+                dist = 2000; //2326
                 break;
         }
 
@@ -91,7 +123,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         rightFront.setPower(power*1.5);
         rightBack.setPower(power*1.5);
 
-        while (leftFront.getPosition() - startPosition > -1350 && !Thread.interrupted()) {}
+        while (leftFront.getPosition() - startPosition > -rot && !Thread.interrupted()) {}
 
         robot.stopMotors();
 

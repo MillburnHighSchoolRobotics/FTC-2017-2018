@@ -23,7 +23,7 @@ public class ExampleLogic extends LogicThread {
 //        runCommand(new Rotate(90));
         int meme = -1;
         while (true) {
-            robot.getJewelHitter().setSpeed(meme *= -1);
+            robot.getJewelHitter().setPosition(meme *= -1);
             Thread.sleep(500);
         }
     }
