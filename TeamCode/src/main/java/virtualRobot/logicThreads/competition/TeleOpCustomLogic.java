@@ -15,8 +15,6 @@ public class TeleOpCustomLogic extends LogicThread {
         shouldStartISR = false;
     }
 
-
-
     @Override
     protected void realRun() throws InterruptedException {
         robot.getJewelServo().setPosition(0.07);
@@ -84,6 +82,10 @@ public class TeleOpCustomLogic extends LogicThread {
                     LB = (translatePower * POWER_MATRIX[2][1]);
                     RF = (translatePower * POWER_MATRIX[2][2]);
                     RB = (translatePower * POWER_MATRIX[2][3] * scale);
+//                    LF *= -1;
+//                    LB *= -1;
+//                    RF *= -1;
+//                    RB = -1;
                 } else if (translateTheta > 180 && translateTheta <= 270) { //quadrant 3
                     scale = MathUtils.sinDegrees(translateTheta - 225) / MathUtils.cosDegrees(translateTheta - 225);
                     LF = (translatePower * POWER_MATRIX[4][0]);
@@ -98,6 +100,10 @@ public class TeleOpCustomLogic extends LogicThread {
                     LB = (translatePower * POWER_MATRIX[6][1]);
                     RF = (translatePower * POWER_MATRIX[6][2]);
                     RB = (translatePower * POWER_MATRIX[6][3] * scale);
+//                    LF *= -1;
+//                    LB *= -1;
+//                    RF *= -1;
+//                    RB = -1;
                 }
                 robot.addToTelemetry("1", LF + "\t" + RF);
                 robot.addToTelemetry("2", LB + "\t" + RB);
@@ -134,10 +140,12 @@ public class TeleOpCustomLogic extends LogicThread {
             }
 
             if (controller1.isDown(JoystickController.BUTTON_RT)) {
-                robot.getRelicArmWrist().setPosition(robot.getRelicArmWrist().getPosition() + 0.01);
+                robot.getRelicArmWrist().setSpeed(0.5);
             } else if (controller1.isDown(JoystickController.BUTTON_LT)) {
                 //Lower wrist
-                robot.getRelicArmWrist().setPosition(robot.getRelicArmWrist().getPosition() - 0.01);
+                robot.getRelicArmWrist().setSpeed(-0.5);
+            } else {
+                robot.getRelicArmWrist().setSpeed(0);
             }
 
             if (controller1.isDpadUp()) {

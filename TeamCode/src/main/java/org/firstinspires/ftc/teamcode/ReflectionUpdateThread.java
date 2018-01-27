@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import android.app.Activity;
+import android.provider.Settings;
 import android.util.Log;
 import android.util.Pair;
 
@@ -20,6 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -126,6 +128,7 @@ public abstract class ReflectionUpdateThread extends OpMode {
 		robot.initialBattery = getBatteryVoltage();
 		robot.getTelemetry().clear();
 		robot.getProgress().clear();
+		GlobalUtils.incrementVumark();
 
         //MOTOR SETUP (with physical componenents, e.g. leftBack = hardwareMap.dcMotor.get("leftBack")
 		Class<SallyJoeBot> r = SallyJoeBot.class;
@@ -136,88 +139,94 @@ public abstract class ReflectionUpdateThread extends OpMode {
 				UpdateMotor metadata = f.getAnnotation(UpdateMotor.class);
 				if (metadata != null) {
 					try {
-						if (!metadata.enabled()) throw new Exception("Not enabled");
-						Motor vMotor = (Motor) r.getDeclaredMethod(getter).invoke(robot);
-						DcMotor motor = hardwareMap.dcMotor.get(metadata.name());
-						if (metadata.zero() != DcMotor.ZeroPowerBehavior.UNKNOWN) motor.setZeroPowerBehavior(metadata.zero());
-						motor.setMode(metadata.mode());
-						motor.setDirection(metadata.direction());
-						vMotor.setMotorType(motor.getMotorType());
-						vMotor.setPositionReversed(metadata.encoderReversed());
-						vMotors.add(new Pair(metadata.name(), vMotor));
-						motors.add(motor);
-						Log.d("Motor Load", "Successfully loaded motor " + f.getName());
-					} catch (Exception e) {
-						Log.d("Motor Load", "Failed to load motor " + f.getName() + ": " + e.getMessage());
+						if (metadata.enabled()) {
+							Motor vMotor = (Motor) r.getDeclaredMethod(getter).invoke(robot);
+							DcMotor motor = hardwareMap.dcMotor.get(metadata.name());
+							if (metadata.zero() != DcMotor.ZeroPowerBehavior.UNKNOWN)
+								motor.setZeroPowerBehavior(metadata.zero());
+							motor.setMode(metadata.mode());
+							motor.setDirection(metadata.direction());
+							vMotor.setMotorType(motor.getMotorType());
+							vMotor.setPositionReversed(metadata.encoderReversed());
+							vMotors.add(new Pair(metadata.name(), vMotor));
+							motors.add(motor);
+							Log.d("Loading", "Successfully loaded motor " + f.getName());
+						}
+					} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+						Log.d("Loading", "Failed to load motor " + f.getName());
 					}
-
 				} else {
-					Log.d("Motor Load", "Motor " + f.getName() + " lacks annotation");
+					Log.d("Loading", "Motor " + f.getName() + " lacks annotation");
 				}
 			} else if (f.getType().equals(virtualRobot.hardware.Servo.class)) {
 				UpdateServo metadata = f.getAnnotation(UpdateServo.class);
 				if (metadata != null) {
 					try {
-						if (!metadata.enabled()) throw new Exception("Not enabled");
-						virtualRobot.hardware.Servo vServo = (virtualRobot.hardware.Servo) r.getDeclaredMethod(getter).invoke(robot);
-						Servo servo = hardwareMap.servo.get(metadata.name());
-						servo.setPosition(metadata.initpos());
-						vServos.add(vServo);
-						servos.add(servo);
-						Log.d("Servo Load", "Successfully loaded servo " + f.getName());
-					} catch (Exception e) {
-						Log.d("Servo Load", "Failed to load servo " + f.getName() + ": " + e.getMessage());
+						if (metadata.enabled()) {
+							virtualRobot.hardware.Servo vServo = (virtualRobot.hardware.Servo) r.getDeclaredMethod(getter).invoke(robot);
+							Servo servo = hardwareMap.servo.get(metadata.name());
+							servo.setPosition(metadata.initpos());
+							vServos.add(vServo);
+							servos.add(servo);
+							Log.d("Loading", "Successfully loaded servo " + f.getName());
+						}
+					} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+						Log.d("Loading", "Failed to load servo " + f.getName() + ": " + e.getMessage());
 					}
 				} else {
-					Log.d("Servo Load", "Servo " + f.getName() + " lacks annotation");
+					Log.d("Loading", "Servo " + f.getName() + " lacks annotation");
 				}
 			} else if (f.getType().equals(ContinuousRotationServo.class)) {
 				UpdateCRServo metadata = f.getAnnotation(UpdateCRServo.class);
 				if (metadata != null) {
 					try {
-						if (!metadata.enabled()) throw new Exception("Not enabled");
-						ContinuousRotationServo vCRServo = (ContinuousRotationServo) r.getDeclaredMethod(getter).invoke(robot);
-						CRServo CRServo = hardwareMap.crservo.get(metadata.name());
-						vCRServos.add(vCRServo);
-						CRServos.add(CRServo);
-						Log.d("CRServo Load", "Successfully loaded crservo " + f.getName());
-					} catch (Exception e) {
-						Log.d("CRServo Load", "Failed to load crservo " + f.getName() + ": " + e.getMessage());
+						if (metadata.enabled()) {
+							ContinuousRotationServo vCRServo = (ContinuousRotationServo) r.getDeclaredMethod(getter).invoke(robot);
+							CRServo CRServo = hardwareMap.crservo.get(metadata.name());
+							vCRServos.add(vCRServo);
+							CRServos.add(CRServo);
+							CRServo.setPower(0);
+							Log.d("Loading", "Successfully loaded crservo " + f.getName());
+						}
+					} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+						Log.d("Loading", "Failed to load crservo " + f.getName() + ": " + e.getMessage());
 					}
 				} else {
-					Log.d("CRServo Load", "CRServo " + f.getName() + "lacks annotation");
+					Log.d("Loading", "CRServo " + f.getName() + "lacks annotation");
 				}
 			} else if (!f.getType().equals(DumbColorSensor.class) && f.getClass().isAssignableFrom(Sensor.class)) {
 				UpdateSensor metadata = f.getAnnotation(UpdateSensor.class);
 				if (metadata != null) {
 					try {
-						if (!metadata.enabled()) throw new Exception("Not enabled");
-						Sensor vSensor = (Sensor) r.getDeclaredMethod(getter).invoke(robot);
-						HardwareDevice sensor = hardwareMap.get(metadata.type(), metadata.name());
-						vSensors.add(vSensor);
-						sensors.add(sensor);
-						Log.d("Sensor Load", "Successfully loaded sensor " + f.getName());
-					} catch (Exception e) {
-						Log.d("Sensor Load", "Failed to load sensor " + f.getName() + ": " + e.getMessage());
+						if (metadata.enabled()) {
+							Sensor vSensor = (Sensor) r.getDeclaredMethod(getter).invoke(robot);
+							HardwareDevice sensor = hardwareMap.get(metadata.type(), metadata.name());
+							vSensors.add(vSensor);
+							sensors.add(sensor);
+							Log.d("Loading", "Successfully loaded sensor " + f.getName());
+						}
+					} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+						Log.d("Loading", "Failed to load sensor " + f.getName() + ": " + e.getMessage());
 					}
 				} else {
-					Log.d("Sensor Load", "Sensor " + f.getName() + " lacks annotation");
+					Log.d("Loading", "Sensor " + f.getName() + " lacks annotation");
 				}
 			} else if (f.getType().equals(DumbColorSensor.class)) {
 				UpdateColorSensor metadata = f.getAnnotation(UpdateColorSensor.class);
 				if (metadata != null) {
 					try {
-						if (!metadata.enabled()) throw new Exception("Not enabled");
-						DumbColorSensor vDCS = (DumbColorSensor) r.getDeclaredMethod(getter).invoke(robot);
-						com.qualcomm.robotcore.hardware.ColorSensor CS = hardwareMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, metadata.name());
-						vDumbColorSensors.add(vDCS);
-						dumbColorSensors.add(CS);
-						Log.d("DCS Load", "Successfully loaded DCS " + f.getName());
-					} catch (Exception e) {
-						Log.d("DCS Load", "Failed to load DCS " + f.getName() + ": " + e.getMessage());
+						if (metadata.enabled()) {
+							DumbColorSensor vDCS = (DumbColorSensor) r.getDeclaredMethod(getter).invoke(robot);
+							com.qualcomm.robotcore.hardware.ColorSensor CS = hardwareMap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, metadata.name());
+							vDumbColorSensors.add(vDCS);
+							dumbColorSensors.add(CS);
+							Log.d("Loading", "Successfully loaded DCS " + f.getName());
+						}
+					} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+						Log.d("Loading", "Failed to load DCS " + f.getName() + ": " + e.getMessage());
 					}
 				} else {
-					Log.d("DCS Load", "DCS " + f.getName() + " lacks annotation");
+					Log.d("Loading", "DCS " + f.getName() + " lacks annotation");
 				}
 			}
 		}
@@ -390,7 +399,7 @@ public abstract class ReflectionUpdateThread extends OpMode {
 		}
 
 		for (Pair<String, Motor> pair : vMotors) {
-        	robot.addToTelemetry(pair.first + ": ", pair.second.getPosition());
+        	telemetry.addData(pair.first + ": ", pair.second.getPosition());
         	Log.d(pair.first + ": ", String.valueOf(pair.second.getPosition()));
 		}
 

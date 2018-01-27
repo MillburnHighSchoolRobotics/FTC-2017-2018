@@ -1,5 +1,6 @@
 package virtualRobot;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -53,15 +54,15 @@ public class SallyJoeBot {
     private Servo clawRight;
     @UpdateMotor(name = "relicArmWinch", direction = DcMotorSimple.Direction.REVERSE)
     private Motor relicArmWinch;
-    @UpdateServo(name = "relicArmWrist")
-    private Servo relicArmWrist;
+    @UpdateCRServo(name = "relicArmWrist")
+    private ContinuousRotationServo relicArmWrist;
     @UpdateServo(name = "relicArmClaw")
     private Servo relicArmClaw;
-    @UpdateColorSensor(name = "jewelColorSensor", enabled = false)
+    @UpdateColorSensor(name = "jewelColorSensor")
     private DumbColorSensor colorSensor;
     @UpdateServo(name = "jewelArm")
     private Servo jewelServo;
-    @UpdateServo(name = "jewelHitter")
+    @UpdateServo(name = "jewelHitter", initpos = 1.2)
     private Servo jewelHitter;
     //Sensors
     private IMU imu;
@@ -92,7 +93,7 @@ public class SallyJoeBot {
         clawRight = new Servo();
 
         relicArmWinch = new Motor();
-        relicArmWrist = new Servo();
+        relicArmWrist = new ContinuousRotationServo();
         relicArmClaw = new Servo();
 
         jewelServo = new Servo();
@@ -148,7 +149,7 @@ public class SallyJoeBot {
         return relicArmWinch;
     }
 
-    public synchronized Servo getRelicArmWrist() {
+    public synchronized ContinuousRotationServo getRelicArmWrist() {
         return relicArmWrist;
     }
 

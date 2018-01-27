@@ -24,7 +24,7 @@ Thumbs.db
 .gradle
 build/
 
-*ASUS_PC_01*
-
-# Weird Android Studio Terminal Stuff
-1
+!.idea/codeStyleSettings.xml
+!/doc/apk/FtcDriverStation-release.apk
+/logs/
+vuforia.properties
