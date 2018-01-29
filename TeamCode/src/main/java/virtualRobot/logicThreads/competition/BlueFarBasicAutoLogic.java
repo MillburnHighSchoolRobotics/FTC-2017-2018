@@ -1,5 +1,7 @@
 package virtualRobot.logicThreads.competition;
 
+import android.util.Log;
+
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 import virtualRobot.commands.GetVuMarkSide;
@@ -16,9 +18,64 @@ public class BlueFarBasicAutoLogic extends AutonomousLogicThread {
     private Motor leftFront, leftBack, rightFront, rightBack;
     private Servo jewelArm;
     private DumbColorSensor colorSensor;
+    private static final double RIGHTPOS = -0.2, LEFTPOS = 1.2, CENTERPOS = 0.5;
     @Override
     protected void realRun() throws InterruptedException {
-        leftFront = robot.getLFMotor();
+        double timeS = System.currentTimeMillis();
+        Log.d("Progress", "Began");
+//
+        colorSensor = robot.getColorSensor();
+        jewelArm = robot.getJewelServo();
+//        jewelArm.setPosition(0.67);
+//        Thread.sleep(2000);
+        robot.addToTelemetry("Time Difference:", System.currentTimeMillis() - timeS);
+        Log.d("Progress", "Time Difference:" + String.valueOf(System.currentTimeMillis() - timeS));
+        int dist = 0;
+        int travel = 200;
+        double power = - 0.35;
+        double turn = power*2;
+        int startPosition;
+//        Thread.sleep(1000);
+
+        runCommand(new GetVuMarkSide(2000));
+//        int choice = (int)Math.floor(Math.random() * 3);
+//        int choice = 1;
+//        currentVuMark = new RelicRecoveryVuMark[] {LEFT, CENTER, RIGHT}[choice]; //lmao why does this work
+//        currentVuMark = GlobalUtils.forcedVumark;
+        robot.addToTelemetry("Current VuMark: ", currentVuMark);
+//        if (true) {
+        robot.addToTelemetry("Hello", " there");
+        Servo hitter = robot.getJewelHitter();
+        jewelArm.setPosition(0.15);
+        Thread.sleep(500);
+        hitter.setPosition(CENTERPOS);
+        Thread.sleep(200);
+        jewelArm.setPosition(0.44);
+        Thread.sleep(1000);
+        int red = colorSensor.getRed();
+        int blue = colorSensor.getBlue();
+        if ((red != 0 || blue != 0)) {
+            blue = Math.max(1, blue);
+            double rat = red / (double) blue;
+            robot.addToTelemetry("CS", red + " " + blue + " " + rat);
+            if (rat >= 1.5) {
+                hitter.setPosition(RIGHTPOS);
+                Thread.sleep(1000);
+                hitter.setPosition(CENTERPOS);
+                Thread.sleep(500);
+            } else if (rat <= 0.6) {
+                hitter.setPosition(LEFTPOS);
+                Thread.sleep(1000);
+                hitter.setPosition(CENTERPOS);
+                Thread.sleep(500);
+            }
+            robot.addToProgress("Complete Jewel Servo");
+        }
+
+        jewelArm.setPosition(0);
+        Log.d("Progress", "Jewel Completed");
+        Thread.sleep(1000 );
+      /*  leftFront = robot.getLFMotor();
         leftBack = robot.getLBMotor();
         rightFront = robot.getRFMotor();
         rightBack = robot.getRBMotor();
@@ -128,6 +185,6 @@ public class BlueFarBasicAutoLogic extends AutonomousLogicThread {
         rightBack.setPower(-power);
 
         while ((leftFront.getPosition() - startPosition) > -600 && !Thread.interrupted()) {}
-        robot.stopMotors();
+        robot.stopMotors();*/
     }
 }

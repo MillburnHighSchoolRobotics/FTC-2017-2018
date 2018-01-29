@@ -31,14 +31,14 @@ public class RedNearBasicAutoLogic extends AutonomousLogicThread {
     protected void realRun() throws InterruptedException {
         double timeS = System.currentTimeMillis();
         Log.d("Progress", "Began");
-        robot.getJewelHitter().setPosition(CENTERPOS);
+//        robot.getJewelHitter().setPosition(CENTERPOS);
 
         leftFront = robot.getLFMotor();
         leftBack = robot.getLBMotor();
         rightFront = robot.getRFMotor();
         rightBack = robot.getRBMotor();
 
-        encoder = leftBack;
+        encoder = leftFront;
         colorSensor = robot.getColorSensor();
         jewelArm = robot.getJewelServo();
 //        jewelArm.setPosition(0.67);
@@ -52,7 +52,7 @@ public class RedNearBasicAutoLogic extends AutonomousLogicThread {
         int startPosition;
 //        Thread.sleep(1000);
 
-        runCommand(new GetVuMarkSide(2000));
+        runCommand(new GetVuMarkSide(4000));
 //        int choice = (int)Math.floor(Math.random() * 3);
 //        int choice = 1;
 //        currentVuMark = new RelicRecoveryVuMark[] {LEFT, CENTER, RIGHT}[choice]; //lmao why does this work
@@ -61,9 +61,11 @@ public class RedNearBasicAutoLogic extends AutonomousLogicThread {
 //        if (true) {
         robot.addToTelemetry("Hello", " there");
         Servo hitter = robot.getJewelHitter();
+        jewelArm.setPosition(0.15);
+        Thread.sleep(500);
         hitter.setPosition(CENTERPOS);
         Thread.sleep(200);
-        jewelArm.setPosition(0.62);
+        jewelArm.setPosition(0.44);
         Thread.sleep(1000);
         int red = colorSensor.getRed();
         int blue = colorSensor.getBlue();
@@ -72,12 +74,12 @@ public class RedNearBasicAutoLogic extends AutonomousLogicThread {
             blue = Math.max(1, blue);
             double rat = red / (double) blue;
             robot.addToTelemetry("CS", red + " " + blue + " " + rat);
-            if (rat <= 0.6) {
+            if (rat >= 1.5) {
                 hitter.setPosition(RIGHTPOS);
                 Thread.sleep(1000);
                 hitter.setPosition(CENTERPOS);
                 Thread.sleep(500);
-            } else if (rat >= 1.5) {
+            } else if (rat <= 0.6) {
                 hitter.setPosition(LEFTPOS);
                 Thread.sleep(1000);
                 hitter.setPosition(CENTERPOS);
@@ -101,11 +103,11 @@ public class RedNearBasicAutoLogic extends AutonomousLogicThread {
                 rot += 100; //rotate more
                 break;
             case CENTER:
-                dist = 1950; //2126
+                dist = 2150; //2126
                 rot -= 100;
                 break;
             case RIGHT:
-                dist = 2280; //2326
+                dist = 2350; //2326
                 break;
         }
 
@@ -137,14 +139,15 @@ public class RedNearBasicAutoLogic extends AutonomousLogicThread {
 
         robot.addToProgress("Ended Rot");
         Thread.sleep(1000);
-        startPosition = leftBack.getPosition();
+        startPosition = encoder.getPosition();
         leftFront.setPower(power * 1.5);
         leftBack.setPower(power * 1.5);
         rightFront.setPower(power * 1.5);
         rightBack.setPower(power * 1.5);
 
-        while (leftBack.getPosition() - startPosition < 1500 && !Thread.interrupted()) {
-        }
+//        while (leftBack.getPosition() - startPosition < 1500 && !Thread.interrupted()) {
+//        }
+        Thread.sleep(2000);
         robot.stopMotors();
 
 
@@ -153,7 +156,7 @@ public class RedNearBasicAutoLogic extends AutonomousLogicThread {
         robot.moveClaw(true);
         Thread.sleep(2000);
 
-        startPosition = leftBack.getPosition();
+        startPosition = encoder.getPosition();
 
 //        Thread.sleep(1000);
         leftFront.setPower(-power);
@@ -161,7 +164,7 @@ public class RedNearBasicAutoLogic extends AutonomousLogicThread {
         rightFront.setPower(-power);
         rightBack.setPower(-power);
 
-        while (leftBack.getPosition() - startPosition > -500 && !Thread.interrupted()) {
+        while (encoder.getPosition() - startPosition > -500 && !Thread.interrupted()) {
         }
         robot.stopMotors();
 

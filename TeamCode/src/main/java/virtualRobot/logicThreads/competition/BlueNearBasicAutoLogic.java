@@ -40,7 +40,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         rightFront = robot.getRFMotor();
         rightBack = robot.getRBMotor();
 
-        encoder = leftBack;
+        encoder = leftFront;
                 colorSensor = robot.getColorSensor();
         jewelArm = robot.getJewelServo();
 //        jewelArm.setPosition(0.67);
@@ -54,7 +54,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         int startPosition;
 //        Thread.sleep(1000);
 
-        runCommand(new GetVuMarkSide(2000));
+        runCommand(new GetVuMarkSide(4000));
 //        int choice = (int)Math.floor(Math.random() * 3);
 //        int choice = 1;
 //        currentVuMark = new RelicRecoveryVuMark[] {LEFT, CENTER, RIGHT}[choice]; //lmao why does this work
@@ -67,7 +67,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
             Thread.sleep(500);
             hitter.setPosition(CENTERPOS);
             Thread.sleep(200);
-            jewelArm.setPosition(0.44g);
+            jewelArm.setPosition(0.43);
             Thread.sleep(1000);
             int red = colorSensor.getRed();
             int blue = colorSensor.getBlue();
@@ -75,12 +75,12 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
                 blue = Math.max(1, blue);
                 double rat = red / (double) blue;
                 robot.addToTelemetry("CS", red + " " + blue + " " + rat);
-                if (rat >= 1.5) {
+                if (rat <= 0.6) {
                     hitter.setPosition(RIGHTPOS);
                     Thread.sleep(1000);
                     hitter.setPosition(CENTERPOS);
                     Thread.sleep(500);
-                } else if (rat <= 0.6) {
+                } else if (rat >= 1.5) {
                     hitter.setPosition(LEFTPOS);
                     Thread.sleep(1000);
                     hitter.setPosition(CENTERPOS);
