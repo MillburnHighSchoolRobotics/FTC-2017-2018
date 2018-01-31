@@ -149,6 +149,12 @@ public class TeleOpCustomLogic extends LogicThread {
                 robot.getRelicArmWrist().setSpeed(0);
             }
 
+            if (false) { //TODO: Map relic arm rotater
+                robot.getRelicArmRotater().setPosition(robot.getRelicArmRotater().getPosition() + 0.01);
+            } else if (false) {
+                robot.getRelicArmRotater().setPosition(robot.getRelicArmRotater().getPosition() - 0.01);
+            }
+
             if (controller1.isDpadUp()) {
                 robot.getLift().setPower(liftSpeed);
             } else if (controller1.isDpadDown()) {

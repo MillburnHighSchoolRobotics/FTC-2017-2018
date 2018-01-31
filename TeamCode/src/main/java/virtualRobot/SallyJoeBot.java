@@ -1,16 +1,10 @@
 package virtualRobot;
 
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.opencv.core.Mat;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
-import retrofit2.Call;
 import retrofit2.Retrofit;
 import virtualRobot.hardware.ContinuousRotationServo;
 import virtualRobot.hardware.DumbColorSensor;
@@ -64,6 +58,8 @@ public class SallyJoeBot {
     private Servo jewelServo;
     @UpdateServo(name = "jewelHitter", initpos = 1.2)
     private Servo jewelHitter;
+    @UpdateServo(name = "relicArmRotater", initpos = 0.5)
+    private Servo relicArmRotater;
     //Sensors
     private IMU imu;
     private Sensor voltageSensor;
@@ -95,6 +91,7 @@ public class SallyJoeBot {
         relicArmWinch = new Motor();
         relicArmWrist = new ContinuousRotationServo();
         relicArmClaw = new Servo();
+        relicArmRotater = new Servo();
 
         jewelServo = new Servo();
         jewelHitter = new Servo();
@@ -215,6 +212,10 @@ public class SallyJoeBot {
 
     public Servo getJewelHitter() {
         return jewelHitter;
+    }
+
+    public Servo getRelicArmRotater() {
+        return relicArmRotater;
     }
 
     public enum Team {
