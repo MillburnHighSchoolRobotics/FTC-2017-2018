@@ -12,6 +12,9 @@ gen/
 # Local configuration file (sdk path, etc)
 local.properties
 
+# Vuforia configuration
+vuforia.properties
+
 # Windows thumbnail db
 Thumbs.db
 
