@@ -11,13 +11,21 @@
         android:allowBackup="true"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:theme="@style/AppThemeRedRC">
+        android:theme="@style/AppThemeRedRC"
+        tools:node="replace">
 
         <!-- Splash screen activity (only launched in the openrc build flavor) -->
         <activity
             android:name="org.openftc.rc.SplashActivity"
             android:theme="@style/SplashTheme">
+        </activity>
 
+        <!-- The main robot controller activity -->
+        <activity
+            android:name="org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/app_name"
+            android:launchMode="singleTask">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>
                 <action android:name="android.intent.action.MAIN"/>
@@ -30,13 +38,6 @@
                 android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
                 android:resource="@xml/device_filter"/>
         </activity>
-
-        <!-- The main robot controller activity -->
-        <activity
-            android:name="org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity"
-            android:configChanges="orientation|screenSize"
-            android:label="@string/app_name"
-            android:launchMode="singleTask"/>
 
         <!-- The robot controller service in which most of the robot functionality is managed -->
         <service
