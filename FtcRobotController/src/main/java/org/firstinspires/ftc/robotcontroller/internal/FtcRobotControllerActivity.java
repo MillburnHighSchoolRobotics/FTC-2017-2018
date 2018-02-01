@@ -47,6 +47,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -239,7 +240,7 @@ public class FtcRobotControllerActivity extends Activity {
         }
 
         ThemedActivity.appAppThemeToActivity(getTag(), this); // do this way instead of inherit to help AppInventor
-
+        Log.e("Appshit", AppUtil.getInstance().getRootActivity().getClass().getName());
         Assert.assertTrue(FtcRobotControllerWatchdogService.isFtcRobotControllerActivity(AppUtil.getInstance().getRootActivity()));
         Assert.assertTrue(AppUtil.getInstance().isRobotController());
 
