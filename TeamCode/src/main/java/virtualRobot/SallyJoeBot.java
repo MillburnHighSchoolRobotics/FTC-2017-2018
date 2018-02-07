@@ -40,25 +40,31 @@ public class SallyJoeBot {
     private Motor RFMotor;
     @UpdateMotor(name = "rightBack", encoderReversed = true)
     private Motor RBMotor;
-    @UpdateMotor(name = "lift")
+    @UpdateMotor(name = "rollerLeft", enabled = false)
+    private Motor rollerLeft;
+    @UpdateMotor(name = "rollerRight", direction = DcMotorSimple.Direction.REVERSE, enabled = false)
+    private Motor rollerRight;
+    @UpdateMotor(name = "lift", enabled = false)
     private Motor lift;
-    @UpdateServo(name = "clawLeft", initpos = 1)
-    private Servo clawLeft;
-    @UpdateServo(name = "clawRight")
-    private Servo clawRight;
-    @UpdateMotor(name = "relicArmWinch", direction = DcMotorSimple.Direction.REVERSE)
+    @UpdateServo(name = "flipper", enabled = false)
+    private Servo flipper;
+    @UpdateServo(name = "rollerLiftLeft", enabled = false)
+    private Servo rollerLiftLeft;
+    @UpdateServo(name = "rollerLiftRight", enabled = false)
+    private Servo rollerLiftRight;
+    @UpdateMotor(name = "relicArmWinch", direction = DcMotorSimple.Direction.REVERSE, enabled = false)
     private Motor relicArmWinch;
-    @UpdateCRServo(name = "relicArmWrist")
+    @UpdateCRServo(name = "relicArmWrist", enabled = false)
     private ContinuousRotationServo relicArmWrist;
-    @UpdateServo(name = "relicArmClaw")
+    @UpdateServo(name = "relicArmClaw", enabled = false)
     private Servo relicArmClaw;
-    @UpdateColorSensor(name = "jewelColorSensor")
+    @UpdateColorSensor(name = "jewelColorSensor", enabled = false)
     private DumbColorSensor colorSensor;
-    @UpdateServo(name = "jewelArm")
+    @UpdateServo(name = "jewelArm", enabled = false)
     private Servo jewelServo;
-    @UpdateServo(name = "jewelHitter", initpos = 1.2)
+    @UpdateServo(name = "jewelHitter", initpos = 1.2, enabled = false)
     private Servo jewelHitter;
-    @UpdateServo(name = "relicArmRotater", initpos = 0.5)
+    @UpdateServo(name = "relicArmRotater", initpos = 0.5, enabled = false)
     private Servo relicArmRotater;
     //Sensors
     private IMU imu;
@@ -84,9 +90,14 @@ public class SallyJoeBot {
         LBMotor = new Motor();
         RFMotor = new Motor();
         RBMotor = new Motor();
+
         lift = new Motor();
-        clawLeft = new Servo();
-        clawRight = new Servo();
+        flipper = new Servo();
+        rollerLiftLeft = new Servo();
+        rollerLiftRight = new Servo();
+
+        rollerLeft = new Motor();
+        rollerRight = new Motor();
 
         relicArmWinch = new Motor();
         relicArmWrist = new ContinuousRotationServo();
@@ -130,18 +141,6 @@ public class SallyJoeBot {
         return RBMotor;
     }
 
-    public synchronized Motor getLift() {
-        return lift;
-    }
-
-    public synchronized Servo getClawLeft() {
-        return clawLeft;
-    }
-
-    public synchronized Servo getClawRight() {
-        return clawRight;
-    }
-
     public synchronized Motor getRelicArmWinch() {
         return relicArmWinch;
     }
@@ -169,9 +168,9 @@ public class SallyJoeBot {
         RBMotor.setPower(0);
     }
 
-    public synchronized void moveClaw(boolean isOpen) {
-        clawLeft.setPosition(isOpen ? 0.6 : 1);
-        clawRight.setPosition(isOpen ? 0.4 : 0);
+    public synchronized void moveRollerLifts(boolean isOpen) {
+        rollerLiftLeft.setPosition(isOpen ? 0 : 1);
+        rollerLiftRight.setPosition(isOpen ? 1 : 0);
     }
 
     public synchronized JoystickController getJoystickController1() {
@@ -188,6 +187,11 @@ public class SallyJoeBot {
 
     public synchronized ArrayList<String> getProgress() {
         return robotProgress;
+    }
+
+    public synchronized void setRollerPower(double power) {
+        rollerLeft.setPower(power);
+        rollerRight.setPower(power);
     }
 
     public synchronized void addToTelemetry(String s, Object arg) {
@@ -216,6 +220,30 @@ public class SallyJoeBot {
 
     public Servo getRelicArmRotater() {
         return relicArmRotater;
+    }
+
+    public Motor getRollerRight() {
+        return rollerRight;
+    }
+
+    public Motor getRollerLeft() {
+        return rollerLeft;
+    }
+
+    public Motor getLift() {
+        return lift;
+    }
+
+    public Servo getFlipper() {
+        return flipper;
+    }
+
+    public Servo getRollerLiftLeft() {
+        return rollerLiftLeft;
+    }
+
+    public Servo getRollerLiftRight() {
+        return rollerLiftRight;
     }
 
     public enum Team {

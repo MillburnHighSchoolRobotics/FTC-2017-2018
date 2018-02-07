@@ -150,7 +150,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
 
         robot.addToProgress("Ended Deposit");
         Thread.sleep(1500);
-        robot.moveClaw(true);
+//        robot.moveClaw(true);
         Thread.sleep(2000);
 
         startPosition = leftBack.getPosition();

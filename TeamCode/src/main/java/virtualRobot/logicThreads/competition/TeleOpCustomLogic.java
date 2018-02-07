@@ -122,38 +122,32 @@ public class TeleOpCustomLogic extends LogicThread {
                 robot.stopMotors();
             }
 
-            if (controller1.isPressed(JoystickController.BUTTON_RB)) {
-                //Grasp Relic
-                robot.getRelicArmClaw().setPosition(0);
-            } else if (controller1.isPressed(JoystickController.BUTTON_LB)) {
-                //Release Relic
-                robot.getRelicArmClaw().setPosition(1);
-            }
+//            if (controller1.isPressed(JoystickController.BUTTON_RB)) {
+//                //Grasp Relic
+//                robot.getRelicArmClaw().setPosition(0);
+//            } else if (controller1.isPressed(JoystickController.BUTTON_LB)) {
+//                //Release Relic
+//                robot.getRelicArmClaw().setPosition(1);
+//            }
 
-            if (controller1.isDpadRight()) {
-                //Extend arm
-                robot.getRelicArmWinch().setPower(relicArmSpeed);
-            } else if (controller1.isDpadLeft()) {
-                //Retract arm
-                robot.getRelicArmWinch().setPower(-relicArmSpeed);
-            } else {
-                robot.getRelicArmWinch().setPower(0);
-            }
+//            if (controller1.isDpadRight()) {
+//                //Extend arm
+//                robot.getRelicArmWinch().setPower(relicArmSpeed);
+//            } else if (controller1.isDpadLeft()) {
+//                //Retract arm
+//                robot.getRelicArmWinch().setPower(-relicArmSpeed);
+//            } else {
+//                robot.getRelicArmWinch().setPower(0);
+//            }
 
-            if (controller1.isDown(JoystickController.BUTTON_RT)) {
-                robot.getRelicArmWrist().setSpeed(0.5);
-            } else if (controller1.isDown(JoystickController.BUTTON_LT)) {
-                //Lower wrist
-                robot.getRelicArmWrist().setSpeed(-0.5);
-            } else {
-                robot.getRelicArmWrist().setSpeed(0);
-            }
-
-            if (false) { //TODO: Map relic arm rotater
-                robot.getRelicArmRotater().setPosition(robot.getRelicArmRotater().getPosition() + 0.01);
-            } else if (false) {
-                robot.getRelicArmRotater().setPosition(robot.getRelicArmRotater().getPosition() - 0.01);
-            }
+//            if (controller1.isDown(JoystickController.BUTTON_RT)) {
+//                robot.getRelicArmWrist().setSpeed(0.5);
+//            } else if (controller1.isDown(JoystickController.BUTTON_LT)) {
+//                //Lower wrist
+//                robot.getRelicArmWrist().setSpeed(-0.5);
+//            } else {
+//                robot.getRelicArmWrist().setSpeed(0);
+//            }
 
             if (controller1.isDpadUp()) {
                 robot.getLift().setPower(liftSpeed);
@@ -164,9 +158,17 @@ public class TeleOpCustomLogic extends LogicThread {
             }
 
             if (controller1.isDown(JoystickController.BUTTON_A)) {
-                robot.moveClaw(false);
+                robot.setRollerPower(1);
             } else if (controller1.isDown(JoystickController.BUTTON_B)) {
-                robot.moveClaw(true);
+                robot.setRollerPower(-1);
+            } else {
+                robot.setRollerPower(0);
+            }
+
+            if (controller1.isDpadRight()) {
+                robot.getFlipper().setPosition(1);
+            } else if (controller1.isDpadLeft()) {
+                robot.getFlipper().setPosition(0);
             }
 
             if (Thread.currentThread().isInterrupted())
