@@ -72,15 +72,15 @@ public class TeleOpCustomLogic extends LogicThread {
                 double translatePower = translateMag * 0.666;
                 if (translateTheta >= 0 && translateTheta <= 90) { //quadrant 1
                     scale = MathUtils.sinDegrees(translateTheta - 45) / MathUtils.cosDegrees(translateTheta - 45);
-                    LF = translatePower * POWER_MATRIX[0][0];
-                    LB = translatePower * POWER_MATRIX[0][1] * scale;
+                    LB = translatePower * POWER_MATRIX[0][0];
+                    LF = translatePower * POWER_MATRIX[0][1] * scale;
                     RF = translatePower * POWER_MATRIX[0][2] * scale;
                     RB = translatePower * POWER_MATRIX[0][3];
                 } else if (translateTheta > 90 && translateTheta <= 180) { //quadrant 2
                     translatePower *= -1;
                     scale = MathUtils.sinDegrees(translateTheta - 135) / MathUtils.cosDegrees(translateTheta - 135);
-                    LF = (translatePower * POWER_MATRIX[2][0] * scale);
-                    LB = (translatePower * POWER_MATRIX[2][1]);
+                    LB = (translatePower * POWER_MATRIX[2][0] * scale);
+                    LF = (translatePower * POWER_MATRIX[2][1]);
                     RF = (translatePower * POWER_MATRIX[2][2]);
                     RB = (translatePower * POWER_MATRIX[2][3] * scale);
 //                    LF *= -1;
@@ -89,16 +89,16 @@ public class TeleOpCustomLogic extends LogicThread {
 //                    RB = -1;
                 } else if (translateTheta > 180 && translateTheta <= 270) { //quadrant 3
                     scale = MathUtils.sinDegrees(translateTheta - 225) / MathUtils.cosDegrees(translateTheta - 225);
-                    LF = (translatePower * POWER_MATRIX[4][0]);
-                    LB = (translatePower * POWER_MATRIX[4][1] * scale);
+                    LB = (translatePower * POWER_MATRIX[4][0]);
+                    LF = (translatePower * POWER_MATRIX[4][1] * scale);
                     RF = (translatePower * POWER_MATRIX[4][2] * scale);
                     RB = (translatePower * POWER_MATRIX[4][3]);
 //                Log.d("aaa", robot.getLFMotor().getPower() + " " + robot.getRFMotor().getPower() + " " + robot.getLBMotor().getPower() + " " + robot.getRBMotor().getPower());
                 } else if (translateTheta > 270 && translateTheta < 360) { //quadrant 4
                     translatePower *= -1;
                     scale = MathUtils.sinDegrees(translateTheta - 315) / MathUtils.cosDegrees(translateTheta - 315);
-                    LF = (translatePower * POWER_MATRIX[6][0] * scale);
-                    LB = (translatePower * POWER_MATRIX[6][1]);
+                    LB = (translatePower * POWER_MATRIX[6][0] * scale);
+                    LF = (translatePower * POWER_MATRIX[6][1]);
                     RF = (translatePower * POWER_MATRIX[6][2]);
                     RB = (translatePower * POWER_MATRIX[6][3] * scale);
 //                    LF *= -1;

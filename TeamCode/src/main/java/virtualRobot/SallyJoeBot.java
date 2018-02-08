@@ -32,13 +32,13 @@ public class SallyJoeBot {
     private ConcurrentHashMap<String, Object> telemetry;
 
     //Motors and Servos
-    @UpdateMotor(name = "leftFront", direction = DcMotorSimple.Direction.REVERSE, encoderReversed = true)
+    @UpdateMotor(name = "leftFront")
     private Motor LFMotor;
-    @UpdateMotor(name = "leftBack", direction = DcMotorSimple.Direction.REVERSE, encoderReversed = true)
+    @UpdateMotor(name = "leftBack")
     private Motor LBMotor;
-    @UpdateMotor(name = "rightFront", encoderReversed = true)
+    @UpdateMotor(name = "rightFront", direction = DcMotorSimple.Direction.REVERSE)
     private Motor RFMotor;
-    @UpdateMotor(name = "rightBack", encoderReversed = true)
+    @UpdateMotor(name = "rightBack", direction = DcMotorSimple.Direction.REVERSE)
     private Motor RBMotor;
     @UpdateMotor(name = "rollerLeft", enabled = false)
     private Motor rollerLeft;
