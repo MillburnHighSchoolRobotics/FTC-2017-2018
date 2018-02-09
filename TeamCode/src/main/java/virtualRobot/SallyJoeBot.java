@@ -40,13 +40,13 @@ public class SallyJoeBot {
     private Motor RFMotor;
     @UpdateMotor(name = "rightBack", direction = DcMotorSimple.Direction.REVERSE)
     private Motor RBMotor;
-    @UpdateMotor(name = "rollerLeft", enabled = false)
+    @UpdateMotor(name = "rollerLeft", enabled = true)
     private Motor rollerLeft;
-    @UpdateMotor(name = "rollerRight", direction = DcMotorSimple.Direction.REVERSE, enabled = false)
+    @UpdateMotor(name = "rollerRight", direction = DcMotorSimple.Direction.REVERSE, enabled = true)
     private Motor rollerRight;
-    @UpdateMotor(name = "lift", enabled = false)
+    @UpdateMotor(name = "lift", enabled = true)
     private Motor lift;
-    @UpdateServo(name = "flipper", enabled = false)
+    @UpdateServo(name = "flipper", enabled = true)
     private Servo flipper;
     @UpdateServo(name = "rollerLiftLeft", enabled = false)
     private Servo rollerLiftLeft;
@@ -66,6 +66,8 @@ public class SallyJoeBot {
     private Servo jewelHitter;
     @UpdateServo(name = "relicArmRotater", initpos = 0.5, enabled = false)
     private Servo relicArmRotater;
+    @UpdateServo(name = "phoneServo", enabled = false)
+    private Servo phoneServo;
     //Sensors
     private IMU imu;
     private Sensor voltageSensor;
@@ -244,6 +246,10 @@ public class SallyJoeBot {
 
     public Servo getRollerLiftRight() {
         return rollerLiftRight;
+    }
+
+    public Servo getPhoneServo() {
+        return phoneServo;
     }
 
     public enum Team {

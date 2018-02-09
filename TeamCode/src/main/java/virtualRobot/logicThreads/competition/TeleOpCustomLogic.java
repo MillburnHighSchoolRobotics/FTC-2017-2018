@@ -40,7 +40,7 @@ public class TeleOpCustomLogic extends LogicThread {
                 {-1, 1, 1, -1},
                 {0, 1, 1, 0}
         };
-        double liftSpeed = 1;
+        double liftSpeed = 0.5;
         double relicArmSpeed = 0.5;
         double gearCoefficient = 0.666;
 //        Translate headingMovement = null;
@@ -156,6 +156,10 @@ public class TeleOpCustomLogic extends LogicThread {
             } else {
                 robot.getLift().setPower(0);
             }
+
+            robot.getRollerLeft().setPower(controller2.getValue(JoystickController.Y_1));
+            robot.getRollerRight().setPower(controller2.getValue(JoystickController.Y_2));
+
 
             if (controller1.isDown(JoystickController.BUTTON_A)) {
                 robot.setRollerPower(1);
