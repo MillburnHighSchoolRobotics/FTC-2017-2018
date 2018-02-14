@@ -51,8 +51,10 @@ public class AlignmentTestLogic extends LogicThread {
         height = vuforiaInstance.rgb.getHeight();
         int target = (int)(Math.random() * 3);
         robot.addToTelemetry("Target", target);
+        int cutoff = 40;
         //Start CV
         while (true) {
+            robot.addToTelemetry("Cutoff", cutoff);
             Mat img = new Mat();
             Bitmap bm = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
             bm.copyPixelsFromBuffer(vuforiaInstance.rgb.getPixels());
@@ -61,15 +63,18 @@ public class AlignmentTestLogic extends LogicThread {
             Mat hsv = new Mat();
             Imgproc.GaussianBlur(img, hsv, new Size(5, 5), 0);
             Imgproc.cvtColor(hsv, hsv, Imgproc.COLOR_RGB2HSV);
+            Mat element = Imgproc.getStructuringElement(Imgproc.CV_SHAPE_RECT, new Size(3, 10));
             Mat inrange = new Mat();
             Core.inRange(hsv, new Scalar(hue, sat, val), new Scalar(hue + del, sat + del, val + del), inrange);
+            Imgproc.morphologyEx(inrange, inrange, Imgproc.MORPH_ERODE, element);
+//            Imgproc.erode(inrange, inrange, element);
             try {
                 robot.getCTelemetry().sendImage("InRange", inrange).execute();
             } catch (IOException e) {
                 e.printStackTrace();
             }
             Mat lines = new Mat();
-            Imgproc.HoughLines(inrange, lines, 1, Math.PI/180, 200/3);
+            Imgproc.HoughLines(inrange, lines, 1, Math.PI/180, 200/2);
             Log.d("Lines", lines.toString());
             int positions[] = new int[4];
             int lineCount = 0;
@@ -80,7 +85,7 @@ public class AlignmentTestLogic extends LogicThread {
                 boolean interferes = false;
                 for (int j = 0; j < lineCount; j++) {
                     int dist = (int)Math.abs(Math.abs(currentLine[0]) - positions[j]);
-                    if (dist < 75/3) {
+                    if (dist < cutoff) {
                         interferes = true;
                         break;
                     }
@@ -101,36 +106,86 @@ public class AlignmentTestLogic extends LogicThread {
             else avgPos = 0;
             if (lineCount > 1) avgSpace /= (lineCount - 1);
             else avgSpace = 0;
+            boolean safe = true;
+            if (lineCount == 3) {
+                boolean leftOff = positions[0] < avgSpace;
+                boolean rightOff = positions[2] > img.cols() - avgSpace;
+                if (leftOff && rightOff) {
+                    safe = false;
+                } else if (leftOff) {
+                    positions[3] = positions[2];
+                    positions[2] = positions[1];
+                    positions[1] = positions[0];
+                    positions[0] = -1;
+                } else if (rightOff) {
+                    positions[3] = -1;
+                } else safe = false;
+            } else if (lineCount == 2) {
+                boolean leftOff = positions[0] < avgSpace;
+                boolean rightOff = positions[1] > img.cols() - avgSpace;
+                if (leftOff && rightOff) {
+                    positions[3] = -1;
+                    positions[2] = positions[1];
+                    positions[1] = positions[0];
+                    positions[0] = -1;
+                } else if (leftOff && !rightOff) {
+                    positions[3] = positions[1];
+                    positions[2] = positions[0];
+                    positions[1] = -1;
+                    positions[0] = -1;
+                } else if (!leftOff && rightOff) {
+                    positions[3] = -1;
+                    positions[2] = -1;
+                } else safe = false;
+            } else if (lineCount == 1) safe = false;
             Mat hough = new Mat();
             Imgproc.cvtColor(img, hough, Imgproc.COLOR_RGB2BGR);
-            for (int i = 0; i < lineCount; i++) {
-                double rho = Math.abs(positions[i]), theta = 0; //lmao
+            if (safe) {
+                for (int i = 0; i < 4; i++) {
+                    double rho = positions[i], theta = 0; //lmao
+                    if (rho < 0) continue;
 //            cout << rho << "\t";
 //            if (i != lineCount - 1) cout << positions[i + 1] - positions[i] << '\t';
 //            if (i != lineCount - 1) avgSpace += (positions[i + 1] - positions[i]);
-                Point pt1 = new Point(), pt2 = new Point();
-                double a = Math.cos(theta), b = Math.sin(theta);
-                double x0 = a * rho, y0 = b * rho;
-                pt1.x = (int)(x0 + 2000 * (-b));
-                pt1.y = (int)(y0 + 2000 * (a));
-                pt2.x = (int)(x0 - 1000 * (-b));
-                pt2.y = (int)(y0 - 1000 * (a));
-                //Target lines are green, others are red;
-                Imgproc.line(hough, pt1, pt2, new Scalar(0, i == target || i == target + 1 ? 255 : 0, i == target || i == target + 1 ? 0 : 255), 3, Core.LINE_AA, 0);
-            }
-            try {
-                robot.getCTelemetry().sendImage("Hough", hough).execute();
-            } catch (IOException e) {
-                e.printStackTrace();
+                    Point pt1 = new Point(), pt2 = new Point();
+                    double a = Math.cos(theta), b = Math.sin(theta);
+                    double x0 = a * rho, y0 = b * rho;
+                    pt1.x = (int) (x0 + 2000 * (-b));
+                    pt1.y = (int) (y0 + 2000 * (a));
+                    pt2.x = (int) (x0 - 1000 * (-b));
+                    pt2.y = (int) (y0 - 1000 * (a));
+                    //Target lines are green, others are red;
+                    Imgproc.line(hough, pt1, pt2, new Scalar(0, i == target || i == target + 1 ? 255 : 0, i == target || i == target + 1 ? 0 : 255), 3, Core.LINE_AA, 0);
+                }
+                try {
+                    robot.getCTelemetry().sendImage("Hough", hough).execute();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             robot.addToTelemetry("Positions", Arrays.toString(positions));
-            if (avgPos != 0 && avgSpace != 0 && target + 1 <= lineCount - 1) {
+            if (avgPos != 0 && avgSpace != 0 && safe) {
+//                cutoff = avgSpace - 10;
                 int left, right;
                 left = positions[target];
                 right = positions[target + 1];
-                int avg = (left + right) / 2;
-                robot.addToTelemetry("Offset", avg - img.cols() / 2);
+                if (left >= 0 && right >= 0) {
+                    int avg = (left + right) / 2;
+                    robot.addToTelemetry("Offset", avg - img.cols() / 2);
+                    int offset = avg - img.cols() / 2;
+                    strafe(0.35 * Math.signum(offset));
+                }
+
+            } else {
+                robot.stopMotors();
             }
         }
+    }
+
+    private void strafe(double power) { //positive is left, negative is right
+        robot.getLFMotor().setPower(power);
+        robot.getLBMotor().setPower(-power);
+        robot.getRFMotor().setPower(-power);
+        robot.getRBMotor().setPower(power);
     }
 }
