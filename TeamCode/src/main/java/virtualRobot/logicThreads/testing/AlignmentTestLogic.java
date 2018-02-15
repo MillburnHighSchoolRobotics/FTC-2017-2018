@@ -54,6 +54,7 @@ public class AlignmentTestLogic extends LogicThread {
         int cutoff = 40;
         //Start CV
         while (true) {
+            robot.stopMotors();
             robot.addToTelemetry("Cutoff", cutoff);
             Mat img = new Mat();
             Bitmap bm = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
@@ -66,7 +67,7 @@ public class AlignmentTestLogic extends LogicThread {
             Mat element = Imgproc.getStructuringElement(Imgproc.CV_SHAPE_RECT, new Size(3, 10));
             Mat inrange = new Mat();
             Core.inRange(hsv, new Scalar(hue, sat, val), new Scalar(hue + del, sat + del, val + del), inrange);
-            Imgproc.morphologyEx(inrange, inrange, Imgproc.MORPH_ERODE, element);
+            Imgproc.morphologyEx(inrange, inrange, Imgproc.MORPH_CLOSE, element);
 //            Imgproc.erode(inrange, inrange, element);
             try {
                 robot.getCTelemetry().sendImage("InRange", inrange).execute();
@@ -107,43 +108,48 @@ public class AlignmentTestLogic extends LogicThread {
             if (lineCount > 1) avgSpace /= (lineCount - 1);
             else avgSpace = 0;
             boolean safe = true;
-            if (lineCount == 3) {
-                boolean leftOff = positions[0] < avgSpace;
-                boolean rightOff = positions[2] > img.cols() - avgSpace;
-                if (leftOff && rightOff) {
-                    safe = false;
-                } else if (leftOff) {
-                    positions[3] = positions[2];
-                    positions[2] = positions[1];
-                    positions[1] = positions[0];
-                    positions[0] = -1;
-                } else if (rightOff) {
-                    positions[3] = -1;
-                } else safe = false;
-            } else if (lineCount == 2) {
-                boolean leftOff = positions[0] < avgSpace;
-                boolean rightOff = positions[1] > img.cols() - avgSpace;
-                if (leftOff && rightOff) {
-                    positions[3] = -1;
-                    positions[2] = positions[1];
-                    positions[1] = positions[0];
-                    positions[0] = -1;
-                } else if (leftOff && !rightOff) {
-                    positions[3] = positions[1];
-                    positions[2] = positions[0];
-                    positions[1] = -1;
-                    positions[0] = -1;
-                } else if (!leftOff && rightOff) {
-                    positions[3] = -1;
-                    positions[2] = -1;
-                } else safe = false;
-            } else if (lineCount == 1) safe = false;
+            if (avgSpace != 0) {
+                if (lineCount == 3) {
+                    boolean leftOff = positions[0] < avgSpace;
+                    boolean rightOff = positions[2] > img.cols() - avgSpace;
+                    if (leftOff && rightOff) {
+                        safe = false;
+                    } else if (leftOff) {
+                        positions[3] = positions[2];
+                        positions[2] = positions[1];
+                        positions[1] = positions[0];
+
+                        positions[0] = positions[1] - avgSpace;
+                    } else if (rightOff) {
+                        positions[3] = positions[2] + avgSpace;
+                    } else safe = false;
+                } else if (lineCount == 2) {
+                    boolean leftOff = positions[0] < avgSpace;
+                    boolean rightOff = positions[1] > img.cols() - avgSpace;
+                    if (leftOff && rightOff) {
+                        positions[2] = positions[1];
+                        positions[1] = positions[0];
+
+                        positions[3] = positions[2] + avgSpace;
+                        positions[0] = positions[1] - avgSpace;
+                    } else if (leftOff && !rightOff) {
+                        positions[3] = positions[1];
+                        positions[2] = positions[0];
+
+                        positions[1] = positions[2] - avgSpace;
+                        positions[0] = positions[1] - avgSpace;
+                    } else if (!leftOff && rightOff) {
+                        positions[2] = positions[1] + avgSpace;
+                        positions[3] = positions[2] + avgSpace;
+                    } else safe = false;
+                } else if (lineCount == 1) safe = false;
+            }
             Mat hough = new Mat();
             Imgproc.cvtColor(img, hough, Imgproc.COLOR_RGB2BGR);
             if (safe) {
                 for (int i = 0; i < 4; i++) {
                     double rho = positions[i], theta = 0; //lmao
-                    if (rho < 0) continue;
+                    if (rho < 0 || rho > img.cols()) continue;
 //            cout << rho << "\t";
 //            if (i != lineCount - 1) cout << positions[i + 1] - positions[i] << '\t';
 //            if (i != lineCount - 1) avgSpace += (positions[i + 1] - positions[i]);
@@ -169,13 +175,14 @@ public class AlignmentTestLogic extends LogicThread {
                 int left, right;
                 left = positions[target];
                 right = positions[target + 1];
-                if (left >= 0 && right >= 0) {
-                    int avg = (left + right) / 2;
-                    robot.addToTelemetry("Offset", avg - img.cols() / 2);
-                    int offset = avg - img.cols() / 2;
-                    strafe(0.35 * Math.signum(offset));
-                }
-
+//                if (left >= 0 && right >= 0) {
+                int avg = (left + right) / 2;
+//                avg = avg + (int)(avgSpace * 1.5);
+                robot.addToTelemetry("Offset", avg - img.cols() / 2);
+                int offset = avg - (img.cols() / 2);
+                strafe(0.5 * Math.signum(offset));
+//                }
+                Thread.sleep(200);
             } else {
                 robot.stopMotors();
             }
@@ -183,8 +190,8 @@ public class AlignmentTestLogic extends LogicThread {
     }
 
     private void strafe(double power) { //positive is left, negative is right
-        robot.getLFMotor().setPower(power);
-        robot.getLBMotor().setPower(-power);
+        robot.getLFMotor().setPower(-power);
+        robot.getLBMotor().setPower(power);
         robot.getRFMotor().setPower(-power);
         robot.getRBMotor().setPower(power);
     }

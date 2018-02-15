@@ -76,7 +76,7 @@ public class SallyJoeBot {
 
     //CTelemetry
     private CTelemetry ctel;
-    private final String ipaddr = "http://172.20.95.158:8080/";
+    private final String ipaddr = "http://172.20.95.88:8080/";
 
     //Motors, sensors, servos instantiated (e.g Motor = new Motor(), some positions can also be set if desired
     public SallyJoeBot() {
