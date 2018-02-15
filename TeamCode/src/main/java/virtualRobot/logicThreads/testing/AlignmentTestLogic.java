@@ -45,7 +45,7 @@ public class AlignmentTestLogic extends LogicThread {
 
     @Override
     protected void realRun() throws InterruptedException {
-        robot.initCTelemetry();
+//        robot.initCTelemetry();
         vuforiaInstance = GlobalUtils.vuforiaInstance;
         width = vuforiaInstance.rgb.getWidth();
         height = vuforiaInstance.rgb.getHeight();
@@ -69,13 +69,15 @@ public class AlignmentTestLogic extends LogicThread {
             Core.inRange(hsv, new Scalar(hue, sat, val), new Scalar(hue + del, sat + del, val + del), inrange);
             Imgproc.morphologyEx(inrange, inrange, Imgproc.MORPH_CLOSE, element);
 //            Imgproc.erode(inrange, inrange, element);
-            try {
-                robot.getCTelemetry().sendImage("InRange", inrange).execute();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                robot.getCTelemetry().sendImage("InRange", inrange).execute();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
             Mat lines = new Mat();
+            long timestamp = System.currentTimeMillis();
             Imgproc.HoughLines(inrange, lines, 1, Math.PI/180, 200/2);
+            Log.d("Hough Complete", Long.toString(System.currentTimeMillis() - timestamp) + "ms");
             Log.d("Lines", lines.toString());
             int positions[] = new int[4];
             int lineCount = 0;
@@ -144,31 +146,31 @@ public class AlignmentTestLogic extends LogicThread {
                     } else safe = false;
                 } else if (lineCount == 1) safe = false;
             }
-            Mat hough = new Mat();
-            Imgproc.cvtColor(img, hough, Imgproc.COLOR_RGB2BGR);
-            if (safe) {
-                for (int i = 0; i < 4; i++) {
-                    double rho = positions[i], theta = 0; //lmao
-                    if (rho < 0 || rho > img.cols()) continue;
-//            cout << rho << "\t";
-//            if (i != lineCount - 1) cout << positions[i + 1] - positions[i] << '\t';
-//            if (i != lineCount - 1) avgSpace += (positions[i + 1] - positions[i]);
-                    Point pt1 = new Point(), pt2 = new Point();
-                    double a = Math.cos(theta), b = Math.sin(theta);
-                    double x0 = a * rho, y0 = b * rho;
-                    pt1.x = (int) (x0 + 2000 * (-b));
-                    pt1.y = (int) (y0 + 2000 * (a));
-                    pt2.x = (int) (x0 - 1000 * (-b));
-                    pt2.y = (int) (y0 - 1000 * (a));
-                    //Target lines are green, others are red;
-                    Imgproc.line(hough, pt1, pt2, new Scalar(0, i == target || i == target + 1 ? 255 : 0, i == target || i == target + 1 ? 0 : 255), 3, Core.LINE_AA, 0);
-                }
-                try {
-                    robot.getCTelemetry().sendImage("Hough", hough).execute();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+//            Mat hough = new Mat();
+//            Imgproc.cvtColor(img, hough, Imgproc.COLOR_RGB2BGR);
+//            if (safe) {
+//                for (int i = 0; i < 4; i++) {
+//                    double rho = positions[i], theta = 0; //lmao
+//                    if (rho < 0 || rho > img.cols()) continue;
+////            cout << rho << "\t";
+////            if (i != lineCount - 1) cout << positions[i + 1] - positions[i] << '\t';
+////            if (i != lineCount - 1) avgSpace += (positions[i + 1] - positions[i]);
+//                    Point pt1 = new Point(), pt2 = new Point();
+//                    double a = Math.cos(theta), b = Math.sin(theta);
+//                    double x0 = a * rho, y0 = b * rho;
+//                    pt1.x = (int) (x0 + 2000 * (-b));
+//                    pt1.y = (int) (y0 + 2000 * (a));
+//                    pt2.x = (int) (x0 - 1000 * (-b));
+//                    pt2.y = (int) (y0 - 1000 * (a));
+//                    //Target lines are green, others are red;
+//                    Imgproc.line(hough, pt1, pt2, new Scalar(0, i == target || i == target + 1 ? 255 : 0, i == target || i == target + 1 ? 0 : 255), 3, Core.LINE_AA, 0);
+//                }
+//                try {
+//                    robot.getCTelemetry().sendImage("Hough", hough).execute();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
             robot.addToTelemetry("Positions", Arrays.toString(positions));
             if (avgPos != 0 && avgSpace != 0 && safe) {
 //                cutoff = avgSpace - 10;
