@@ -38,20 +38,20 @@ public class SallyJoeBot {
     private ConcurrentHashMap<String, Object> telemetry;
 
     //Motors and Servos
-    @UpdateMotor(name = "leftFront", direction = DcMotorSimple.Direction.REVERSE, encoderReversed = true)
+    @UpdateMotor(name = "leftFront", encoderReversed = true)
     private Motor LFMotor;
-    @UpdateMotor(name = "leftBack", direction = DcMotorSimple.Direction.REVERSE, encoderReversed = true)
+    @UpdateMotor(name = "leftBack",  encoderReversed = true)
     private Motor LBMotor;
-    @UpdateMotor(name = "rightFront", encoderReversed = true)
+    @UpdateMotor(name = "rightFront", direction = DcMotorSimple.Direction.REVERSE, encoderReversed = true)
     private Motor RFMotor;
-    @UpdateMotor(name = "rightBack", encoderReversed = true)
+    @UpdateMotor(name = "rightBack", direction = DcMotorSimple.Direction.REVERSE, encoderReversed = true)
     private Motor RBMotor;
+    @UpdateMotor(name = "rollerLeft")
+    private Motor rollerLeft;
+    @UpdateMotor(name = "rollerRight", direction = DcMotorSimple.Direction.REVERSE)
+    private Motor rollerRight;
     @UpdateMotor(name = "lift")
     private Motor lift;
-    @UpdateServo(name = "clawLeft", initpos = 1)
-    private Servo clawLeft;
-    @UpdateServo(name = "clawRight")
-    private Servo clawRight;
     @UpdateMotor(name = "relicArmWinch", direction = DcMotorSimple.Direction.REVERSE)
     private Motor relicArmWinch;
     @UpdateCRServo(name = "relicArmWrist")
@@ -62,7 +62,7 @@ public class SallyJoeBot {
     private DumbColorSensor colorSensor;
     @UpdateServo(name = "jewelArm")
     private Servo jewelServo;
-    @UpdateServo(name = "jewelHitter", initpos = 1.2)
+    @UpdateServo(name = "jewelHitter")
     private Servo jewelHitter;
     //Sensors
     private IMU imu;
