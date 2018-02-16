@@ -24,7 +24,7 @@ public class IMU {
 
         angularVelocity = new AxisSensor();
 
-        yaw = new Sensor();
+        yaw = new ContinuousRotationSensor();
         pitch = new Sensor();
         roll = new Sensor();
         angleAcquisition = 0;
