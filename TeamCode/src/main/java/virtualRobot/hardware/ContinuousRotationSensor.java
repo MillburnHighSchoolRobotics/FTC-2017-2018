@@ -5,13 +5,11 @@ package virtualRobot.hardware;
  */
 
 public class ContinuousRotationSensor extends Sensor {
-    protected double relative;
     //offset is the amount of revolutions
 
     @Override
     public synchronized void clearValue() {
         offset = 0;
-        relative = getValue();
     }
 
     @Override
@@ -31,8 +29,8 @@ public class ContinuousRotationSensor extends Sensor {
     }
 
     //TODO: Test this function
-    public synchronized void setRelativeValue(double relVal) {
-        relative = relVal;
+    @Override
+    public synchronized void setValue(double relVal) {
         offset = (int)Math.floor((relVal + 180)/360);
         hardValue = relVal - (offset * 360);
     }

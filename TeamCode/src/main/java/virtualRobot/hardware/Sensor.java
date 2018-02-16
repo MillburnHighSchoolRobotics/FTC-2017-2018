@@ -25,6 +25,10 @@ public class Sensor {
         return hardValue - offset;
     }
 
+    public synchronized void setValue(double softValue) {
+        hardValue = softValue + offset;
+    }
+
     //allows the UpdateThread to set the HardValue
     public synchronized void setRawValue(double hardValue) {
     	this.hardValue = hardValue;
