@@ -47,7 +47,7 @@ public class SallyJoeBot {
     private Motor rollerRight;
     @UpdateMotor(name = "lift", enabled = true)
     private Motor lift;
-    @UpdateServo(name = "flipper", enabled = true)
+    @UpdateServo(name = "flipper", initpos = 1, enabled = true)
     private Servo flipper;
     @UpdateServo(name = "rollerLiftLeft", enabled = false)
     private Servo rollerLiftLeft;
@@ -61,9 +61,9 @@ public class SallyJoeBot {
     private Servo relicArmClaw;
     @UpdateColorSensor(name = "jewelColorSensor", enabled = false)
     private DumbColorSensor colorSensor;
-    @UpdateServo(name = "jewelArm", enabled = false)
+    @UpdateServo(name = "jewelArm", initpos = 1, enabled = true)
     private Servo jewelServo;
-    @UpdateServo(name = "jewelHitter", initpos = 1.2, enabled = false)
+    @UpdateServo(name = "jewelHitter", initpos = 0.5, enabled = true)
     private Servo jewelHitter;
     @UpdateServo(name = "relicArmRotater", initpos = 0.5, enabled = false)
     private Servo relicArmRotater;

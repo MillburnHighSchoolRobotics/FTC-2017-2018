@@ -7,13 +7,10 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
-import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
-import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 import virtualRobot.LogicThread;
@@ -42,6 +39,7 @@ public class AlignmentTestLogic extends LogicThread {
     final int val = 12; //84
     final int del = 150; //128
     final double tolerance = 0.4;
+    final int widthOfStupidBarThatsInTheWay = 100; //TODO: tune this stupid value
 
     @Override
     protected void realRun() throws InterruptedException {
@@ -54,7 +52,7 @@ public class AlignmentTestLogic extends LogicThread {
         int cutoff = 40;
         //Start CV
         while (true) {
-            robot.stopMotors();
+//            robot.stopMotors();
             robot.addToTelemetry("Cutoff", cutoff);
             Mat img = new Mat();
             Bitmap bm = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
@@ -100,20 +98,20 @@ public class AlignmentTestLogic extends LogicThread {
             }
             Arrays.sort(positions, 0, lineCount);
             int avgSpace = 0;
-            int avgPos = 0;
+//            int avgPos = 0;
             for (int i = 0; i < lineCount; i++) {
-                avgPos += positions[i];
+//                avgPos += positions[i];
                 if (i < lineCount - 1) avgSpace += positions[i + 1] - positions[i];
             }
-            if (lineCount > 0) avgPos /= lineCount;
-            else avgPos = 0;
+//            if (lineCount > 0) avgPos /= lineCount;
+//            else avgPos = 0;
             if (lineCount > 1) avgSpace /= (lineCount - 1);
             else avgSpace = 0;
             boolean safe = true;
             if (avgSpace != 0) {
                 if (lineCount == 3) {
                     boolean leftOff = positions[0] < avgSpace;
-                    boolean rightOff = positions[2] > img.cols() - avgSpace;
+                    boolean rightOff = positions[2] > (img.cols() - avgSpace) - widthOfStupidBarThatsInTheWay;
                     if (leftOff && rightOff) {
                         safe = false;
                     } else if (leftOff) {
@@ -127,7 +125,7 @@ public class AlignmentTestLogic extends LogicThread {
                     } else safe = false;
                 } else if (lineCount == 2) {
                     boolean leftOff = positions[0] < avgSpace;
-                    boolean rightOff = positions[1] > img.cols() - avgSpace;
+                    boolean rightOff = positions[1] > (img.cols() - avgSpace) - widthOfStupidBarThatsInTheWay;
                     if (leftOff && rightOff) {
                         positions[2] = positions[1];
                         positions[1] = positions[0];
@@ -172,7 +170,8 @@ public class AlignmentTestLogic extends LogicThread {
 //                }
 //            }
             robot.addToTelemetry("Positions", Arrays.toString(positions));
-            if (avgPos != 0 && avgSpace != 0 && safe) {
+//            Log.d("Safe", (avgSpace != 0 && safe + "");
+            if (avgSpace != 0 && safe) {
 //                cutoff = avgSpace - 10;
                 int left, right;
                 left = positions[target];
@@ -180,11 +179,18 @@ public class AlignmentTestLogic extends LogicThread {
 //                if (left >= 0 && right >= 0) {
                 int avg = (left + right) / 2;
 //                avg = avg + (int)(avgSpace * 1.5);
-                robot.addToTelemetry("Offset", avg - img.cols() / 2);
                 int offset = avg - (img.cols() / 2);
+                offset -= (int)(avgSpace * 1.5);
+                robot.addToTelemetry("Offset", offset);
+                robot.addToTelemetry("Avg Space", avgSpace);
                 strafe(0.5 * Math.signum(offset));
+                img.release();
+                hsv.release();
+                inrange.release();
+                lines.release();
+//                hough.release();
 //                }
-                Thread.sleep(200);
+//                Thread.sleep(200);
             } else {
                 robot.stopMotors();
             }
@@ -192,6 +198,7 @@ public class AlignmentTestLogic extends LogicThread {
     }
 
     private void strafe(double power) { //positive is left, negative is right
+        Log.d("Strafe", "triggered");
         robot.getLFMotor().setPower(-power);
         robot.getLBMotor().setPower(power);
         robot.getRFMotor().setPower(-power);
