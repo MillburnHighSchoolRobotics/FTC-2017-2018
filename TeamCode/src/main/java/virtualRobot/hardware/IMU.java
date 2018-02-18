@@ -12,7 +12,8 @@ public class IMU {
 
     private AxisSensor angularVelocity;
 
-    private Sensor yaw, pitch, roll;
+    private Sensor pitch, roll;
+    private ContinuousRotationSensor yaw;
 
     public volatile long linearAcquisition, totalAcquisition, angleAcquisition;
 
@@ -107,4 +108,6 @@ public class IMU {
     public void clearRoll() {
         roll.clearValue();
     }
+
+    public String toString() { return "[" + getHeading() + "," + getPitch() + "," + getRoll() + "]"; }
 }

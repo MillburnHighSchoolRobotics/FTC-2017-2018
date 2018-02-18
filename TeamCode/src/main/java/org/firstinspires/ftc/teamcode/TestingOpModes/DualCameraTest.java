@@ -8,12 +8,13 @@ import android.hardware.camera2.CameraManager;
 import android.os.Build;
 import android.util.Size;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 /**
  * Created by Ethan Mak on 11/24/2017.
  */
-
+@Disabled
 public class DualCameraTest extends OpMode {
     Context context;
 

@@ -31,6 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package org.firstinspires.ftc.teamcode.ExampleOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -42,6 +43,7 @@ import java.util.Date;
  * <p>
  *Enables control of the robot via the gamepad
  */
+@Disabled
 public class NullOp extends OpMode {
 
   private String startDate;

@@ -3,12 +3,14 @@ package org.firstinspires.ftc.teamcode.TestingOpModes;
 import com.kauailabs.navx.ftc.AHRS;
 import com.kauailabs.navx.ftc.MPU9250;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
  * Created by Yanjun on 11/24/2015.
  */
+@Disabled
 @Autonomous(name ="Sensor: Testing IMU", group="Sensor")
 public class IMUTest extends OpMode {
 

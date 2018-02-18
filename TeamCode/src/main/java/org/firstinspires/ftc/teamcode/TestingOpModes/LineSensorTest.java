@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.TestingOpModes;
 //import com.kauailabs.navx.ftc.MPU9250;
 import com.kauailabs.navx.ftc.MPU9250;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.*;
@@ -12,7 +13,7 @@ import com.qualcomm.robotcore.hardware.*;
  * Created by 17osullivand on 10/5/16.
  */
 //note that to test componenets just create a basic OpMode
-
+@Disabled
 @Autonomous(name ="Sensor: Testing All Sensors", group="Sensor")
 public class LineSensorTest extends OpMode {
     ColorSensor linetest;

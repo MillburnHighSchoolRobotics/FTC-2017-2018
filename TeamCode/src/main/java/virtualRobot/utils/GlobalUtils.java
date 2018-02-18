@@ -3,7 +3,15 @@ package virtualRobot.utils;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.teamcode.ReflectionUpdateThread;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 
 import virtualRobot.VuforiaLocalizerImplSubclass;
 
@@ -18,6 +26,10 @@ public class GlobalUtils {
     public static VuforiaLocalizerImplSubclass vuforiaInstance = null;
     public static RelicRecoveryVuMark forcedVumark = LEFT;
     private static int vumarkNum = 0;
+    public static ReflectionUpdateThread currentUpdateThread = null;
+    public static ElapsedTime runtime = new ElapsedTime();
+    public static ThreadGroup updateThreadGroup = null;
+    public static PrintWriter crashLogger = null;
 
     public static Activity getCurrentActivity() {
         if (currentActivity == null)

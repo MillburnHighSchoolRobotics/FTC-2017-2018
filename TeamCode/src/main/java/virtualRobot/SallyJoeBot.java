@@ -1,6 +1,9 @@
 package virtualRobot;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.BuildConfig;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import java.util.ArrayList;
@@ -16,6 +19,7 @@ import virtualRobot.hardware.Servo;
 import virtualRobot.hardware.StateSensor;
 import virtualRobot.telemetry.CTelemetry;
 import virtualRobot.telemetry.MatConverterFactory;
+import virtualRobot.utils.GlobalUtils;
 
 /**
  * Created by DOSullivan on 9/14/16.
@@ -33,13 +37,13 @@ public class SallyJoeBot {
     private ConcurrentHashMap<String, Object> telemetry;
 
     //Motors and Servos
-    @UpdateMotor(name = "leftFront")
+    @UpdateMotor(name = "leftFront", direction = DcMotorSimple.Direction.REVERSE)
     private Motor LFMotor;
-    @UpdateMotor(name = "leftBack")
+    @UpdateMotor(name = "leftBack", direction = DcMotorSimple.Direction.REVERSE)
     private Motor LBMotor;
-    @UpdateMotor(name = "rightFront", direction = DcMotorSimple.Direction.REVERSE)
+    @UpdateMotor(name = "rightFront")
     private Motor RFMotor;
-    @UpdateMotor(name = "rightBack", direction = DcMotorSimple.Direction.REVERSE)
+    @UpdateMotor(name = "rightBack")
     private Motor RBMotor;
     @UpdateMotor(name = "rollerLeft", enabled = true)
     private Motor rollerLeft;
@@ -59,9 +63,9 @@ public class SallyJoeBot {
     private ContinuousRotationServo relicArmWrist;
     @UpdateServo(name = "relicArmClaw", enabled = false)
     private Servo relicArmClaw;
-    @UpdateColorSensor(name = "jewelColorSensor", enabled = false)
+    @UpdateColorSensor(name = "jewelColorSensor", enabled = true)
     private DumbColorSensor colorSensor;
-    @UpdateServo(name = "jewelArm", initpos = 1, enabled = true)
+    @UpdateServo(name = "jewelArm", initpos = 0.87, enabled = true)
     private Servo jewelServo;
     @UpdateServo(name = "jewelHitter", initpos = 0.5, enabled = true)
     private Servo jewelHitter;
@@ -79,6 +83,11 @@ public class SallyJoeBot {
     private CTelemetry ctel;
     private final String ipaddr = org.firstinspires.ftc.teamcode.BuildConfig.CTELEM_SERVER_IP;
 
+    public static double COUNTS_PER_MOTOR_REV;    // eg: TETRIX Motor Encoder
+    public static double DRIVE_GEAR_REDUCTION;     // This is < 1.0 if geared UP
+    public static double WHEEL_DIAMETER_INCHES;     // For figuring circumference
+    public static double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
+    public static double wheelbase;
 
     //Motors, sensors, servos instantiated (e.g Motor = new Motor(), some positions can also be set if desired
     public SallyJoeBot() {
@@ -114,6 +123,13 @@ public class SallyJoeBot {
         //capLift = new SyncedMotors(LiftLeftMotor, LiftRightMotor, LiftLeftEncoder, LiftRightEncoder, KP, KI, KD, SyncedMotors.SyncAlgo.POSITION);
         //capLift.setRatio(1);
 
+    }
+    public synchronized void updateValues() {
+        COUNTS_PER_MOTOR_REV = LFMotor.getMotorType().getTicksPerRev();
+        DRIVE_GEAR_REDUCTION = 1;
+        WHEEL_DIAMETER_INCHES = 4;
+        COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI);
+        wheelbase = 27.8058441;
     }
     //All of Autonomous and TeleopRobot's functions are created e.g. (public synchronized Motor getMotor() {return Motor;}
 
@@ -161,6 +177,19 @@ public class SallyJoeBot {
         return jewelServo;
     }
 
+    public synchronized void moveJewelServo(boolean isOpen) {
+        jewelServo.setPosition(isOpen ? 0.40 : 0.87);
+    }
+
+    public synchronized void moveJewelRotater(int dir) {
+        if (dir < 0)
+            jewelHitter.setPosition(0.75);
+        else if (dir > 0)
+            jewelHitter.setPosition(0.25);
+        else
+            jewelHitter.setPosition(0.5);
+    }
+
     public synchronized StateSensor getStateSensor() {
         return stateSensor;
     }
@@ -170,6 +199,59 @@ public class SallyJoeBot {
         RFMotor.setPower(0);
         LBMotor.setPower(0);
         RBMotor.setPower(0);
+    }
+
+    public void encoderDrive(double speed, double LFPos, double LBPos, double RFPos, double RBPos, double timeoutS) {
+        // Ensure that the opmode is still active
+        DcMotor.RunMode LFMode = LFMotor.getMode();
+        DcMotor.RunMode LBMode = LBMotor.getMode();
+        DcMotor.RunMode RFMode = RFMotor.getMode();
+        DcMotor.RunMode RBMode = RBMotor.getMode();
+
+        Log.d("Progress", "hit encoderDrive " + timeoutS + " " + LFPos);
+        int LFTarget = (int) (LFMotor.getPosition() + LFPos);
+        int LBTarget = (int) (LBMotor.getPosition() + LBPos);
+        int RFTarget = (int) (RFMotor.getPosition() + RFPos);
+        int RBTarget = (int) (RBMotor.getPosition() + RBPos);
+        LFMotor.setTargetPositon(LFTarget);
+        LBMotor.setTargetPositon(LBTarget);
+        RFMotor.setTargetPositon(RFTarget);
+        RBMotor.setTargetPositon(RBTarget);
+
+        // Turn On RUN_TO_POSITION
+        LFMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        LBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RFMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        RBMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // reset the timeout time and start motion.
+        GlobalUtils.runtime.reset();
+        LFMotor.setPower(Math.abs(speed));
+        LBMotor.setPower(Math.abs(speed));
+        RFMotor.setPower(Math.abs(speed));
+        RBMotor.setPower(Math.abs(speed));
+
+        // keep looping while we are still active, and there is time left, and both motors are running.
+        // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+        // its target position, the motion will stop.  This is "safer" in the event that the robot will
+        // always end the motion as soon as possible.
+        // However, if you require that BOTH motors have finished their moves before the robot continues
+        // onto the next step, use (isBusy() || isBusy()) in the loop test.
+        while ((GlobalUtils.runtime.milliseconds() < timeoutS) &&
+                (LFMotor.isBusy() && LBMotor.isBusy() && RFMotor.isBusy() && RBMotor.isBusy()) &&
+                (!Thread.currentThread().isInterrupted())) {
+//            Log.d("Busy", LFMotor.isBusy() + " " + LBMotor.isBusy() + " " +  RFMotor.isBusy() + " " +  RBMotor.isBusy());
+        }
+        Log.d("Progress", "end encoderDrive");
+        // Stop all motion;
+        stopMotors();
+
+        // Turn off RUN_TO_POSITION
+        LFMotor.setMode(LFMode);
+        LBMotor.setMode(LBMode);
+        RFMotor.setMode(RFMode);
+        RBMotor.setMode(RBMode);
+        //  sleep(250);   // optional pause after each move
     }
 
     public synchronized void moveRollerLifts(boolean isOpen) {
@@ -240,6 +322,10 @@ public class SallyJoeBot {
 
     public Servo getFlipper() {
         return flipper;
+    }
+
+    public synchronized void moveFipper(boolean isOpen) {
+        flipper.setPosition(isOpen ? 0 : 1);
     }
 
     public Servo getRollerLiftLeft() {

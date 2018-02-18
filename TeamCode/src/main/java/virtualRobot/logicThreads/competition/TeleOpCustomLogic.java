@@ -108,10 +108,10 @@ public class TeleOpCustomLogic extends LogicThread {
                 }
                 robot.addToTelemetry("1", LF + "\t" + RF);
                 robot.addToTelemetry("2", LB + "\t" + RB);
-                LF *= -1;
-                LB *= -1;
-                RF *= -1;
-                RB *= -1;
+//                LF *= -1;
+//                LB *= -1;
+//                RF *= -1;
+//                RB *= -1;
                 robot.getLFMotor().setPower(LF * gearCoefficient);
                 robot.getLBMotor().setPower(LB * gearCoefficient);
                 robot.getRBMotor().setPower(RB * gearCoefficient);
@@ -168,6 +168,9 @@ public class TeleOpCustomLogic extends LogicThread {
             } else {
                 robot.setRollerPower(0);
             }
+
+//            robot.getRollerLeft().setPower(controller2.getValue(JoystickController.Y_1));
+//            robot.getRollerRight().setPower(controller2.getValue(JoystickController.Y_2));
 
             if (controller1.isDpadRight()) {
                 robot.getFlipper().setPosition(1);

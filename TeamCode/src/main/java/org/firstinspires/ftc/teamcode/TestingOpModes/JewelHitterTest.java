@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -7,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * Created by david on 1/26/18.
  */
-
+@Disabled
 @TeleOp(name = "Jewel Hitter Test", group = "Testing")
 public class JewelHitterTest extends OpMode {
     Servo hitter;

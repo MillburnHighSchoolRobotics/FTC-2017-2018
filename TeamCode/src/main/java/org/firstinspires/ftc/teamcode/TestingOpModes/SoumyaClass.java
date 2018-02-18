@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by david on 10/26/17.
  */
-
+@Disabled
 @Autonomous( name="SoumyaClass", group="memes" )
 public class SoumyaClass extends OpMode {
     Servo clawLeft, clawRight, gll, glr;

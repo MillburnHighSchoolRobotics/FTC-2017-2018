@@ -10,7 +10,7 @@ import virtualRobot.logicThreads.competition.RedFarAutoLogic;
  * Created by ethan on 9/22/17.
  */
 
-@Autonomous(name = "Autonomous: Red 2 Full", group = "Competition")
+@Autonomous(name = "Autonomous: Red Far Full", group = "Competition")
 public class RedFarAutoUpdate extends ReflectionUpdateThread {
     @Override
     public void setLogicThread() {

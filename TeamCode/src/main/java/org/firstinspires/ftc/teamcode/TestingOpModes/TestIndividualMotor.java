@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -10,7 +11,7 @@ import java.util.Map;
 /**
  * Created by mehme_000 on 1/12/2017.
  */
-
+@Disabled
 public class TestIndividualMotor extends OpMode {
         private DcMotor motor1;
         private double initMotorEncoder;

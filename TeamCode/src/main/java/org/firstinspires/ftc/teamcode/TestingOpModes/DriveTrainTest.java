@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import android.util.Log;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by Mehmet on 10/25/2017.
  */
+@Disabled
 @TeleOp(name="DriveTrainTest", group="Testing")
 public class DriveTrainTest extends OpMode {
     DcMotor leftFront,rightFront,leftBack,rightBack;

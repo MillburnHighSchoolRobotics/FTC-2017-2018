@@ -25,9 +25,9 @@ public class Rotate extends Command {
     public static final double THRESHOLD = 0;
     //KU:  0.0351875, 0.0377188, 0.04025, 0.04102
     //KU: 0.0377188; TU: 106 0.04102 TU = 80
-    public static final double KP =  0.02719146;
-    public static final double KI = 0.0005724517895; //0.0005131034;
-    public static final double KD = 0.3228985875; //0.24273;
+    public static final double KP =  0.0117;
+    public static final double KI = 0.00039; //0.0005131034;
+    public static final double KD = 0.08775; //0.24273;
 
     public static final double MIN_MAX_POWER = .99;
 

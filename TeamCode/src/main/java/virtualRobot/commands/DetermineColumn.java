@@ -1,9 +1,8 @@
-package virtualRobot.logicThreads.testing;
+package virtualRobot.commands;
 
 import android.graphics.Bitmap;
 import android.util.Log;
 
-import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -13,19 +12,18 @@ import org.opencv.imgproc.Imgproc;
 
 import java.util.Arrays;
 
-import virtualRobot.LogicThread;
 import virtualRobot.VuforiaLocalizerImplSubclass;
-import virtualRobot.utils.BetterLog;
 import virtualRobot.utils.GlobalUtils;
 
 /**
- * Created by david on 2/12/18.
+ * Created by Ethan Mak on 2/16/2018.
  */
 
-public class AlignmentTestLogic extends LogicThread {
+public class DetermineColumn extends Command {
     private int width, height;
 
     private VuforiaLocalizerImplSubclass vuforiaInstance;
+
 
     final int hue = 86; //107
     final int sat = 120; //143
@@ -35,12 +33,12 @@ public class AlignmentTestLogic extends LogicThread {
     final int widthOfStupidBarThatsInTheWay = 100; //TODO: tune this stupid value
 
     @Override
-    protected void realRun() throws InterruptedException {
+    public boolean changeRobotState() throws InterruptedException {
 //        robot.initCTelemetry();
         vuforiaInstance = GlobalUtils.vuforiaInstance;
         width = vuforiaInstance.rgb.getWidth();
         height = vuforiaInstance.rgb.getHeight();
-        int target = (int)(Math.random() * 3);
+        int target = (int) (Math.random() * 3);
         robot.addToTelemetry("Target", target);
         int cutoff = 40;
         //Start CV
@@ -51,7 +49,7 @@ public class AlignmentTestLogic extends LogicThread {
             Bitmap bm = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
             bm.copyPixelsFromBuffer(vuforiaInstance.rgb.getPixels());
             Utils.bitmapToMat(bm, img);
-            Imgproc.resize(img, img, new Size(0,0), 0.3, 0.3, Imgproc.INTER_LINEAR);
+            Imgproc.resize(img, img, new Size(0, 0), 0.3, 0.3, Imgproc.INTER_LINEAR);
             Mat hsv = new Mat();
             Imgproc.GaussianBlur(img, hsv, new Size(5, 5), 0);
             Imgproc.cvtColor(hsv, hsv, Imgproc.COLOR_RGB2HSV);
@@ -67,7 +65,7 @@ public class AlignmentTestLogic extends LogicThread {
 //            }
             Mat lines = new Mat();
             long timestamp = System.currentTimeMillis();
-            Imgproc.HoughLines(inrange, lines, 1, Math.PI/180, 200/2);
+            Imgproc.HoughLines(inrange, lines, 1, Math.PI / 180, 200 / 2);
             Log.d("Hough Complete", Long.toString(System.currentTimeMillis() - timestamp) + "ms");
             Log.d("Lines", lines.toString());
             int positions[] = new int[4];
@@ -78,14 +76,14 @@ public class AlignmentTestLogic extends LogicThread {
                 if (currentLine[1] > tolerance && currentLine[1] < (Math.PI - tolerance)) continue;
                 boolean interferes = false;
                 for (int j = 0; j < lineCount; j++) {
-                    int dist = (int)Math.abs(Math.abs(currentLine[0]) - positions[j]);
+                    int dist = (int) Math.abs(Math.abs(currentLine[0]) - positions[j]);
                     if (dist < cutoff) {
                         interferes = true;
                         break;
                     }
                 }
                 if (!interferes) {
-                    positions[lineCount] = (int)Math.abs(currentLine[0]);
+                    positions[lineCount] = (int) Math.abs(currentLine[0]);
                     lineCount++;
                 }
             }
@@ -173,7 +171,7 @@ public class AlignmentTestLogic extends LogicThread {
                 int avg = (left + right) / 2;
 //                avg = avg + (int)(avgSpace * 1.5);
                 int offset = avg - (img.cols() / 2);
-                offset -= (int)(avgSpace * 1.5);
+                offset -= (int) (avgSpace * 1.5);
                 robot.addToTelemetry("Offset", offset);
                 robot.addToTelemetry("Avg Space", avgSpace);
                 strafe(0.5 * Math.signum(offset));

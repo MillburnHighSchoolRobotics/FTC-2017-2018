@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 
 /**
  * Created by Mehmet on 11/14/2017.
  */
-
+@Disabled
 public class ODSTest extends OpMode {
 
     OpticalDistanceSensor ODS;

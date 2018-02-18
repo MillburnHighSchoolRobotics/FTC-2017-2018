@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Created by shant on 2/18/2016.
  */
+@Disabled
 public class N60Test extends OpMode {
 
     DcMotor m1;

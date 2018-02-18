@@ -1,6 +1,7 @@
 package virtualRobot;
 
 
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 
 import org.firstinspires.ftc.teamcode.ReflectionUpdateThread;
@@ -16,6 +17,7 @@ import virtualRobot.commands.Command;
 import virtualRobot.commands.SpawnNewThread;
 import virtualRobot.commands.Translate;
 import virtualRobot.utils.BetterLog;
+import virtualRobot.utils.GlobalUtils;
 
 /**
  * Created by ethachu19 on 3/31/17
@@ -88,6 +90,10 @@ public abstract class LogicThread extends Thread {
             }
         }
     }.setParent(this);
+
+    public LogicThread() {
+        super(GlobalUtils.updateThreadGroup, "Logic Thread");
+    }
 
     @Override
     public void run(){

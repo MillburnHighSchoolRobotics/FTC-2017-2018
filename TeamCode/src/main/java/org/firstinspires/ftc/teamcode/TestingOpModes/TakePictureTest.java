@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import virtualRobot.utils.BetterLog;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.vuforia.HINT;
 import com.vuforia.Vuforia;
@@ -25,6 +26,7 @@ import virtualRobot.commands.DavidClass;
  * Created by mehme_000 on 10/7/2016.
  */
 
+@Disabled
 @Autonomous(name ="Sensor: CameraNoBackend", group="Sensor")
 public class TakePictureTest extends LinearOpMode {
     //private TakePictureTestGod tp;

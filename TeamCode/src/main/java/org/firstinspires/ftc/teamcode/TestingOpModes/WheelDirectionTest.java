@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Created by david on 9/29/17.
  */
+@Disabled
 @Autonomous(name = "Testing: Wheel Direction", group = "Testing")
 public class WheelDirectionTest extends OpMode {
     private DcMotor LF, RF, LB, RB;

@@ -1,5 +1,8 @@
 package virtualRobot.hardware;
 
+import android.util.Log;
+
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
 
 import virtualRobot.SallyJoeBot;
@@ -16,12 +19,17 @@ public class Motor {
 	boolean positionReverse;
 	MotorConfigurationType motorType;
 
+	DcMotor.RunMode runMode = DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 
 
     private volatile double power;
+    private volatile int target;
+    private volatile boolean busy;
 
     public Motor() {
         power = 0;
+        target = 0;
+        busy = false;
 		position = new Sensor();
 		positionReverse = false;
     }
@@ -47,7 +55,27 @@ public class Motor {
 		}
     }
 
+    public synchronized void setTargetPositon(int position) {
+		target = position;
+	}
+
+	public synchronized int getTargetPosition() {
+    	return target;
+	}
+
+	public synchronized void setBusy(boolean b) {
+    	this.busy = b;
+	}
+
+	public synchronized boolean isBusy() {
+    	return busy;
+	}
+
 	public synchronized Motor setMotorType(MotorConfigurationType type) { motorType = type; return this; }
+
+	public synchronized void setMode(DcMotor.RunMode mode) { runMode = mode;  if (mode == DcMotor.RunMode.RUN_TO_POSITION) busy = true;}
+
+	public synchronized DcMotor.RunMode getMode() { return runMode; }
 
 	public synchronized MotorConfigurationType getMotorType() { return motorType; }
 

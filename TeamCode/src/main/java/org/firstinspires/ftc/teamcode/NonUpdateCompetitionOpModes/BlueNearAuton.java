@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.NonUpdateCompetitionOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 /**
  * Created by Mehmet on 10/27/2017.
  */
-
+@Disabled
 @Autonomous(name="Blue Near Jewel Park", group="DumbComp")
 public class BlueNearAuton extends LinearOpMode {
     private DcMotor leftFront,rightFront,leftBack,rightBack;

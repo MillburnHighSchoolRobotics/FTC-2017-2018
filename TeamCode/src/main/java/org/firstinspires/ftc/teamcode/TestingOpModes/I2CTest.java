@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cController;
@@ -12,7 +13,7 @@ import com.qualcomm.robotcore.hardware.I2cDeviceSynchSimple;
 /**
  * Created by ethachu19 on 11/3/2016.
  */
-
+@Disabled
 @Autonomous(name = "Sensor: I2CTest", group = "Sensor")
 public class I2CTest extends OpMode {
     I2cDeviceSynchSimple device;

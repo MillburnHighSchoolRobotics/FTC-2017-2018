@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import android.graphics.Bitmap;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -21,7 +22,7 @@ import virtualRobot.telemetry.MatConverterFactory;
 /**
  * Created by david on 11/7/17.
  */
-
+@Disabled
 @TeleOp( name="OpenCVTelemetryTest", group="Testing" )
 public class OpenCVTelemetryTest extends LinearOpMode {
 

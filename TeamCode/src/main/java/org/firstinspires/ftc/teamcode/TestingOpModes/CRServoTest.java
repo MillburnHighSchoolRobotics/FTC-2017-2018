@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -8,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * Created by ethachu19 on 10/21/2016.
  */
-
+@Disabled
 @TeleOp(name = "CRServoTest", group = "Test Components")
 public class CRServoTest extends OpMode {
 

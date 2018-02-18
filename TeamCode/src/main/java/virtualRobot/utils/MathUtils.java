@@ -29,4 +29,13 @@ public class MathUtils {
             return false;
         return Math.abs(d-e) < tolerance;
     }
+
+    public static double wrap(double d, double min, double max) {
+        if (!equals(d, min) &&d < min) {
+            d = max - (min - d);
+        } else if (!equals(d, max) && d > max) {
+            d = min + (d - max);
+        }
+        return d;
+    }
 }

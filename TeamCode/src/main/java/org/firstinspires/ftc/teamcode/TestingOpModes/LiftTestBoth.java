@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,6 +11,7 @@ import virtualRobot.PIDController;
 /**
  * Created by shant on 2/14/2016.
  */
+@Disabled
 @TeleOp(name = "Test: Whole Lift", group = "Tests")
 public class LiftTestBoth extends OpMode {
     DcMotor liftLeft;

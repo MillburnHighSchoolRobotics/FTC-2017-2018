@@ -2,12 +2,14 @@ package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 /**
  * Created by david on 12/14/17.
  * class made by mehmet for weird adafruit stuff
  */
+@Disabled
 @Autonomous(name = "Autonomous: adafruitRGBTest", group = "Testing")
 public class AdafruitRGBTest extends OpMode{
     AdafruitI2cColorSensor sensorRGB;

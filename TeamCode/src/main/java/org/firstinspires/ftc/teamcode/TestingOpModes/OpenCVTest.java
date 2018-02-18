@@ -7,6 +7,7 @@ import retrofit2.Retrofit;
 import virtualRobot.utils.BetterLog;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -37,7 +38,7 @@ import virtualRobot.telemetry.MatConverterFactory;
 /**
  * Created by Ethan Mak on 8/31/2017.
  */
-
+@Disabled
 @Autonomous(name = "Testing: OpenCV Test", group = "Testing")
 public class OpenCVTest extends LinearOpMode {
     ElapsedTime time = new ElapsedTime();

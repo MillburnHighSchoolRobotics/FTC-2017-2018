@@ -6,6 +6,7 @@ import com.qualcomm.hardware.lynx.LynxUsbDevice;
 import com.qualcomm.hardware.lynx.commands.standard.LynxDiscoveryCommand;
 import com.qualcomm.hardware.lynx.commands.standard.LynxSetModuleLEDColorCommand;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.configuration.LynxUsbDeviceConfiguration;
 
@@ -14,7 +15,7 @@ import com.qualcomm.robotcore.hardware.configuration.LynxUsbDeviceConfiguration;
  *
  * Used to test the LynxModule object and the command system for the module
  */
-
+@Disabled
 @Autonomous(name="Shenanigans", group = "Testing")
 public class ShenanigansOpMode extends OpMode {
     byte purple = (byte) 153;

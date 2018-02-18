@@ -21,6 +21,11 @@ public abstract class Command  {
     private final HashMap<Condition, String> conditionals = new HashMap<>();
     private final AtomicBoolean stopCommand = new AtomicBoolean(false);
     protected LogicThread parentThread = null;
+    protected SallyJoeBot robot;
+
+    protected Command() {
+        robot = Command.ROBOT;
+    }
 
     /**
      * To evaluate the action of the string and act accordingly

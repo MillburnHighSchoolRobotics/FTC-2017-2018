@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.ExampleOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -18,6 +19,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * <p/>
  * Created by shant on 11/24/2015.
  */
+@Disabled
 public class SBDriveTest extends OpMode {
     DcMotor rightFront, rightBack, leftFront, leftBack;
     Servo backShieldRight, backShieldLeft, frontShield;

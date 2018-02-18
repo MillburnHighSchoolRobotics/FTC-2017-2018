@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Created by Yanjun on 1/16/2016.
  */
+@Disabled
 @Autonomous(name = "Testing: WheelTest", group = "Testing")
 public class WheelTest extends LinearOpMode {
     @Override

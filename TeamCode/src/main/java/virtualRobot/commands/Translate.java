@@ -1,6 +1,8 @@
 package virtualRobot.commands;
 
 
+import android.util.Log;
+
 import virtualRobot.utils.BetterLog;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -68,7 +70,7 @@ public class Translate extends Command {
     }
 
     public Translate() {
-        runMode = RunMode.WITH_PID;
+        runMode = RunMode.USING_ENCODERS;
 
         LFtranslateController = new PIDController(KP, KI, KD, THRESHOLD);
         RFtranslateController = new PIDController(KP, KI, KD, THRESHOLD);
@@ -855,6 +857,13 @@ public class Translate extends Command {
                 }
                 break;
 
+            case USING_ENCODERS:
+                Log.d("Run", "Translate USING ENCODERS");
+                if (timeLimit == -1)
+                    timeLimit = 30000;
+                robot.encoderDrive(maxPower,LFtranslateController.getTarget()*multiplier[0],LBtranslateController.getTarget()*multiplier[1],RFtranslateController.getTarget()*multiplier[2],RBtranslateController.getTarget()*multiplier[3],timeLimit);
+                break;
+
             default:
                 break;
         }
@@ -901,7 +910,8 @@ public class Translate extends Command {
         CUSTOM,
         WITH_ENCODERS,
         WITH_PID,
-        HEADING_ONLY
+        HEADING_ONLY,
+        USING_ENCODERS
     }
 
     public enum Direction {

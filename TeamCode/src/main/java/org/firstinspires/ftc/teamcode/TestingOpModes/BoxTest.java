@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by Ethan Mak on 11/30/2017.
  */
-
+@Disabled
 public class BoxTest extends OpMode {
     Servo boxLeft, boxRight, intakeLeft, intakeRight, clawLeft, clawRight;
     @Override

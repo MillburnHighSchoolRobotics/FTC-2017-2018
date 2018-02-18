@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import android.util.Log;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,7 +13,7 @@ import virtualRobot.utils.MathUtils;
 /**
  * Created by david on 10/9/17.
  */
-
+@Disabled
 @TeleOp(name="AldenTeleop", group="LALALA")
 public class AldenTeleOpThingy extends OpMode {
 //    DcMotor motor1;

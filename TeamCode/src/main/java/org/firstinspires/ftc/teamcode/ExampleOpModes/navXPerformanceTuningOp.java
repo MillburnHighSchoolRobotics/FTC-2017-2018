@@ -35,6 +35,7 @@ import android.os.SystemClock;
 
 import com.kauailabs.navx.ftc.AHRS;
 import com.kauailabs.navx.ftc.navXPerformanceMonitor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -63,6 +64,7 @@ import java.text.DecimalFormat;
  * 3) Lower the navX-Model device update rate until the number of missed
  * samples over the last minute reaches zero.
  */
+@Disabled
 public class navXPerformanceTuningOp extends OpMode {
 
   /* This is the port on the Core Device Interface Module */

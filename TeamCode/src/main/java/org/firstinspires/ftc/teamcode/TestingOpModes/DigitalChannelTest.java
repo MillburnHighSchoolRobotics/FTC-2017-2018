@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DigitalChannelController;
@@ -8,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannelController;
 /**
  * Created by ethachu19 on 11/1/2016.
  */
-
+@Disabled
 @Autonomous(name = "Sensor: Test Digital Channel", group = "Sensor")
 public class DigitalChannelTest extends OpMode {
     DigitalChannel channel;

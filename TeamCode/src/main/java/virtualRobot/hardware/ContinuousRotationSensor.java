@@ -1,37 +1,42 @@
 package virtualRobot.hardware;
 
+import android.util.Log;
+
+import virtualRobot.utils.MathUtils;
+
 /**
  * Created by david on 2/16/18.
  */
 
 public class ContinuousRotationSensor extends Sensor {
     //offset is the amount of revolutions
+    double lastAngle;
+    boolean firstTime;
 
-    @Override
-    public synchronized void clearValue() {
-        offset = 0;
-    }
-
-    @Override
-    public synchronized double getValue() {
-        return hardValue + (offset * 360);
+    public ContinuousRotationSensor() {
+        super();
+        lastAngle = hardValue;
+        firstTime = true;
     }
 
     @Override
     public synchronized void setRawValue(double hardValue) {
-        if (hardValue > 180 || hardValue < -180) return;
-        double oldValue = super.hardValue;
-        if (Math.abs(oldValue - hardValue) > 180) {
-            int oldSign = (int)Math.signum(oldValue);
-            offset += oldSign; //up one revolution if 1 --> -1, down one if -1 --> 1
+        if (firstTime) {
+            firstTime = false;
+            lastAngle = hardValue;
+            super.setRawValue(hardValue);
+            return;
         }
-        super.setRawValue(hardValue);
-    }
+        double delta = hardValue - lastAngle;
+        if (MathUtils.equals(delta, 0, 0.0001))
+            delta = 0;
+        if (delta < -180) {
+            this.hardValue += ((180-lastAngle) + (hardValue + 180));
+        } else if (delta > 180) {
+            this.hardValue -= ((lastAngle + 180) + (180 - hardValue));
+        } else
+            this.hardValue += delta;
 
-    //TODO: Test this function
-    @Override
-    public synchronized void setValue(double relVal) {
-        offset = (int)Math.floor((relVal + 180)/360);
-        hardValue = relVal - (offset * 360);
+        lastAngle = hardValue;
     }
 }

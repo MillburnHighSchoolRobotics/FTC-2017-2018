@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TestingOpModes;
 
 import android.util.Log;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,6 +14,7 @@ import virtualRobot.utils.MathUtils;
  * Created by ethan on 10/5/17.
  */
 
+@Disabled
 @TeleOp(name="MainTeleop", group="LALALA")
 public class TestLiftOpMode extends OpMode {
     DcMotor motor1;
