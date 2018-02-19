@@ -6,11 +6,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 import virtualRobot.commands.EthanClass;
 import virtualRobot.commands.GetVuMarkSide;
+import virtualRobot.commands.RotateEncoder;
 import virtualRobot.commands.Translate;
 import virtualRobot.hardware.DumbColorSensor;
 import virtualRobot.hardware.Motor;
 import virtualRobot.hardware.Servo;
 import virtualRobot.logicThreads.AutonomousLogicThread;
+import virtualRobot.utils.GlobalUtils;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark.LEFT;
 import static org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark.UNKNOWN;
@@ -20,145 +22,64 @@ import static org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryV
  */
 
 public class RedFarBasicAutoLogic extends AutonomousLogicThread {
-    private Motor leftFront, leftBack, rightFront, rightBack, encoder;
-    private Servo jewelArm;
-    private DumbColorSensor colorSensor;
-    private static final double RIGHTPOS = -0.2, LEFTPOS = 1.2, CENTERPOS = 0.5;
+    private double power = 0.5;
 
     @Override
     protected void realRun() throws InterruptedException {
-        double timeS = System.currentTimeMillis();
-        Log.d("Progress", "Began");
-        robot.getJewelHitter().setPosition(CENTERPOS); //????????
+        int rot = 0;
+        int push = 0;
 
-        colorSensor = robot.getColorSensor();
-        jewelArm = robot.getJewelServo();
-//        jewelArm.setPosition(0.67);
-//        Thread.sleep(2000);
-        robot.addToTelemetry("Time Difference:", System.currentTimeMillis() - timeS);
-        Log.d("Progress", "Time Difference:" + String.valueOf(System.currentTimeMillis() - timeS));
-        int dist = 0;
-        int travel = 200;
-        double power = -0.35;
-        double turn = power * 2;
-        int startPosition;
-//        Thread.sleep(1000);
+        if (GlobalUtils.withoutVumark)
+            currentVuMark = GlobalUtils.forcedVumark;
+        else
+            runCommand(new GetVuMarkSide(1000));
 
-        runCommand(new GetVuMarkSide(2000));
-//        int choice = (int)Math.floor(Math.random() * 3);
-//        int choice = 1;
-//        currentVuMark = new RelicRecoveryVuMark[] {LEFT, CENTER, RIGHT}[choice]; //lmao why does this work
-//        currentVuMark = GlobalUtils.forcedVumark;
         robot.addToTelemetry("Current VuMark: ", currentVuMark);
-//        if (true) {
-        robot.addToTelemetry("Hello", " there");
-        Servo hitter = robot.getJewelHitter();
-        jewelArm.setPosition(0.15);
-        Thread.sleep(500);
-        hitter.setPosition(CENTERPOS);
-        Thread.sleep(200);
-        jewelArm.setPosition(0.62);
+
+        robot.moveJewelServo(true);
         Thread.sleep(1000);
-        int red = colorSensor.getRed();
-        int blue = colorSensor.getBlue();
+
+        int red = robot.getColorSensor().getRed();
+        int blue = robot.getColorSensor().getBlue();
         if ((red != 0 || blue != 0)) {
-            blue = Math.max(1, blue);
             double rat = red / (double) blue;
             robot.addToTelemetry("CS", red + " " + blue + " " + rat);
-            if (rat <= 0.6) {
-                hitter.setPosition(RIGHTPOS);
-                Thread.sleep(1000);
-                hitter.setPosition(CENTERPOS);
+            if (rat >= 1.5) {
+                robot.moveJewelRotater(1);
                 Thread.sleep(500);
-            } else if (rat >= 1.5) {
-                hitter.setPosition(LEFTPOS);
-                Thread.sleep(1000);
-                hitter.setPosition(CENTERPOS);
+                robot.moveJewelRotater(0);
+            } else if (rat <= 0.6) {
+                robot.moveJewelRotater(-1);
                 Thread.sleep(500);
+                robot.moveJewelRotater(0);
             }
-            robot.addToProgress("Complete Jewel Servo");
         }
-
-        jewelArm.setPosition(0);
-        Log.d("Progress", "Jewel Completed");
+        robot.moveJewelServo(false);
         Thread.sleep(500);
-//        }
-/*
-        dist = 0;
-        int rot = 1450;
-        if (currentVuMark == UNKNOWN)
+
+        rot = 0;
+        if (currentVuMark == UNKNOWN) {
             currentVuMark = LEFT;
+        }
         switch (currentVuMark) {
-            case LEFT:
-                dist = 1500; //1926
-                rot += 100; //rotate more
+            case RIGHT:
+                rot = 180-15; //1926
+                push = 700;
                 break;
             case CENTER:
-                dist = 1950; //2126
-                rot -= 100;
+                rot = 180-37; //2126
+                push = 850;
                 break;
-            case RIGHT:
-                dist = 2280; //2326
+            case LEFT:
+                rot = 180-60;
+                push = 1000;
                 break;
         }
-
-        Log.d("Progress", "Vumark " + currentVuMark.name());
-
-        startPosition = encoder.getPosition();
-        leftFront.setPower(-power);
-        leftBack.setPower(-power);
-        rightFront.setPower(-power);
-        rightBack.setPower(-power);
-
-        while (encoder.getPosition() - startPosition > -dist && !Thread.interrupted()) {
-        }
-        robot.stopMotors();
-
-        robot.addToProgress("Ended Front");
-
-        Thread.sleep(1000);
-        startPosition = encoder.getPosition();
-        leftFront.setPower(-power * 1.5);
-        leftBack.setPower(-power * 1.5);
-        rightFront.setPower(power * 1.5);
-        rightBack.setPower(power * 1.5);
-
-        while (encoder.getPosition() - startPosition > -rot && !Thread.interrupted()) {
-        }
-
-        robot.stopMotors();
-
-        robot.addToProgress("Ended Rot");
-        Thread.sleep(1000);
-        startPosition = leftBack.getPosition();
-        leftFront.setPower(power * 1.5);
-        leftBack.setPower(power * 1.5);
-        rightFront.setPower(power * 1.5);
-        rightBack.setPower(power * 1.5);
-
-        while (leftBack.getPosition() - startPosition < 1500 && !Thread.interrupted()) {
-        }
-        robot.stopMotors();
-
-
-        robot.addToProgress("Ended Deposit");
-        Thread.sleep(1500);
-        robot.moveClaw(true);
-        Thread.sleep(2000);
-
-        startPosition = leftBack.getPosition();
-
-//        Thread.sleep(1000);
-        leftFront.setPower(-power);
-        leftBack.setPower(-power);
-        rightFront.setPower(-power);
-        rightBack.setPower(-power);
-
-        while (leftBack.getPosition() - startPosition > -500 && !Thread.interrupted()) {
-        }
-        robot.stopMotors();
-
-        robot.addToProgress("Ended Backup");
-        */
+        runCommand(new Translate(1200, Translate.Direction.FORWARD,0,power));
+        runCommand(new RotateEncoder(rot,power));
+        robot.moveFipper(true);
+        Thread.sleep(500);
+        runCommand(new Translate(push, Translate.Direction.BACKWARD, 0, power));
+        runCommand(new Translate(300, Translate.Direction.FORWARD, 0, power));
     }
 }

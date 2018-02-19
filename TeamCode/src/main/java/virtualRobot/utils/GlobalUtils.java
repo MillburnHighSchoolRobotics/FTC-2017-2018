@@ -30,6 +30,7 @@ public class GlobalUtils {
     public static ElapsedTime runtime = new ElapsedTime();
     public static ThreadGroup updateThreadGroup = null;
     public static PrintWriter crashLogger = null;
+    public static final boolean withoutVumark = true;
 
     public static Activity getCurrentActivity() {
         if (currentActivity == null)

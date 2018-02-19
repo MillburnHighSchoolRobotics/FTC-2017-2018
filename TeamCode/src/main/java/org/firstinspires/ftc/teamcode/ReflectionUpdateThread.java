@@ -189,7 +189,6 @@ public abstract class ReflectionUpdateThread extends OpMode {
                             }
                             motor.setMode(metadata.mode());
                             motor.setDirection(metadata.direction());
-                            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                             vMotor.setMotorType(motor.getMotorType());
                             vMotor.setPositionReversed(metadata.encoderReversed());
                             vMotors.add(new Pair(metadata.name(), vMotor));

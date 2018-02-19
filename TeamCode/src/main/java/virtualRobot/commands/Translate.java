@@ -3,6 +3,8 @@ package virtualRobot.commands;
 
 import android.util.Log;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+
 import virtualRobot.utils.BetterLog;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -10,6 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import virtualRobot.Condition;
 import virtualRobot.PIDController;
 import virtualRobot.SallyJoeBot;
+import virtualRobot.utils.GlobalUtils;
 import virtualRobot.utils.MathUtils;
 
 /**
@@ -221,8 +224,8 @@ public class Translate extends Command {
         this(target, direction, angleModifier, maxPower);
 
         this.referenceAngle = referenceAngle;
-        headingController.setTarget(this.referenceAngle + (blueSide ? -180 : 0) + (globalReferenceAngleModifier));
-        headingOnlyController.setTarget(this.referenceAngle + (blueSide ? -180 : 0) + (globalReferenceAngleModifier));
+        headingController.setTarget(referenceAngle);
+        headingOnlyController.setTarget(referenceAngle);
 
     }
 
@@ -858,12 +861,61 @@ public class Translate extends Command {
                 break;
 
             case USING_ENCODERS:
-                Log.d("Run", "Translate USING ENCODERS");
+//                Log.d("Run", "Translate USING ENCODERS");
                 if (timeLimit == -1)
                     timeLimit = 30000;
                 robot.encoderDrive(maxPower,LFtranslateController.getTarget()*multiplier[0],LBtranslateController.getTarget()*multiplier[1],RFtranslateController.getTarget()*multiplier[2],RBtranslateController.getTarget()*multiplier[3],timeLimit);
                 break;
+            case USING_ENCODERS_WITH_HEADING:
+                if (timeLimit == -1)
+                    timeLimit = 30000;
+                DcMotor.RunMode LFMode = robot.getLFMotor().getMode();
+                DcMotor.RunMode LBMode = robot.getLBMotor().getMode();
+                DcMotor.RunMode RFMode = robot.getRFMotor().getMode();
+                DcMotor.RunMode RBMode = robot.getRBMotor().getMode();
 
+//                Log.d("Progress", "hit encoderDrive " + timeLimit);
+                int LFTarget = (int) (robot.getLFMotor().getPosition() + LFtranslateController.getTarget()*multiplier[0]);
+                int LBTarget = (int) (robot.getLBMotor().getPosition() + LBtranslateController.getTarget()*multiplier[1]);
+                int RFTarget = (int) (robot.getRFMotor().getPosition() + RFtranslateController.getTarget()*multiplier[2]);
+                int RBTarget = (int) (robot.getRBMotor().getPosition() + RBtranslateController.getTarget()*multiplier[3]);
+                robot.getLFMotor().setTargetPositon(LFTarget);
+                robot.getLBMotor().setTargetPositon(LBTarget);
+                robot.getRFMotor().setTargetPositon(RFTarget);
+                robot.getRBMotor().setTargetPositon(RBTarget);
+
+                // Turn On RUN_TO_POSITION
+                robot.getLFMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.getLBMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.getRFMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.getRBMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                // reset the timeout time and start motion.
+                GlobalUtils.runtime.reset();
+                robot.getLFMotor().setPower(Math.abs(maxPower));
+                robot.getLFMotor().setPower(Math.abs(maxPower));
+                robot.getLFMotor().setPower(Math.abs(maxPower));
+                robot.getLFMotor().setPower(Math.abs(maxPower));
+
+                double PIDValue;
+                while ((GlobalUtils.runtime.milliseconds() < timeLimit) &&
+                        (robot.getLFMotor().isBusy() && robot.getLBMotor().isBusy() && robot.getRFMotor().isBusy() && robot.getRBMotor().isBusy()) &&
+                        (!Thread.currentThread().isInterrupted())) {
+                    PIDValue = headingController.getPIDOutput(robot.getImu().getHeading())* Math.abs(maxPower);
+                    robot.getLFMotor().setPower(Math.abs(maxPower) + PIDValue);
+                    robot.getLFMotor().setPower(Math.abs(maxPower) + PIDValue);
+                    robot.getLFMotor().setPower(Math.abs(maxPower) - PIDValue);
+                    robot.getLFMotor().setPower(Math.abs(maxPower) - PIDValue);
+                }
+                // Stop all motion;
+                robot.stopMotors();
+
+                // Turn off RUN_TO_POSITION
+                robot.getLFMotor().setMode(LFMode);
+                robot.getLBMotor().setMode(LBMode);
+                robot.getRFMotor().setMode(RFMode);
+                robot.getRBMotor().setMode(RBMode);
+                break;
             default:
                 break;
         }
@@ -911,7 +963,8 @@ public class Translate extends Command {
         WITH_ENCODERS,
         WITH_PID,
         HEADING_ONLY,
-        USING_ENCODERS
+        USING_ENCODERS,
+        USING_ENCODERS_WITH_HEADING
     }
 
     public enum Direction {

@@ -65,7 +65,7 @@ public class SallyJoeBot {
     private Servo relicArmClaw;
     @UpdateColorSensor(name = "jewelColorSensor", enabled = true)
     private DumbColorSensor colorSensor;
-    @UpdateServo(name = "jewelArm", initpos = 0.87, enabled = true)
+    @UpdateServo(name = "jewelArm", initpos = 0.90, enabled = true)
     private Servo jewelServo;
     @UpdateServo(name = "jewelHitter", initpos = 0.5, enabled = true)
     private Servo jewelHitter;
@@ -178,7 +178,7 @@ public class SallyJoeBot {
     }
 
     public synchronized void moveJewelServo(boolean isOpen) {
-        jewelServo.setPosition(isOpen ? 0.40 : 0.87);
+        jewelServo.setPosition(isOpen ? 0.42 : 0.90);
     }
 
     public synchronized void moveJewelRotater(int dir) {
@@ -231,18 +231,10 @@ public class SallyJoeBot {
         RFMotor.setPower(Math.abs(speed));
         RBMotor.setPower(Math.abs(speed));
 
-        // keep looping while we are still active, and there is time left, and both motors are running.
-        // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-        // its target position, the motion will stop.  This is "safer" in the event that the robot will
-        // always end the motion as soon as possible.
-        // However, if you require that BOTH motors have finished their moves before the robot continues
-        // onto the next step, use (isBusy() || isBusy()) in the loop test.
         while ((GlobalUtils.runtime.milliseconds() < timeoutS) &&
                 (LFMotor.isBusy() && LBMotor.isBusy() && RFMotor.isBusy() && RBMotor.isBusy()) &&
                 (!Thread.currentThread().isInterrupted())) {
-//            Log.d("Busy", LFMotor.isBusy() + " " + LBMotor.isBusy() + " " +  RFMotor.isBusy() + " " +  RBMotor.isBusy());
         }
-        Log.d("Progress", "end encoderDrive");
         // Stop all motion;
         stopMotors();
 
@@ -294,6 +286,7 @@ public class SallyJoeBot {
                 .addConverterFactory(MatConverterFactory.create())
                 .build()
                 .create(CTelemetry.class);
+
     }
 
     public synchronized CTelemetry getCTelemetry() {
