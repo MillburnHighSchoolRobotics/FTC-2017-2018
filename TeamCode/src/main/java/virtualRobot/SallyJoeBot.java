@@ -1,16 +1,16 @@
 package virtualRobot;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.qualcomm.robotcore.BuildConfig;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
+import retrofit2.Call;
 import retrofit2.Retrofit;
-import virtualRobot.hardware.ContinuousRotationServo;
 import virtualRobot.hardware.DumbColorSensor;
 import virtualRobot.hardware.IMU;
 import virtualRobot.hardware.Motor;
@@ -19,8 +19,11 @@ import virtualRobot.hardware.Servo;
 import virtualRobot.hardware.StateSensor;
 import virtualRobot.telemetry.CTelemetry;
 import virtualRobot.telemetry.MatConverterFactory;
+import virtualRobot.telemetry.NonInterferingCallback;
 import virtualRobot.utils.GlobalUtils;
 
+
+@SuppressWarnings("unchecked") //lmao
 /**
  * Created by DOSullivan on 9/14/16.
  * All of our our virtual hardware and there getters are housed in SallyJoeBot
@@ -80,6 +83,7 @@ public class SallyJoeBot {
     //CTelemetry
     private CTelemetry ctel;
     private final String ipaddr = org.firstinspires.ftc.teamcode.BuildConfig.CTELEM_SERVER_IP;
+    private ConcurrentHashMap<String, Call> endpointController;
 
     public static double COUNTS_PER_MOTOR_REV;    // eg: TETRIX Motor Encoder
     public static double DRIVE_GEAR_REDUCTION;     // This is < 1.0 if geared UP
@@ -283,7 +287,41 @@ public class SallyJoeBot {
                 .addConverterFactory(MatConverterFactory.create())
                 .build()
                 .create(CTelemetry.class);
+        endpointController = new ConcurrentHashMap<String, Call>();
+    }
 
+    public synchronized @NonNull Call reserveEndpoint(String endpoint, Call call) {
+        if (!endpointController.contains(endpoint) || endpointController.get(endpoint) == null) {
+            endpointController.put(endpoint, call);
+            return call;
+        } else {
+            return endpointController.get(endpoint);
+        }
+    }
+
+    public synchronized Call getEndpointReservation(String endpoint) {
+        return endpointController.get(endpoint);
+    }
+
+    public synchronized void releaseEndpoint(String endpoint) {
+        endpointController.remove(endpoint);
+    }
+
+    public synchronized boolean safeCall(Call call, boolean override) {
+        String endpoint = call.request().url().encodedPath();
+        if (getEndpointReservation(endpoint) == null) {
+            reserveEndpoint(endpoint, call);
+            call.enqueue(new NonInterferingCallback());
+            return true;
+        } else if (override) {
+            getEndpointReservation(endpoint).cancel();
+            releaseEndpoint(endpoint);
+            reserveEndpoint(endpoint, call); //lol
+            call.enqueue(new NonInterferingCallback());
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public synchronized CTelemetry getCTelemetry() {

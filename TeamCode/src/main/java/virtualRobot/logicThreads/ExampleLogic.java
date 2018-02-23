@@ -3,6 +3,7 @@ package virtualRobot.logicThreads;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import virtualRobot.LogicThread;
+import virtualRobot.commands.DetermineColumn;
 import virtualRobot.commands.Rotate;
 import virtualRobot.monitorThreads.TimeMonitor;
 
@@ -12,7 +13,7 @@ import virtualRobot.monitorThreads.TimeMonitor;
  *
  */
 
-public class ExampleLogic extends LogicThread {
+public class ExampleLogic extends AutonomousLogicThread {
     @Override
     protected void addPresets() {
 
@@ -21,5 +22,6 @@ public class ExampleLogic extends LogicThread {
     @Override
     protected void realRun() throws InterruptedException {
 //        runCommand(new Rotate(90))
+        while (true) runCommand(new DetermineColumn());
     }
 }
