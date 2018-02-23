@@ -25,11 +25,13 @@ public class DetermineColumn extends Command {
     private VuforiaLocalizerImplSubclass vuforiaInstance;
 
 
+    //These are some hardcoded values, tuned for blue
     final int hue = 86; //107
     final int sat = 120; //143
     final int val = 12; //84
     final int del = 150; //128
     final double tolerance = 0.4;
+    //The relic arm stand gets in the way, so I just ignore it lol
     final int widthOfStupidBarThatsInTheWay = 100; //TODO: tune this stupid value
 
     @Override
@@ -38,9 +40,10 @@ public class DetermineColumn extends Command {
         vuforiaInstance = GlobalUtils.vuforiaInstance;
         width = vuforiaInstance.rgb.getWidth();
         height = vuforiaInstance.rgb.getHeight();
-        int target = (int) (Math.random() * 3);
+        int target = (int) (Math.random() * 3); // The target column. 0 = LEFT, 1 = CENTER, 2 = RIGHT
         robot.addToTelemetry("Target", target);
-        int cutoff = 40;
+        int cutoff = 40; //cutoff constant.  lines that are closer than this value to another vertical line are ignored. you'll see what that means later
+
         //Start CV
         while (true) {
 //            robot.stopMotors();
@@ -48,15 +51,15 @@ public class DetermineColumn extends Command {
             Mat img = new Mat();
             Bitmap bm = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
             bm.copyPixelsFromBuffer(vuforiaInstance.rgb.getPixels());
-            Utils.bitmapToMat(bm, img);
-            Imgproc.resize(img, img, new Size(0, 0), 0.3, 0.3, Imgproc.INTER_LINEAR);
+            Utils.bitmapToMat(bm, img); //get the pic
+            Imgproc.resize(img, img, new Size(0, 0), 0.3, 0.3, Imgproc.INTER_LINEAR); //resize the image so that hough lines goes faster.  you might need to lower the amount of downscaling for reasons explained later, but for now the image is reduced by 30% on each dimension
             Mat hsv = new Mat();
-            Imgproc.GaussianBlur(img, hsv, new Size(5, 5), 0);
-            Imgproc.cvtColor(hsv, hsv, Imgproc.COLOR_RGB2HSV);
-            Mat element = Imgproc.getStructuringElement(Imgproc.CV_SHAPE_RECT, new Size(3, 10));
+            Imgproc.GaussianBlur(img, hsv, new Size(5, 5), 0); //blur the image
+            Imgproc.cvtColor(hsv, hsv, Imgproc.COLOR_RGB2HSV); //RGB -> HSV
+            Mat element = Imgproc.getStructuringElement(Imgproc.CV_SHAPE_RECT, new Size(3, 10)); //This is a "structuring element" that is shaped like a tall rectangle.
             Mat inrange = new Mat();
-            Core.inRange(hsv, new Scalar(hue, sat, val), new Scalar(hue + del, sat + del, val + del), inrange);
-            Imgproc.morphologyEx(inrange, inrange, Imgproc.MORPH_CLOSE, element);
+            Core.inRange(hsv, new Scalar(hue, sat, val), new Scalar(hue + del, sat + del, val + del), inrange); //you know what inrange is lmao
+            Imgproc.morphologyEx(inrange, inrange, Imgproc.MORPH_CLOSE, element); //this basically closes the gaps between the segments of the cryptobox at far distances. basically, it dilates and then erodes the inranged image.  a dilation means that for each pixel, imagine the structuring element (a tall rectangle) - if there's a pixel of high value in there, the whole bit takes a high value. otherwise the whole bit takes a low value.  erosion is the opposite. the result is that small holes are closed (like the ones between cryptobox segments) but not large ones (like the ones between cryptobox columns) - that's why it's a tall rectangle, so that only vertical distances are closed and not horizontal ones
 //            Imgproc.erode(inrange, inrange, element);
 //            try {
 //                robot.getCTelemetry().sendImage("InRange", inrange).execute();
@@ -65,29 +68,29 @@ public class DetermineColumn extends Command {
 //            }
             Mat lines = new Mat();
             long timestamp = System.currentTimeMillis();
-            Imgproc.HoughLines(inrange, lines, 1, Math.PI / 180, 200 / 2);
+            Imgproc.HoughLines(inrange, lines, 1, Math.PI / 180, 200 / 2); //look at the hough lines documentation - the only things you should really change are the 3rd and last parameter. the last parameter is how hard it is to find a line - the higher it is, the more confident it has to be in the line. the 3rd is the resolution of the distance from the center that the line is. you might want to lower the resolution and change the cutoff to a double/making it smaller OR making the image bigger. when the bot gets further away than the blue line from the cryptobox, the columns start to be less than 40 pixels apart, meaning that it starts ignoring them. the point is, if you want the CV to work from further away, either make the image bigger or the resolution + cutoff smaller.
             Log.d("Hough Complete", Long.toString(System.currentTimeMillis() - timestamp) + "ms");
             Log.d("Lines", lines.toString());
             int positions[] = new int[4];
             int lineCount = 0;
 //            Log.d("Columns", Integer.toString(lines.cols()));
-            for (int i = 0; i < lines.rows() && lineCount < 4; i++) {
-                double[] currentLine = lines.get(i, 0);
-                if (currentLine[1] > tolerance && currentLine[1] < (Math.PI - tolerance)) continue;
+            for (int i = 0; i < lines.rows() && lineCount < 4; i++) { //for each line detected and while the amount of accepted lines is less than 4
+                double[] currentLine = lines.get(i, 0); //get a detected line
+                if (currentLine[1] > tolerance && currentLine[1] < (Math.PI - tolerance)) continue; //check if it's vertical enough. currentLine[1] is theta - the angle of the line perpendicular to the detected line, and running from the detected line to the center.
                 boolean interferes = false;
                 for (int j = 0; j < lineCount; j++) {
-                    int dist = (int) Math.abs(Math.abs(currentLine[0]) - positions[j]);
+                    int dist = (int) Math.abs(Math.abs(currentLine[0]) - positions[j]); //loop through each already accepted line and find the distance between the current line and the accepted one. currentLine[0] is rho - the distance from the center to the detected line
                     if (dist < cutoff) {
-                        interferes = true;
+                        interferes = true; //if it's too close to an already accepted line, then it interferes.
                         break;
                     }
                 }
                 if (!interferes) {
-                    positions[lineCount] = (int) Math.abs(currentLine[0]);
-                    lineCount++;
+                    positions[lineCount] = (int) Math.abs(currentLine[0]); //if it doesnt interfere then add it to the accepted lines
+                    lineCount++; //notice that because of the for loop condition, there will never be more than 4 lines... but there can be less than 4!
                 }
             }
-            Arrays.sort(positions, 0, lineCount);
+            Arrays.sort(positions, 0, lineCount); //sort the positions from leftmost to right most
             int avgSpace = 0;
 //            int avgPos = 0;
             for (int i = 0; i < lineCount; i++) {
@@ -97,9 +100,10 @@ public class DetermineColumn extends Command {
 //            if (lineCount > 0) avgPos /= lineCount;
 //            else avgPos = 0;
             if (lineCount > 1) avgSpace /= (lineCount - 1);
-            else avgSpace = 0;
-            boolean safe = true;
+            else avgSpace = 0; //simple enough calculation of the average space between columns
+            boolean safe = true; //this variable is god, it basically says whether the program could fill in the positions of the rest of the cryptobox. the way i extrapolate the off-screen cryptobox positions is done the way it is because i ran out of time and didnt implement a way for it to track the position of the cryptobox over time and predict movement. actually that would no longer work now that this would be a command. i guess this is the best way to do it. it should work - usually. if not, we can use the bot's previous movements to guess at which one is off-screen. there are few situations where it's unsafe though. also, random note that i cant explain right now bc im running out of time, up there ^^^^ in the hough function, i would recommend you reduce the rho resolution. (3rd parameter)
             if (avgSpace != 0) {
+            //this should be fairly self-explanatory, not going to comment it
                 if (lineCount == 3) {
                     boolean leftOff = positions[0] < avgSpace;
                     boolean rightOff = positions[2] > (img.cols() - avgSpace) - widthOfStupidBarThatsInTheWay;
@@ -135,6 +139,10 @@ public class DetermineColumn extends Command {
                     } else safe = false;
                 } else if (lineCount == 1) safe = false;
             }
+//            THIS NEXT PART IS ACTUAL BLACK MAGIC WIZARDRY INVENTED BY THE OPENCV TEAM TO PERPETUATE THE NEW WORLD ORDER
+//            IDK HOW IT WORKS BUT IT DOES, IT RENDERS LINES IT DETECTS, SO THAT IT CAN SEND TO CTELEMETRY
+//            NO TOUCHY PLS
+//========================================================================================
 //            Mat hough = new Mat();
 //            Imgproc.cvtColor(img, hough, Imgproc.COLOR_RGB2BGR);
 //            if (safe) {
@@ -154,6 +162,7 @@ public class DetermineColumn extends Command {
 //                    //Target lines are green, others are red;
 //                    Imgproc.line(hough, pt1, pt2, new Scalar(0, i == target || i == target + 1 ? 255 : 0, i == target || i == target + 1 ? 0 : 255), 3, Core.LINE_AA, 0);
 //                }
+//                END BLACK MAGIC WIZARDRY
 //                try {
 //                    robot.getCTelemetry().sendImage("Hough", hough).execute();
 //                } catch (IOException e) {
@@ -162,19 +171,19 @@ public class DetermineColumn extends Command {
 //            }
             robot.addToTelemetry("Positions", Arrays.toString(positions));
 //            Log.d("Safe", (avgSpace != 0 && safe + "");
-            if (avgSpace != 0 && safe) {
+            if (avgSpace != 0 && safe) { // ok now here i calculate the offset and stuff
 //                cutoff = avgSpace - 10;
                 int left, right;
                 left = positions[target];
-                right = positions[target + 1];
+                right = positions[target + 1]; //find the left and right target lines
 //                if (left >= 0 && right >= 0) {
-                int avg = (left + right) / 2;
+                int avg = (left + right) / 2; // find the center between them
 //                avg = avg + (int)(avgSpace * 1.5);
-                int offset = avg - (img.cols() / 2);
-                offset -= (int) (avgSpace * 1.5);
+                int offset = avg - (img.cols() / 2); //negative is left, positive is right - distance from the center
+                offset -= (int) (avgSpace * 1.5); //take into account the offset of the phone
                 robot.addToTelemetry("Offset", offset);
                 robot.addToTelemetry("Avg Space", avgSpace);
-                strafe(0.5 * Math.signum(offset));
+                strafe(0.5 * Math.signum(offset)); //idk why this strafe function works but it does - what you need to do with this command is instead of strafing after this is done, set a global offset variable or something idk
                 img.release();
                 hsv.release();
                 inrange.release();
@@ -182,6 +191,9 @@ public class DetermineColumn extends Command {
 //                hough.release();
 //                }
 //                Thread.sleep(200);
+//========================================================================================
+//      HOPE THAT MADE SENSE LMAO, HAVE FUN WARREN (if you want you can wait for me)
+//========================================================================================
             } else {
                 robot.stopMotors();
             }
