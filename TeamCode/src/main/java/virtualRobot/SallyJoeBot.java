@@ -51,17 +51,17 @@ public class SallyJoeBot {
     private Motor rollerRight;
     @UpdateMotor(name = "lift", enabled = true)
     private Motor lift;
-    @UpdateServo(name = "flipper", initpos = 1, enabled = true)
+    @UpdateServo(name = "flipper", initpos = 0.65, enabled = true)
     private Servo flipper;
-    @UpdateServo(name = "rollerLiftLeft", enabled = false)
+    @UpdateServo(name = "rollerLiftLeft",initpos = 0, enabled = false)
     private Servo rollerLiftLeft;
-    @UpdateServo(name = "rollerLiftRight", enabled = false)
+    @UpdateServo(name = "rollerLiftRight",initpos = 1, enabled = false)
     private Servo rollerLiftRight;
-    @UpdateMotor(name = "relicArmWinch", direction = DcMotorSimple.Direction.REVERSE, enabled = false)
+    @UpdateMotor(name = "relicArmWinch", direction = DcMotorSimple.Direction.REVERSE, enabled = true)
     private Motor relicArmWinch;
-    @UpdateCRServo(name = "relicArmWrist", enabled = false)
-    private ContinuousRotationServo relicArmWrist;
-    @UpdateServo(name = "relicArmClaw", enabled = false)
+    @UpdateServo(name = "relicArmWrist", initpos = 0, enabled = true)
+    private Servo relicArmWrist;
+    @UpdateServo(name = "relicArmClaw", enabled = true)
     private Servo relicArmClaw;
     @UpdateColorSensor(name = "jewelColorSensor", enabled = true)
     private DumbColorSensor colorSensor;
@@ -69,8 +69,6 @@ public class SallyJoeBot {
     private Servo jewelServo;
     @UpdateServo(name = "jewelHitter", initpos = 0.5, enabled = true)
     private Servo jewelHitter;
-    @UpdateServo(name = "relicArmRotater", initpos = 0.5, enabled = false)
-    private Servo relicArmRotater;
     @UpdateServo(name = "phoneServo", enabled = false)
     private Servo phoneServo;
     //Sensors
@@ -113,9 +111,8 @@ public class SallyJoeBot {
         rollerRight = new Motor();
 
         relicArmWinch = new Motor();
-        relicArmWrist = new ContinuousRotationServo();
+        relicArmWrist = new Servo();
         relicArmClaw = new Servo();
-        relicArmRotater = new Servo();
 
         jewelServo = new Servo();
         jewelHitter = new Servo();
@@ -165,7 +162,7 @@ public class SallyJoeBot {
         return relicArmWinch;
     }
 
-    public synchronized ContinuousRotationServo getRelicArmWrist() {
+    public synchronized Servo getRelicArmWrist() {
         return relicArmWrist;
     }
 
@@ -297,10 +294,6 @@ public class SallyJoeBot {
         return jewelHitter;
     }
 
-    public Servo getRelicArmRotater() {
-        return relicArmRotater;
-    }
-
     public Motor getRollerRight() {
         return rollerRight;
     }
@@ -318,7 +311,7 @@ public class SallyJoeBot {
     }
 
     public synchronized void moveFipper(boolean isOpen) {
-        flipper.setPosition(isOpen ? 0 : 1);
+        flipper.setPosition(isOpen ? 1 : 0.65);
     }
 
     public Servo getRollerLiftLeft() {

@@ -13,6 +13,7 @@ import java.io.BufferedWriter;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 
+import virtualRobot.SallyJoeBot;
 import virtualRobot.VuforiaLocalizerImplSubclass;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark.*;
@@ -31,6 +32,7 @@ public class GlobalUtils {
     public static ThreadGroup updateThreadGroup = null;
     public static PrintWriter crashLogger = null;
     public static final boolean withoutVumark = true;
+    public static SallyJoeBot.Team currentTeam;
 
     public static Activity getCurrentActivity() {
         if (currentActivity == null)

@@ -1,9 +1,16 @@
 package virtualRobot.logicThreads.competition;
 
+import android.provider.Settings;
+
 import virtualRobot.JoystickController;
 import virtualRobot.LogicThread;
+import virtualRobot.SallyJoeBot;
+import virtualRobot.commands.RotateEncoder;
 import virtualRobot.commands.Translate;
+import virtualRobot.utils.GlobalUtils;
 import virtualRobot.utils.MathUtils;
+
+import static virtualRobot.SallyJoeBot.Team.BLUE;
 
 /**
  * Created by Ethan Mak on 8/29/2017.
@@ -17,7 +24,7 @@ public class TeleOpCustomLogic extends LogicThread {
 
     @Override
     protected void realRun() throws InterruptedException {
-//        robot.getJewelServo().setPosition(0.07);
+        robot.getJewelServo().setPosition(0.85);
 //        robot.getJewelHitter().setPosition(0.5);
         JoystickController controller1;
         JoystickController controller2;
@@ -30,7 +37,6 @@ public class TeleOpCustomLogic extends LogicThread {
         int translateAngle = 0;
         int lastTranslateAngle = 0;
         final int POWER_MATRIX[][] = { //for each of the directions
-                //RF, RB, LF, LB
                 {1, 1, 1, 1},
                 {1, 0, 0, 1},
                 {1, -1, -1, 1},
@@ -42,7 +48,8 @@ public class TeleOpCustomLogic extends LogicThread {
         };
         double liftSpeed = 0.5;
         double relicArmSpeed = 0.5;
-        double gearCoefficient = 0.666;
+        double gearCoefficient = 1;
+        double rotateCoefficient = 0.5;
 //        Translate headingMovement = null;
 //        int lastAction = 0; //0 for stopped, 1 for translating, 2 for rotating
         boolean isInterrupted = false;
@@ -57,30 +64,31 @@ public class TeleOpCustomLogic extends LogicThread {
             double RF = 0, RB = 0, LF = 0, LB = 0;
             robot.addToTelemetry("mag", translateMag);
 
-            if (controller1.isDown(JoystickController.BUTTON_X)) {
+            if (controller1.isDown(JoystickController.BUTTON_LB)) {
                 gearCoefficient = 1;
-            } else if (controller1.isDown(JoystickController.BUTTON_Y)) {
+            } else if (controller1.isDown(JoystickController.BUTTON_RB)) {
                 gearCoefficient = 0.5;
             }
+
             if (!MathUtils.equals(rotateX, 0, 0.05)) {
-                robot.getRFMotor().setPower(rotateX * gearCoefficient);
-                robot.getRBMotor().setPower(rotateX * gearCoefficient);
-                robot.getLFMotor().setPower(-rotateX * gearCoefficient);
-                robot.getLBMotor().setPower(-rotateX * gearCoefficient);
+                robot.getRFMotor().setPower(-rotateX * gearCoefficient * rotateCoefficient);
+                robot.getRBMotor().setPower(-rotateX * gearCoefficient * rotateCoefficient);
+                robot.getLFMotor().setPower(rotateX * gearCoefficient * rotateCoefficient);
+                robot.getLBMotor().setPower(rotateX * gearCoefficient * rotateCoefficient);
 //                robot.addToTelemetry("TeleOp if statement lvl", 0);
             } else if (!MathUtils.equals(translateMag, 0, 0.05)) {
                 double translatePower = translateMag * 0.666;
                 if (translateTheta >= 0 && translateTheta <= 90) { //quadrant 1
                     scale = MathUtils.sinDegrees(translateTheta - 45) / MathUtils.cosDegrees(translateTheta - 45);
-                    LB = translatePower * POWER_MATRIX[0][0];
-                    LF = translatePower * POWER_MATRIX[0][1] * scale;
+                    LF = translatePower * POWER_MATRIX[0][0];
+                    LB = translatePower * POWER_MATRIX[0][1] * scale;
                     RF = translatePower * POWER_MATRIX[0][2] * scale;
                     RB = translatePower * POWER_MATRIX[0][3];
                 } else if (translateTheta > 90 && translateTheta <= 180) { //quadrant 2
                     translatePower *= -1;
                     scale = MathUtils.sinDegrees(translateTheta - 135) / MathUtils.cosDegrees(translateTheta - 135);
-                    LB = (translatePower * POWER_MATRIX[2][0] * scale);
-                    LF = (translatePower * POWER_MATRIX[2][1]);
+                    LF = (translatePower * POWER_MATRIX[2][0] * scale);
+                    LB = (translatePower * POWER_MATRIX[2][1]);
                     RF = (translatePower * POWER_MATRIX[2][2]);
                     RB = (translatePower * POWER_MATRIX[2][3] * scale);
 //                    LF *= -1;
@@ -89,16 +97,16 @@ public class TeleOpCustomLogic extends LogicThread {
 //                    RB = -1;
                 } else if (translateTheta > 180 && translateTheta <= 270) { //quadrant 3
                     scale = MathUtils.sinDegrees(translateTheta - 225) / MathUtils.cosDegrees(translateTheta - 225);
-                    LB = (translatePower * POWER_MATRIX[4][0]);
-                    LF = (translatePower * POWER_MATRIX[4][1] * scale);
+                    LF = (translatePower * POWER_MATRIX[4][0]);
+                    LB = (translatePower * POWER_MATRIX[4][1] * scale);
                     RF = (translatePower * POWER_MATRIX[4][2] * scale);
                     RB = (translatePower * POWER_MATRIX[4][3]);
 //                Log.d("aaa", robot.getLFMotor().getPower() + " " + robot.getRFMotor().getPower() + " " + robot.getLBMotor().getPower() + " " + robot.getRBMotor().getPower());
                 } else if (translateTheta > 270 && translateTheta < 360) { //quadrant 4
                     translatePower *= -1;
                     scale = MathUtils.sinDegrees(translateTheta - 315) / MathUtils.cosDegrees(translateTheta - 315);
-                    LB = (translatePower * POWER_MATRIX[6][0] * scale);
-                    LF = (translatePower * POWER_MATRIX[6][1]);
+                    LF = (translatePower * POWER_MATRIX[6][0] * scale);
+                    LB = (translatePower * POWER_MATRIX[6][1]);
                     RF = (translatePower * POWER_MATRIX[6][2]);
                     RB = (translatePower * POWER_MATRIX[6][3] * scale);
 //                    LF *= -1;
@@ -122,32 +130,34 @@ public class TeleOpCustomLogic extends LogicThread {
                 robot.stopMotors();
             }
 
-//            if (controller1.isPressed(JoystickController.BUTTON_RB)) {
-//                //Grasp Relic
-//                robot.getRelicArmClaw().setPosition(0);
-//            } else if (controller1.isPressed(JoystickController.BUTTON_LB)) {
-//                //Release Relic
-//                robot.getRelicArmClaw().setPosition(1);
+//            if (controller1.isPressed(JoystickController.BUTTON_LT)) {
+//                runCommand(new RotateEncoder())
 //            }
 
-//            if (controller1.isDpadRight()) {
-//                //Extend arm
-//                robot.getRelicArmWinch().setPower(relicArmSpeed);
-//            } else if (controller1.isDpadLeft()) {
-//                //Retract arm
-//                robot.getRelicArmWinch().setPower(-relicArmSpeed);
-//            } else {
-//                robot.getRelicArmWinch().setPower(0);
-//            }
+            if (controller2.isPressed(JoystickController.BUTTON_X)) {
+                //Grasp Relic
+                robot.getRelicArmClaw().setPosition(0);
+            } else if (controller2.isPressed(JoystickController.BUTTON_Y)) {
+                //Release Relic
+                robot.getRelicArmClaw().setPosition(1);
+            }
 
-//            if (controller1.isDown(JoystickController.BUTTON_RT)) {
-//                robot.getRelicArmWrist().setSpeed(0.5);
-//            } else if (controller1.isDown(JoystickController.BUTTON_LT)) {
-//                //Lower wrist
-//                robot.getRelicArmWrist().setSpeed(-0.5);
-//            } else {
-//                robot.getRelicArmWrist().setSpeed(0);
-//            }
+            if (controller2.isDpadRight()) {
+                //Extend arm
+                robot.getRelicArmWinch().setPower(relicArmSpeed);
+            } else if (controller2.isDpadLeft()) {
+                //Retract arm
+                robot.getRelicArmWinch().setPower(-relicArmSpeed);
+            } else {
+                robot.getRelicArmWinch().setPower(0);
+            }
+
+            if (controller2.isDown(JoystickController.BUTTON_RT)) {
+                robot.getRelicArmWrist().setPosition(robot.getRelicArmWrist().getPosition() + 0.01);
+            } else if (controller2.isDown(JoystickController.BUTTON_LT)) {
+                //Lower wrist
+                robot.getRelicArmWrist().setPosition(robot.getRelicArmWrist().getPosition() - 0.01);
+            }
 
             if (controller1.isDpadUp()) {
                 robot.getLift().setPower(liftSpeed);
@@ -157,14 +167,12 @@ public class TeleOpCustomLogic extends LogicThread {
                 robot.getLift().setPower(0);
             }
 
-            robot.getRollerLeft().setPower(controller2.getValue(JoystickController.Y_1));
-            robot.getRollerRight().setPower(controller2.getValue(JoystickController.Y_2));
-
-
             if (controller1.isDown(JoystickController.BUTTON_A)) {
                 robot.setRollerPower(1);
+                robot.moveFipper(false);
             } else if (controller1.isDown(JoystickController.BUTTON_B)) {
                 robot.setRollerPower(-1);
+//                robot.moveFipper(false);
             } else {
                 robot.setRollerPower(0);
             }
@@ -172,10 +180,10 @@ public class TeleOpCustomLogic extends LogicThread {
 //            robot.getRollerLeft().setPower(controller2.getValue(JoystickController.Y_1));
 //            robot.getRollerRight().setPower(controller2.getValue(JoystickController.Y_2));
 
-            if (controller1.isDpadRight()) {
-                robot.getFlipper().setPosition(1);
-            } else if (controller1.isDpadLeft()) {
-                robot.getFlipper().setPosition(0);
+            if (controller1.isDown(JoystickController.BUTTON_X)) {
+                robot.moveFipper(true);
+            } else if (controller1.isDown(JoystickController.BUTTON_Y)) {
+                robot.moveFipper(false);
             }
 
             if (Thread.currentThread().isInterrupted())

@@ -79,8 +79,8 @@ public class Translate extends Command {
         RFtranslateController = new PIDController(KP, KI, KD, THRESHOLD);
         LBtranslateController = new PIDController(KP, KI, KD, THRESHOLD);
         RBtranslateController = new PIDController(KP, KI, KD, THRESHOLD);
-        headingController = new PIDController(0.11, 0, 0, 0); //.04
-        headingOnlyController = new PIDController(0.11, 0, 0, 0); //.04
+        headingController = new PIDController(0.055, 0, 0, 0); //.04
+        headingOnlyController = new PIDController(0.055, 0, 0, 0); //.04
         if (blueSide) {
             headingController.setTarget(blueAngle);
             headingOnlyController.setTarget(blueAngle);
@@ -871,8 +871,8 @@ public class Translate extends Command {
                     timeLimit = 30000;
                 DcMotor.RunMode LFMode = robot.getLFMotor().getMode();
                 DcMotor.RunMode LBMode = robot.getLBMotor().getMode();
-                DcMotor.RunMode RFMode = robot.getRFMotor().getMode();
-                DcMotor.RunMode RBMode = robot.getRBMotor().getMode();
+//                DcMotor.RunMode RFMode = robot.getRFMotor().getMode();
+//                DcMotor.RunMode RBMode = robot.getRBMotor().getMode();
 
 //                Log.d("Progress", "hit encoderDrive " + timeLimit);
                 int LFTarget = (int) (robot.getLFMotor().getPosition() + LFtranslateController.getTarget()*multiplier[0]);
@@ -881,14 +881,12 @@ public class Translate extends Command {
                 int RBTarget = (int) (robot.getRBMotor().getPosition() + RBtranslateController.getTarget()*multiplier[3]);
                 robot.getLFMotor().setTargetPositon(LFTarget);
                 robot.getLBMotor().setTargetPositon(LBTarget);
-                robot.getRFMotor().setTargetPositon(RFTarget);
-                robot.getRBMotor().setTargetPositon(RBTarget);
+//                robot.getRFMotor().setTargetPositon(RFTarget);
+//                robot.getRBMotor().setTargetPositon(RBTarget);
 
                 // Turn On RUN_TO_POSITION
                 robot.getLFMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.getLBMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.getRFMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.getRBMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
                 // reset the timeout time and start motion.
                 GlobalUtils.runtime.reset();
@@ -899,7 +897,7 @@ public class Translate extends Command {
 
                 double PIDValue;
                 while ((GlobalUtils.runtime.milliseconds() < timeLimit) &&
-                        (robot.getLFMotor().isBusy() && robot.getLBMotor().isBusy() && robot.getRFMotor().isBusy() && robot.getRBMotor().isBusy()) &&
+                        (robot.getLFMotor().isBusy() && robot.getLBMotor().isBusy()) &&
                         (!Thread.currentThread().isInterrupted())) {
                     PIDValue = headingController.getPIDOutput(robot.getImu().getHeading())* Math.abs(maxPower);
                     robot.getLFMotor().setPower(Math.abs(maxPower) + PIDValue);
@@ -913,8 +911,8 @@ public class Translate extends Command {
                 // Turn off RUN_TO_POSITION
                 robot.getLFMotor().setMode(LFMode);
                 robot.getLBMotor().setMode(LBMode);
-                robot.getRFMotor().setMode(RFMode);
-                robot.getRBMotor().setMode(RBMode);
+//                robot.getRFMotor().setMode(RFMode);
+//                robot.getRBMotor().setMode(RBMode);
                 break;
             default:
                 break;

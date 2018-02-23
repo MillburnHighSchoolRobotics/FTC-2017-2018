@@ -1,25 +1,13 @@
 package virtualRobot.logicThreads.competition;
 
-import android.util.Log;
-
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-
-import virtualRobot.commands.Command;
 import virtualRobot.commands.GetVuMarkSide;
-import virtualRobot.commands.HitJewel;
 import virtualRobot.commands.RotateEncoder;
 import virtualRobot.commands.Translate;
-import virtualRobot.hardware.DumbColorSensor;
-import virtualRobot.hardware.Motor;
-import virtualRobot.hardware.Servo;
 import virtualRobot.logicThreads.AutonomousLogicThread;
 import virtualRobot.utils.GlobalUtils;
 
-import static org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark.CENTER;
 import static org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark.LEFT;
-import static org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark.RIGHT;
 import static org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark.UNKNOWN;
-import static virtualRobot.SallyJoeBot.Team.BLUE;
 
 /**
  * Created by ethan on 9/22/17.
