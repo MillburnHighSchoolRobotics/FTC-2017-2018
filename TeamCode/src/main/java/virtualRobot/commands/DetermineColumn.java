@@ -40,12 +40,13 @@ public class DetermineColumn extends Command {
         vuforiaInstance = GlobalUtils.vuforiaInstance;
         width = vuforiaInstance.rgb.getWidth();
         height = vuforiaInstance.rgb.getHeight();
-        int target = (int) (Math.random() * 3); // The target column. 0 = LEFT, 1 = CENTER, 2 = RIGHT
+        int target = (int) (0 * 3); // The target column. 0 = LEFT, 1 = CENTER, 2 = RIGHT
         robot.addToTelemetry("Target", target);
         int cutoff = 40; //cutoff constant.  lines that are closer than this value to another vertical line are ignored. you'll see what that means later
 
         //Start CV
-        while (true) {
+        int runtimes = 0;
+        while (runtimes <2) {
 //            robot.stopMotors();
             robot.addToTelemetry("Cutoff", cutoff);
             Mat img = new Mat();
@@ -139,7 +140,7 @@ public class DetermineColumn extends Command {
                     } else safe = false;
                 } else if (lineCount == 1) safe = false;
             }
-//            THIS NEXT PART IS ACTUAL BLACK MAGIC WIZARDRY INVENTED BY THE OPENCV TEAM TO PERPETUATE THE NEW WORLD ORDER
+//            THIS NEXT PART IS ACTUAL <BLACK MAGIC WIZARDRY> INVENTED BY THE OPENCV TEAM TO PERPETUATE THE NEW WORLD ORDER
 //            IDK HOW IT WORKS BUT IT DOES, IT RENDERS LINES IT DETECTS, SO THAT IT CAN SEND TO CTELEMETRY
 //            NO TOUCHY PLS
 //========================================================================================
@@ -162,7 +163,7 @@ public class DetermineColumn extends Command {
 //                    //Target lines are green, others are red;
 //                    Imgproc.line(hough, pt1, pt2, new Scalar(0, i == target || i == target + 1 ? 255 : 0, i == target || i == target + 1 ? 0 : 255), 3, Core.LINE_AA, 0);
 //                }
-//                END BLACK MAGIC WIZARDRY
+//                </BLACK MAGIC WIZARDRY>
 //                try {
 //                    robot.getCTelemetry().sendImage("Hough", hough).execute();
 //                } catch (IOException e) {
@@ -197,14 +198,16 @@ public class DetermineColumn extends Command {
             } else {
                 robot.stopMotors();
             }
+            runtimes++;
         }
+        return true;
     }
 
     private void strafe(double power) { //positive is left, negative is right
         Log.d("Strafe", "triggered");
         robot.getLFMotor().setPower(-power);
         robot.getLBMotor().setPower(power);
-        robot.getRFMotor().setPower(-power);
-        robot.getRBMotor().setPower(power);
+        robot.getRFMotor().setPower(power);
+        robot.getRBMotor().setPower(-power);
     }
 }

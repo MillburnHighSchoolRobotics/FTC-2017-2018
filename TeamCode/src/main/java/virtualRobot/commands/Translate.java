@@ -79,8 +79,8 @@ public class Translate extends Command {
         RFtranslateController = new PIDController(KP, KI, KD, THRESHOLD);
         LBtranslateController = new PIDController(KP, KI, KD, THRESHOLD);
         RBtranslateController = new PIDController(KP, KI, KD, THRESHOLD);
-        headingController = new PIDController(0.055, 0, 0, 0); //.04
-        headingOnlyController = new PIDController(0.055, 0, 0, 0); //.04
+        headingController = new PIDController(0.032, 0, 0, 0); //.04
+        headingOnlyController = new PIDController(0.032, 0, 0, 0); //.04
         if (blueSide) {
             headingController.setTarget(blueAngle);
             headingOnlyController.setTarget(blueAngle);
@@ -224,6 +224,7 @@ public class Translate extends Command {
         this(target, direction, angleModifier, maxPower);
 
         this.referenceAngle = referenceAngle;
+        this.runMode = RunMode.USING_ENCODERS_WITH_HEADING;
         headingController.setTarget(referenceAngle);
         headingOnlyController.setTarget(referenceAngle);
 
@@ -233,6 +234,7 @@ public class Translate extends Command {
         this(target, direction, angleModifier, maxPower);
 
         this.referenceAngle = referenceAngle;
+        this.runMode = RunMode.USING_ENCODERS_WITH_HEADING;
         headingController.setTarget(this.referenceAngle + (blueSide ? -180 : 0) + (useGlobalAngle ? globalReferenceAngleModifier : 0));
         headingOnlyController.setTarget(this.referenceAngle + (blueSide ? -180 : 0) + (useGlobalAngle ? globalReferenceAngleModifier : 0));
 
@@ -881,29 +883,31 @@ public class Translate extends Command {
                 int RBTarget = (int) (robot.getRBMotor().getPosition() + RBtranslateController.getTarget()*multiplier[3]);
                 robot.getLFMotor().setTargetPositon(LFTarget);
                 robot.getLBMotor().setTargetPositon(LBTarget);
-//                robot.getRFMotor().setTargetPositon(RFTarget);
-//                robot.getRBMotor().setTargetPositon(RBTarget);
+                robot.getRFMotor().setTargetPositon(RFTarget);
+                robot.getRBMotor().setTargetPositon(RBTarget);
 
                 // Turn On RUN_TO_POSITION
                 robot.getLFMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.getLBMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.getRFMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.getRBMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
                 // reset the timeout time and start motion.
                 GlobalUtils.runtime.reset();
                 robot.getLFMotor().setPower(Math.abs(maxPower));
-                robot.getLFMotor().setPower(Math.abs(maxPower));
-                robot.getLFMotor().setPower(Math.abs(maxPower));
-                robot.getLFMotor().setPower(Math.abs(maxPower));
+                robot.getLBMotor().setPower(Math.abs(maxPower));
+                robot.getRFMotor().setPower(Math.abs(maxPower));
+                robot.getRBMotor().setPower(Math.abs(maxPower));
 
                 double PIDValue;
                 while ((GlobalUtils.runtime.milliseconds() < timeLimit) &&
-                        (robot.getLFMotor().isBusy() && robot.getLBMotor().isBusy()) &&
+                        (robot.getLFMotor().isBusy() && robot.getLBMotor().isBusy() && robot.getRFMotor().isBusy() && robot.getRBMotor().isBusy()) &&
                         (!Thread.currentThread().isInterrupted())) {
                     PIDValue = headingController.getPIDOutput(robot.getImu().getHeading())* Math.abs(maxPower);
-                    robot.getLFMotor().setPower(Math.abs(maxPower) + PIDValue);
-                    robot.getLFMotor().setPower(Math.abs(maxPower) + PIDValue);
-                    robot.getLFMotor().setPower(Math.abs(maxPower) - PIDValue);
-                    robot.getLFMotor().setPower(Math.abs(maxPower) - PIDValue);
+                    robot.getLFMotor().setPower(MathUtils.clamp(Math.abs(maxPower) + PIDValue, 0, 1));
+                    robot.getLBMotor().setPower(MathUtils.clamp(Math.abs(maxPower) + PIDValue, 0, 1));
+                    robot.getRFMotor().setPower(MathUtils.clamp(Math.abs(maxPower) - PIDValue, 0, 1));
+                    robot.getRBMotor().setPower(MathUtils.clamp(Math.abs(maxPower) - PIDValue, 0, 1));
                 }
                 // Stop all motion;
                 robot.stopMotors();

@@ -25,6 +25,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.opencv.android.OpenCVLoader;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
@@ -106,6 +107,11 @@ public abstract class ReflectionUpdateThread extends OpMode {
         exceptions.add(PIDTesterLogic.class);
         exceptions.add(SensorTestLogic.class);
         exceptions.add(RotateAutoPIDLogic.class);
+
+        if (OpenCVLoader.initDebug()) {
+            GlobalUtils.isCVLoaded = true;
+        } else
+            GlobalUtils.isCVLoaded = false;
     }
 
     //here we will initiate all of our PHYSICAL hardware. E.g: private DcMotor leftBack...

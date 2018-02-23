@@ -18,10 +18,6 @@ public class PIDTesterLogic extends LogicThread {
 //        runCommand(new Translate(1000, Translate.Direction.R,0,1));
 //        runCommand(new Rotate(0.0122,90,40000, new AtomicBoolean(false)));
 //        runCommand(new Rotate(90));
-        runCommand(new RotateEncoder(90));
-        runCommand(new Pause(2000));
-        runCommand(new RotateEncoder(0));
-        runCommand(new Pause(2000));
-        runCommand(new RotateEncoder(45));
+        runCommand(new Translate(2500, Translate.Direction.FORWARD, 0, 0.5, 0));
     }
 }

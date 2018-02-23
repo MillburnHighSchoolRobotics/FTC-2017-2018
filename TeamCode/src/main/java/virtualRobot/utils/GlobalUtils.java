@@ -33,6 +33,7 @@ public class GlobalUtils {
     public static PrintWriter crashLogger = null;
     public static final boolean withoutVumark = true;
     public static SallyJoeBot.Team currentTeam;
+    public static boolean isCVLoaded = false;
 
     public static Activity getCurrentActivity() {
         if (currentActivity == null)
