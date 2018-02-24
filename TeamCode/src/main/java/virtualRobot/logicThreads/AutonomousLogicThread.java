@@ -3,6 +3,7 @@ package virtualRobot.logicThreads;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import virtualRobot.LogicThread;
 import virtualRobot.commands.Translate;
@@ -14,6 +15,7 @@ import virtualRobot.commands.Translate;
 public abstract class AutonomousLogicThread extends LogicThread {
     public volatile RelicRecoveryVuMark currentVuMark = RelicRecoveryVuMark.UNKNOWN;
     public AtomicBoolean redIsLeft = new AtomicBoolean(false);
+    public AtomicInteger offset = new AtomicInteger(0);
 
 
     protected void depositGlyph() throws InterruptedException {

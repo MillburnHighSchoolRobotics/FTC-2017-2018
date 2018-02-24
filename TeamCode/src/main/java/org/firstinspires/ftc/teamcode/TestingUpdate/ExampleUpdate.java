@@ -12,7 +12,7 @@ import virtualRobot.logicThreads.ExampleLogic;
  *
  * An example of what subclasses of UpdateThread should look like
  */
-@Disabled
+//@Disabled
 @Autonomous(name="Example: Test", group="Example")
 public class ExampleUpdate extends ReflectionUpdateThread {
     @Override
