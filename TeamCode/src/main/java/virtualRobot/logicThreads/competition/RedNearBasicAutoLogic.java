@@ -23,7 +23,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryV
  */
 
 public class RedNearBasicAutoLogic extends AutonomousLogicThread {
-    private final double power = 1;
+    private final double power = 0.5;
 
     @Override
     protected void realRun() throws InterruptedException {
@@ -63,10 +63,10 @@ public class RedNearBasicAutoLogic extends AutonomousLogicThread {
         }
         switch (currentVuMark) {
             case RIGHT:
-                dist = 1300; //1926
+                dist = 1200; //1926
                 break;
             case CENTER:
-                dist = 1550; //2126
+                dist = 1500; //2126
                 break;
             case LEFT:
                 dist = 1800;
