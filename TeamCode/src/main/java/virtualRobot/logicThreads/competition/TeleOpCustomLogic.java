@@ -130,9 +130,15 @@ public class TeleOpCustomLogic extends LogicThread {
                 robot.stopMotors();
             }
 
-//            if (controller1.isPressed(JoystickController.BUTTON_LT)) {
-//                runCommand(new RotateEncoder())
-//            }
+            if (controller2.isPressed(JoystickController.BUTTON_LB)) {
+                runCommand(new RotateEncoder(closerToMultiple(robot.getImu().getHeading(), -90)));
+            } else if (controller2.isPressed(JoystickController.BUTTON_RB)) {
+                if (GlobalUtils.currentTeam == BLUE) {
+                    runCommand(new RotateEncoder(closerToMultiple(robot.getImu().getHeading(), 0)));
+                } else {
+                    runCommand(new RotateEncoder(closerToMultiple(robot.getImu().getHeading(), -180)));
+                }
+            }
 
             if (controller2.isPressed(JoystickController.BUTTON_X)) {
                 //Grasp Relic
@@ -190,5 +196,15 @@ public class TeleOpCustomLogic extends LogicThread {
                 throw new InterruptedException();
             Thread.sleep(5);
         }
+    }
+
+    private double closerToMultiple(double val, double target) {
+        double excess = val % 360;
+        double upper = Math.ceil(val/360) * 360 + excess;
+        double lower = Math.floor(val/360) * 360 + excess;
+        if(Math.abs(upper - val) < Math.abs(lower - val)){
+            return upper;
+        }
+        return lower;
     }
 }
