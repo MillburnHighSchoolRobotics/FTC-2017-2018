@@ -59,7 +59,7 @@ public class SallyJoeBot {
     private Servo rollerLiftRight;
     @UpdateMotor(name = "relicArmWinch", direction = DcMotorSimple.Direction.REVERSE, enabled = true)
     private Motor relicArmWinch;
-    @UpdateServo(name = "relicArmWrist", initpos = 0, enabled = true)
+    @UpdateServo(name = "relicArmWrist", initpos = 1, enabled = true)
     private Servo relicArmWrist;
     @UpdateServo(name = "relicArmClaw", enabled = true)
     private Servo relicArmClaw;

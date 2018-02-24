@@ -152,11 +152,11 @@ public class TeleOpCustomLogic extends LogicThread {
                 robot.getRelicArmWinch().setPower(0);
             }
 
-            if (controller2.isDown(JoystickController.BUTTON_RT)) {
-                robot.getRelicArmWrist().setPosition(robot.getRelicArmWrist().getPosition() + 0.01);
-            } else if (controller2.isDown(JoystickController.BUTTON_LT)) {
+            if (controller2.isDown(JoystickController.BUTTON_A)) {
+                robot.getRelicArmWrist().setPosition(robot.getRelicArmWrist().getPosition() + 0.005);
+            } else if (controller2.isDown(JoystickController.BUTTON_B)) {
                 //Lower wrist
-                robot.getRelicArmWrist().setPosition(robot.getRelicArmWrist().getPosition() - 0.01);
+                robot.getRelicArmWrist().setPosition(robot.getRelicArmWrist().getPosition() - 0.005);
             }
 
             if (controller1.isDpadUp()) {
@@ -169,10 +169,10 @@ public class TeleOpCustomLogic extends LogicThread {
 
             if (controller1.isDown(JoystickController.BUTTON_A)) {
                 robot.setRollerPower(1);
-                robot.moveFipper(false);
+//                robot.moveFipper(false);
             } else if (controller1.isDown(JoystickController.BUTTON_B)) {
                 robot.setRollerPower(-1);
-//                robot.moveFipper(false);
+                robot.moveFipper(false);
             } else {
                 robot.setRollerPower(0);
             }
