@@ -140,6 +140,10 @@ public class TeleOpCustomLogic extends LogicThread {
                 }
             }
 
+            if (controller2.isDown(JoystickController.BUTTON_LT)) {
+
+            }
+
             if (controller2.isPressed(JoystickController.BUTTON_X)) {
                 //Grasp Relic
                 robot.getRelicArmClaw().setPosition(0);
