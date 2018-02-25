@@ -18,9 +18,9 @@ public abstract class AutonomousLogicThread extends LogicThread {
     public AtomicInteger offset = new AtomicInteger(0);
 
 
-    protected void depositGlyph() throws InterruptedException {
-        runCommand(new Translate(100, Translate.Direction.FORWARD, 0));
-        //TODO: RUN BOX TO DEPOSIT GLYPH
-        runCommand(new Translate(100, Translate.Direction.BACKWARD, 0));
-    }
+//    protected void depositGlyph() throws InterruptedException {
+//        runCommand(new Translate(100, Translate.Direction.FORWARD, 0));
+//        //TODO: RUN BOX TO DEPOSIT GLYPH
+//        runCommand(new Translate(100, Translate.Direction.BACKWARD, 0));
+//    }
 }
