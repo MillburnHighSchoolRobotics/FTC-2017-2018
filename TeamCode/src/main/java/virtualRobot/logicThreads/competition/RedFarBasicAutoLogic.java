@@ -24,7 +24,7 @@ public class RedFarBasicAutoLogic extends AutonomousLogicThread {
         if (GlobalUtils.withoutVumark)
             currentVuMark = GlobalUtils.forcedVumark;
         else
-            runCommand(new GetVuMarkSide(1000));
+            runCommand(new GetVuMarkSide(3000));
 
         robot.addToTelemetry("Current VuMark: ", currentVuMark);
 

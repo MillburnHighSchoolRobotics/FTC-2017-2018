@@ -26,7 +26,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         if (GlobalUtils.withoutVumark)
             currentVuMark = GlobalUtils.forcedVumark;
         else
-            runCommand(new GetVuMarkSide(1000));
+            runCommand(new GetVuMarkSide(3000));
 
         robot.addToTelemetry("Current VuMark: ", currentVuMark);
 
@@ -89,8 +89,11 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         Thread.sleep(500);
         runCommand(new Translate(100, Translate.Direction.BACKWARD, 0, 0.5f));
         int lastOffset = -1;
+        offset.set(20);
         while (true) {
-            runCommand(new ShustinClass(mark));
+//            runCommand(new ShustinClass(mark));
+            offset.set(offset.get() - 10);
+            Thread.sleep(500);
             robot.addToTelemetry("Offset", offset.get());
             if (Math.abs(offset.get()) < 7) {
                 break;
