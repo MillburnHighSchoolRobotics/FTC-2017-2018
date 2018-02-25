@@ -85,7 +85,7 @@ public class BlueNearBasicAutoLogic extends AutonomousLogicThread {
         Thread.sleep(3000);
         robot.setRollerPower(0);
         Thread.sleep(500);
-        runCommand(new RotateEncoder(0,1));
+        runCommand(new RotateEncoder(-90,1));
         Thread.sleep(500);
         runCommand(new Translate(100, Translate.Direction.BACKWARD, 0, 0.5f));
         int lastOffset = -1;
