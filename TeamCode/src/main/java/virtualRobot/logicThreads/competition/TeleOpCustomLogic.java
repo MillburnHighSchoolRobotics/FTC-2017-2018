@@ -1,9 +1,18 @@
 package virtualRobot.logicThreads.competition;
 
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
 import virtualRobot.JoystickController;
 import virtualRobot.LogicThread;
+import virtualRobot.commands.RotateEncoder;
+import virtualRobot.commands.ShustinClass;
 import virtualRobot.commands.Translate;
+import virtualRobot.utils.GlobalUtils;
 import virtualRobot.utils.MathUtils;
+
+import static virtualRobot.SallyJoeBot.Team.BLUE;
 
 /**
  * Created by Ethan Mak on 8/29/2017.
@@ -133,9 +142,17 @@ public class TeleOpCustomLogic extends LogicThread {
                 }
             }
 
-            if (controller2.isDown(JoystickController.BUTTON_LT)) {
-
-            }
+if (controller2.isDown(JoystickController.BUTTON_LT)) {
+    AtomicInteger offset = new AtomicInteger(0);
+    int min = Integer.MAX_VALUE;
+    for (RelicRecoveryVuMark vuMark : RelicRecoveryVuMark.values()) {
+        runCommand(new ShustinClass(vuMark, offset));
+        if (offset.get() < min) {
+            min = offset.get();
+        }
+    }
+    runCommand(new Translate(offset.get() * 10, Translate.Direction.LEFT, 0, 0.9));
+}
 
             if (controller2.isPressed(JoystickController.BUTTON_X)) {
                 //Grasp Relic

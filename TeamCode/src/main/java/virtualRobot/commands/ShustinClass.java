@@ -15,6 +15,7 @@ import org.opencv.imgproc.Imgproc;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import retrofit2.Call;
 import virtualRobot.VuforiaLocalizerImplSubclass;
@@ -29,11 +30,19 @@ import virtualRobot.utils.GlobalUtils;
 public class ShustinClass extends Command {
     public ShustinClass(RelicRecoveryVuMark vumark) {
         this.vumark = vumark;
+        this.offset = new AtomicInteger();
+    }
+
+    public ShustinClass(RelicRecoveryVuMark vumark, AtomicInteger offset) {
+        this(vumark);
+        this.offset = offset;
     }
 
     RelicRecoveryVuMark vumark;
 
     private int width, height;
+    private boolean inAuton = true;
+    AtomicInteger offset;
 
     private VuforiaLocalizerImplSubclass vuforiaInstance;
     AutonomousLogicThread currentThread;
@@ -59,7 +68,8 @@ public class ShustinClass extends Command {
         if (parentThread instanceof AutonomousLogicThread) {
             currentThread = (AutonomousLogicThread) parentThread;
         } else {
-            throw new RuntimeException("Was not called in Autonomous!");
+//            throw new RuntimeException("Was not called in Autonomous!");
+            inAuton = false;
         }
         robot.initCTelemetry();
         vuforiaInstance = GlobalUtils.vuforiaInstance;
@@ -217,7 +227,10 @@ public class ShustinClass extends Command {
             offset -= (int) (avgSpace * 1.5); //take into account the offset of the phone
 
 //            robot.addToTelemetry("Offset", offset);
-            currentThread.offset.set(offset); //kms,l
+            if (inAuton) {
+                currentThread.offset.set(offset); //kms,l
+            } else
+                this.offset.set(offset);
 
 //            robot.addToTelemetry("Avg Space", avgSpace);
 //                strafe(0.5 * Math.signum(offset)); //idk why this strafe function works but it does - what you need to do with this command is instead of strafing after this is done, set a global offset variable or something idk
