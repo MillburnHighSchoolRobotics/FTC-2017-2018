@@ -3,6 +3,7 @@ package virtualRobot.commands;
 import android.graphics.Bitmap;
 import android.util.Log;
 
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
@@ -25,18 +26,24 @@ import virtualRobot.utils.GlobalUtils;
  * Created by Ethan Mak on 2/16/2018.
  */
 
-public class DetermineColumn extends Command {
+public class ShustinClass extends Command {
+    public ShustinClass(RelicRecoveryVuMark vumark) {
+        this.vumark = vumark;
+    }
+
+    RelicRecoveryVuMark vumark;
+
     private int width, height;
 
     private VuforiaLocalizerImplSubclass vuforiaInstance;
     AutonomousLogicThread currentThread;
-    static {
-        if(!OpenCVLoader.initDebug()){
-            BetterLog.d("OpenCV", "OpenCV not loaded");
-        } else {
-            BetterLog.d("OpenCV", "OpenCV loaded");
-        }
-    }
+//    static {
+//        if(!OpenCVLoader.initDebug()){
+//            BetterLog.d("OpenCV", "OpenCV not loaded");
+//        } else {
+//            BetterLog.d("OpenCV", "OpenCV loaded");
+//        }
+//    }
 
     //These are some hardcoded values, tuned for blue
     final int hue = 86; //107
@@ -58,15 +65,29 @@ public class DetermineColumn extends Command {
         vuforiaInstance = GlobalUtils.vuforiaInstance;
         width = vuforiaInstance.rgb.getWidth();
         height = vuforiaInstance.rgb.getHeight();
-        int target = (int) (0 * 3); // The target column. 0 = LEFT, 1 = CENTER, 2 = RIGHT
-        robot.addToTelemetry("Target", target);
+        int target; // The target column. 0 = LEFT, 1 = CENTER, 2 = RIGHT
+        switch (vumark) {
+            case LEFT:
+                target = 0;
+                break;
+            case CENTER:
+                target = 1;
+                break;
+            case RIGHT:
+                target = 2;
+                break;
+            default:
+                target = 0;
+                break;
+        }
+//        robot.addToTelemetry("Target", target);
         int cutoff = 40; //cutoff constant.  lines that are closer than this value to another vertical line are ignored. you'll see what that means later
 
         //Start CV
         int runtimes = 0;
 //        while (runtimes <2) {
 //            robot.stopMotors();
-        robot.addToTelemetry("Cutoff", cutoff);
+//        robot.addToTelemetry("Cutoff", cutoff);
         Mat img = new Mat();
         Bitmap bm = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
         bm.copyPixelsFromBuffer(vuforiaInstance.rgb.getPixels());
@@ -83,7 +104,7 @@ public class DetermineColumn extends Command {
         robot.safeCall(robot.getCTelemetry().sendImage("InRange", inrange), false);
         Mat lines = new Mat();
         long timestamp = System.currentTimeMillis();
-        Imgproc.HoughLines(inrange, lines, 1, Math.PI / 180, 200 / 2); //look at the hough lines documentation - the only things you should really change are the 3rd and last parameter. the last parameter is how hard it is to find a line - the higher it is, the more confident it has to be in the line. the 3rd is the resolution of the distance from the center that the line is. you might want to lower the resolution and change the cutoff to a double/making it smaller OR making the image bigger. when the bot gets further away than the blue line from the cryptobox, the columns start to be less than 40 pixels apart, meaning that it starts ignoring them. the point is, if you want the CV to work from further away, either make the image bigger or the resolution + cutoff smaller.
+        Imgproc.HoughLines(inrange, lines, 1, Math.PI / 180, 75); //look at the hough lines documentation - the only things you should really change are the 3rd and last parameter. the last parameter is how hard it is to find a line - the higher it is, the more confident it has to be in the line. the 3rd is the resolution of the distance from the center that the line is. you might want to lower the resolution and change the cutoff to a double/making it smaller OR making the image bigger. when the bot gets further away than the blue line from the cryptobox, the columns start to be less than 40 pixels apart, meaning that it starts ignoring them. the point is, if you want the CV to work from further away, either make the image bigger or the resolution + cutoff smaller.
         Log.d("Hough Complete", Long.toString(System.currentTimeMillis() - timestamp) + "ms");
         Log.d("Lines", lines.toString());
         int positions[] = new int[4];
@@ -182,7 +203,7 @@ public class DetermineColumn extends Command {
             robot.safeCall(robot.getCTelemetry().sendImage("Hough", hough), false);
 
         }
-        robot.addToTelemetry("Positions", Arrays.toString(positions));
+//        robot.addToTelemetry("Positions", Arrays.toString(positions));
 //            Log.d("Safe", (avgSpace != 0 && safe + "");
         if (avgSpace != 0 && safe) { // ok now here i calculate the offset and stuff
 //                cutoff = avgSpace - 10;
@@ -195,10 +216,10 @@ public class DetermineColumn extends Command {
             int offset = avg - (img.cols() / 2); //negative is left, positive is right - distance from the center
             offset -= (int) (avgSpace * 1.5); //take into account the offset of the phone
 
-            robot.addToTelemetry("Offset", offset);
+//            robot.addToTelemetry("Offset", offset);
             currentThread.offset.set(offset); //kms,l
 
-            robot.addToTelemetry("Avg Space", avgSpace);
+//            robot.addToTelemetry("Avg Space", avgSpace);
 //                strafe(0.5 * Math.signum(offset)); //idk why this strafe function works but it does - what you need to do with this command is instead of strafing after this is done, set a global offset variable or something idk
 //            img.release();
 //            hsv.release();

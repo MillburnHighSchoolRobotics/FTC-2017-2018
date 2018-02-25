@@ -38,4 +38,20 @@ public class MathUtils {
         }
         return d;
     }
+
+    public static double standardDeviation(int[] values) {
+        int len = values.length;
+        double mean = 0;
+        for (int i = 0; i < len; i++) {
+            mean += values[i];
+        }
+        mean /= len;
+        double stddev = 0;
+        for (int i = 0; i < len; i++) {
+            double diff = values[i] - mean;
+            stddev += diff * diff;
+        }
+        stddev /= len;
+        return Math.sqrt(stddev);
+    }
 }

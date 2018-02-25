@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.ReflectionUpdateThread;
 
-import virtualRobot.logicThreads.competition.utilities.CollectDepositLogic;
+import virtualRobot.logicThreads.competition.CollectDepositLogic;
 
 /**
  * Created by warre on 2/23/2018.

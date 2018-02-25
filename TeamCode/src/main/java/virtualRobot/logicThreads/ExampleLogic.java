@@ -1,11 +1,10 @@
 package virtualRobot.logicThreads;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
-import virtualRobot.LogicThread;
-import virtualRobot.commands.DetermineColumn;
-import virtualRobot.commands.Rotate;
-import virtualRobot.monitorThreads.TimeMonitor;
+import virtualRobot.commands.ShustinClass;
+import virtualRobot.commands.RotateEncoder;
+import virtualRobot.commands.Translate;
 
 /**
  * Created by ethachu19 on 3/31/2017.
@@ -22,6 +21,12 @@ public class ExampleLogic extends AutonomousLogicThread {
     @Override
     protected void realRun() throws InterruptedException {
 //        runCommand(new Rotate(90))
-        while (true) runCommand(new DetermineColumn());
+        boolean last = false;
+        while (true) {
+            robot.addToTelemetry("Meme", last);
+            robot.moveRollerLifts(last);
+            last = !last;
+            Thread.sleep(1000);
+        }
     }
 }

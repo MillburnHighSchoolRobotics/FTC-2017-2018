@@ -1,16 +1,9 @@
 package virtualRobot.logicThreads.competition;
 
-import android.provider.Settings;
-
 import virtualRobot.JoystickController;
 import virtualRobot.LogicThread;
-import virtualRobot.SallyJoeBot;
-import virtualRobot.commands.RotateEncoder;
 import virtualRobot.commands.Translate;
-import virtualRobot.utils.GlobalUtils;
 import virtualRobot.utils.MathUtils;
-
-import static virtualRobot.SallyJoeBot.Team.BLUE;
 
 /**
  * Created by Ethan Mak on 8/29/2017.
@@ -169,10 +162,10 @@ public class TeleOpCustomLogic extends LogicThread {
 
             if (controller1.isDown(JoystickController.BUTTON_A)) {
                 robot.setRollerPower(1);
-//                robot.moveFipper(false);
+//                robot.moveFlipper(false);
             } else if (controller1.isDown(JoystickController.BUTTON_B)) {
                 robot.setRollerPower(-1);
-                robot.moveFipper(false);
+                robot.moveFlipper(false);
             } else {
                 robot.setRollerPower(0);
             }
@@ -181,9 +174,9 @@ public class TeleOpCustomLogic extends LogicThread {
 //            robot.getRollerRight().setPower(controller2.getValue(JoystickController.Y_2));
 
             if (controller1.isDown(JoystickController.BUTTON_X)) {
-                robot.moveFipper(true);
+                robot.moveFlipper(true);
             } else if (controller1.isDown(JoystickController.BUTTON_Y)) {
-                robot.moveFipper(false);
+                robot.moveFlipper(false);
             }
 
             if (Thread.currentThread().isInterrupted())

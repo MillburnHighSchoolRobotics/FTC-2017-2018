@@ -1,15 +1,12 @@
 package virtualRobot.commands;
 
 
-import android.util.Log;
-
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import virtualRobot.utils.BetterLog;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import virtualRobot.Condition;
 import virtualRobot.PIDController;
 import virtualRobot.SallyJoeBot;
 import virtualRobot.utils.GlobalUtils;
@@ -881,10 +878,10 @@ public class Translate extends Command {
                 int LBTarget = (int) (robot.getLBMotor().getPosition() + LBtranslateController.getTarget()*multiplier[1]);
                 int RFTarget = (int) (robot.getRFMotor().getPosition() + RFtranslateController.getTarget()*multiplier[2]);
                 int RBTarget = (int) (robot.getRBMotor().getPosition() + RBtranslateController.getTarget()*multiplier[3]);
-                robot.getLFMotor().setTargetPositon(LFTarget);
-                robot.getLBMotor().setTargetPositon(LBTarget);
-                robot.getRFMotor().setTargetPositon(RFTarget);
-                robot.getRBMotor().setTargetPositon(RBTarget);
+                robot.getLFMotor().setTargetPosition(LFTarget);
+                robot.getLBMotor().setTargetPosition(LBTarget);
+                robot.getRFMotor().setTargetPosition(RFTarget);
+                robot.getRBMotor().setTargetPosition(RBTarget);
 
                 // Turn On RUN_TO_POSITION
                 robot.getLFMotor().setMode(DcMotor.RunMode.RUN_TO_POSITION);
