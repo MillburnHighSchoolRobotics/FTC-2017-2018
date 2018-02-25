@@ -116,7 +116,7 @@ public class RedNearAutoLogic extends AutonomousLogicThread {
         if (index != 1)
             runCommand(new Translate(75, index == 2 ? Translate.Direction.RIGHT : Translate.Direction.LEFT, 0));
 
-        depositGlyph();
+//        depositGlyph();
         cryptobox[index][0] = stackingLogic.getGlyph(0);
         cryptobox[index][1] = stackingLogic.getGlyph(1);
         stackingLogic.resumeThread();
@@ -152,7 +152,7 @@ public class RedNearAutoLogic extends AutonomousLogicThread {
             if (indexData.first != 1)
                 runCommand(new Translate(75, indexData.first == 2 ? Translate.Direction.RIGHT : Translate.Direction.LEFT, 0));
 
-            depositGlyph();
+//            depositGlyph();
 
             //runCommand(new MoveMotor(robot.getGlyphLift(), 1, indexData.second * -500, Translate.RunMode.WITH_PID, true));
 

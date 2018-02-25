@@ -14,8 +14,6 @@ import virtualRobot.utils.GlobalUtils;
 
 public class GetVuMarkSide extends Command {
     VuforiaLocalizerImplSubclass vuforia = GlobalUtils.vuforiaInstance;
-    VuforiaTrackables relicTrackables;
-    VuforiaTrackable relicTemplate;
     int timeout;
 
     public GetVuMarkSide() {
@@ -23,19 +21,16 @@ public class GetVuMarkSide extends Command {
     }
 
     public GetVuMarkSide(int timeout) {
-        relicTrackables = vuforia.loadTrackablesFromAsset("RelicVuMark");
-        relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicTestTemplate");
         this.timeout = timeout;
     }
 
     @Override
     public boolean changeRobotState() throws InterruptedException {
-        relicTrackables.activate();
+        GlobalUtils.relicTrackables.activate();
         RelicRecoveryVuMark mark = RelicRecoveryVuMark.UNKNOWN;
         long oldTime = System.currentTimeMillis();
         for(int  i = 0; System.currentTimeMillis() - oldTime < timeout && mark == RelicRecoveryVuMark.UNKNOWN; i++) {
-            mark = RelicRecoveryVuMark.from(relicTemplate);
+            mark = RelicRecoveryVuMark.from(GlobalUtils.relicTemplate);
 //            Log.d("VuMeme", mark.name() + " " + i);
             if (mark != RelicRecoveryVuMark.UNKNOWN) {
                 if (parentThread instanceof AutonomousLogicThread)
@@ -43,7 +38,7 @@ public class GetVuMarkSide extends Command {
                 break;
             }
         }
-        relicTrackables.deactivate();
+        GlobalUtils.relicTrackables.deactivate();
         return Thread.currentThread().isInterrupted();
     }
 }

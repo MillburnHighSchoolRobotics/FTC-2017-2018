@@ -10,7 +10,7 @@ import virtualRobot.logicThreads.testing.VuforiaVuMarkTestLogic;
 /**
  * Created by david on 1/24/18.
  */
-@Disabled
+//@Disabled
 @Autonomous(name = "Vuforia Tester", group = "Testing")
 public class VuforiaVuMarkTestUpdate extends ReflectionUpdateThread {
     @Override

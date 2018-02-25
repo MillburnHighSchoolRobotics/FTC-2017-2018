@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.ReflectionUpdateThread;
 
 import java.io.BufferedReader;
@@ -26,6 +28,8 @@ public class GlobalUtils {
     private static Activity currentActivity = null;
     public static VuforiaLocalizerImplSubclass vuforiaInstance = null;
     public static RelicRecoveryVuMark forcedVumark = LEFT;
+    public static VuforiaTrackables relicTrackables = null;
+    public static VuforiaTrackable relicTemplate = null;
     private static int vumarkNum = 0;
     public static ReflectionUpdateThread currentUpdateThread = null;
     public static ElapsedTime runtime = new ElapsedTime();
