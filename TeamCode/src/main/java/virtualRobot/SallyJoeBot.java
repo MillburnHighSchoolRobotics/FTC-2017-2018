@@ -56,9 +56,9 @@ public class SallyJoeBot {
     private Motor lift;
     @UpdateServo(name = "flipper", initpos = 0.65, enabled = true)
     private Servo flipper;
-    @UpdateServo(name = "rollerLiftLeft",initpos = 0, enabled = false)
+    @UpdateServo(name = "rollerLiftLeft",initpos = 0, enabled = true)
     private Servo rollerLiftLeft;
-    @UpdateServo(name = "rollerLiftRight",initpos = 1, enabled = false)
+    @UpdateServo(name = "rollerLiftRight",initpos = 1, enabled = true)
     private Servo rollerLiftRight;
     @UpdateMotor(name = "relicArmWinch", direction = DcMotorSimple.Direction.REVERSE, enabled = true)
     private Motor relicArmWinch;
@@ -72,7 +72,7 @@ public class SallyJoeBot {
     private Servo jewelServo;
     @UpdateServo(name = "jewelHitter", initpos = 0.5, enabled = true)
     private Servo jewelHitter;
-    @UpdateServo(name = "phoneServo", enabled = false)
+    @UpdateServo(name = "phoneServo", initpos = 0.95, enabled = true)
     private Servo phoneServo;
     //Sensors
     private IMU imu;
@@ -121,6 +121,8 @@ public class SallyJoeBot {
         jewelServo = new Servo();
         jewelHitter = new Servo();
         colorSensor = new DumbColorSensor();
+
+        phoneServo = new Servo();
         //capLift = new SyncedMotors(LiftLeftMotor, LiftRightMotor, LiftLeftEncoder, LiftRightEncoder, KP, KI, KD, SyncedMotors.SyncAlgo.POSITION);
         //capLift.setRatio(1);
 
@@ -214,10 +216,10 @@ public class SallyJoeBot {
         int LBTarget = (int) (LBMotor.getPosition() + LBPos);
         int RFTarget = (int) (RFMotor.getPosition() + RFPos);
         int RBTarget = (int) (RBMotor.getPosition() + RBPos);
-        LFMotor.setTargetPositon(LFTarget);
-        LBMotor.setTargetPositon(LBTarget);
-        RFMotor.setTargetPositon(RFTarget);
-        RBMotor.setTargetPositon(RBTarget);
+        LFMotor.setTargetPosition(LFTarget);
+        LBMotor.setTargetPosition(LBTarget);
+        RFMotor.setTargetPosition(RFTarget);
+        RBMotor.setTargetPosition(RBTarget);
 
         // Turn On RUN_TO_POSITION
         LFMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -348,7 +350,7 @@ public class SallyJoeBot {
         return flipper;
     }
 
-    public synchronized void moveFipper(boolean isOpen) {
+    public synchronized void moveFlipper(boolean isOpen) {
         flipper.setPosition(isOpen ? 1 : 0.65);
     }
 

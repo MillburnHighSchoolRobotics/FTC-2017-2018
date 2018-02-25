@@ -56,7 +56,7 @@ public class Motor {
         }
     }
 
-    public synchronized void setTargetPositon(int position) {
+    public synchronized void setTargetPosition(int position) {
         target = position;
     }
 

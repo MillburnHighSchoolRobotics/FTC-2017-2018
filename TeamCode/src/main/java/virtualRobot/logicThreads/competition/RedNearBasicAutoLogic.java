@@ -1,17 +1,8 @@
 package virtualRobot.logicThreads.competition;
 
-import android.util.Log;
-
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-
-import virtualRobot.commands.EthanClass;
 import virtualRobot.commands.GetVuMarkSide;
-import virtualRobot.commands.Rotate;
 import virtualRobot.commands.RotateEncoder;
 import virtualRobot.commands.Translate;
-import virtualRobot.hardware.DumbColorSensor;
-import virtualRobot.hardware.Motor;
-import virtualRobot.hardware.Servo;
 import virtualRobot.logicThreads.AutonomousLogicThread;
 import virtualRobot.utils.GlobalUtils;
 
@@ -75,7 +66,7 @@ public class RedNearBasicAutoLogic extends AutonomousLogicThread {
 
         runCommand(new Translate(dist, Translate.Direction.FORWARD,0,power));
         runCommand(new RotateEncoder(-90,power));
-        robot.moveFipper(true);
+        robot.moveFlipper(true);
         Thread.sleep(500);
         runCommand(new Translate(700, Translate.Direction.BACKWARD, 0, power));
         runCommand(new Translate(300, Translate.Direction.FORWARD, 0, power));
